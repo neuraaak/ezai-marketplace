@@ -75,3 +75,5 @@ temp/
 tmp/
 tmpclaude-*
 .remember/
+docs/superpowers/
+!docs/
