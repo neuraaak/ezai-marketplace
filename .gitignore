@@ -1,0 +1,77 @@
+# =============================================================================
+# GITIGNORE RACINE
+# =============================================================================
+# Ce fichier contient les exclusions GLOBALES et COMMUNES
+# Les sous-dossiers ont leurs propres .gitignore pour les exclusions spécifiques
+
+# =============================================================================
+# CACHE ET FICHIERS TEMPORAIRES (COMMUNS)
+# =============================================================================
+# Caches des outils de développement
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.black_cache/
+.bandit/
+.pre-commit-cache/
+.benchmarks/
+.tox/
+.cache
+.nox/
+.hypothesis/
+
+# Dependency manager cache
+.pip-cache/
+node_modules/
+.npm/
+.yarn/
+
+# =============================================================================
+# LOGS ET FICHIERS TEMPORAIRES
+# =============================================================================
+# Logs d'application
+.logs/
+*.log
+*.xlsx
+*.csv
+version_info.txt
+
+# =============================================================================
+# FICHIERS SYSTÈME (COMMUNS)
+# =============================================================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.AppleDouble
+.LSOverride
+
+# Linux
+.directory
+.Trash-*
+
+# =============================================================================
+# EXCLUSIONS GLOBALES (COMMUNES)
+# =============================================================================
+# Fichiers de sauvegarde
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+
+# Fichiers temporaires
+*.pid
+*.tmp
+*.temp
+_temp/
+temp/
+tmp/
+tmpclaude-*
+.remember/
