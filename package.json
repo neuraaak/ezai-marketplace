@@ -2,6 +2,12 @@
   "name": "ezai-marketplace",
   "version": "1.0.0",
   "description": "CLI pour installer des skills IA depuis le marketplace ezai",
+  "files": [
+    "bin/",
+    "src/",
+    "plugins/",
+    ".claude-plugin/"
+  ],
   "main": "src/catalogue.js",
   "bin": {
     "ezai": "./bin/ezai.js"
