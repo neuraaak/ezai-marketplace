@@ -1,5 +1,5 @@
 ---
-name: code-formatter
+name: ezai-code-formatter
 description:
   "[CLAUDE] - Apply this skill when a source file's visual structure needs to match
   project conventions — not its logic. This means: adding section header comments (IMPORTS,

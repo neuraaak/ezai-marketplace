@@ -1,5 +1,5 @@
 ---
-name: project-config
+name: ezai-project-config
 description:
   "[CLAUDE] - Toolchain setup, project configuration, and infrastructure
   standards for Python and JS/TS projects. Covers pyproject.toml / package.json
