@@ -1,5 +1,5 @@
 ---
-name: project-performance
+name: ezai-project-performance
 description:
   "[CLAUDE] - Concurrency, async patterns, and performance optimization for
   Python and JS/TS projects. Covers async/await model selection, threading vs

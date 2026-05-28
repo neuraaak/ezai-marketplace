@@ -1,5 +1,5 @@
 ---
-name: docs-writer
+name: ezai-docs-writer
 description:
   "[CLAUDE] - Invoke this skill when a user wants to produce documentation
   content for a software project: writing MkDocs pages of any type (homepage,

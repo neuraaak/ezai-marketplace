@@ -1,5 +1,5 @@
 ---
-name: project-quality
+name: ezai-project-quality
 description:
   "[CLAUDE] - Testing, security, and input validation standards for Python and
   JS/TS projects. Covers test architecture (pytest / node:test / Vitest),
