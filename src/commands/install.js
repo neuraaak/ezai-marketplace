@@ -126,7 +126,7 @@ async function runInstall(pluginName, options, catalogue) {
     process.exit(1);
   }
 
-  const baseDestRoot = options.dest || process.cwd();
+  const baseDestRoot = options.dest || os.homedir();
   const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
   const platformDirs = resolvePlatforms(options);
   const installedNames = [];

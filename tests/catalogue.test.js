@@ -1,40 +1,38 @@
 const { fetchCatalogue, filterPlugins } = require('../src/catalogue');
 
 describe('fetchCatalogue', () => {
-  beforeEach(() => {
-    globalThis.fetch = jest.fn();
-  });
+  const originalEnv = process.env.EZAI_CATALOGUE_URL;
 
   afterEach(() => {
+    process.env.EZAI_CATALOGUE_URL = originalEnv || '';
+    if (!originalEnv) delete process.env.EZAI_CATALOGUE_URL;
     jest.resetAllMocks();
   });
 
-  it('retourne les plugins depuis marketplace.json', async () => {
-    const mockData = {
-      version: '1.0.0',
-      plugins: [
-        {
-          name: 'skill-test',
-          description: 'Un test',
-          category: 'dev',
-          version: '1.0.0',
-          path: 'plugins/skill-test',
-        },
-      ],
-    };
-    globalThis.fetch.mockResolvedValue({
-      ok: true,
-      json: async () => mockData,
-    });
+  it('lit le catalogue local bundlé par défaut', async () => {
+    delete process.env.EZAI_CATALOGUE_URL;
+
+    const result = await fetchCatalogue();
+
+    expect(result).toHaveProperty('plugins');
+    expect(Array.isArray(result.plugins)).toBe(true);
+    expect(result.plugins.length).toBeGreaterThan(0);
+  });
+
+  it('utilise EZAI_CATALOGUE_URL si défini', async () => {
+    process.env.EZAI_CATALOGUE_URL = 'https://example.com/catalogue.json';
+    const mockData = { plugins: [{ name: 'skill-test', description: 'test', category: 'dev' }] };
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => mockData });
 
     const result = await fetchCatalogue();
 
     expect(result).toEqual(mockData);
-    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).toHaveBeenCalledWith('https://example.com/catalogue.json');
   });
 
-  it('lève une erreur si le fetch échoue', async () => {
-    globalThis.fetch.mockResolvedValue({ ok: false, status: 404 });
+  it('lève une erreur si EZAI_CATALOGUE_URL retourne une erreur HTTP', async () => {
+    process.env.EZAI_CATALOGUE_URL = 'https://example.com/catalogue.json';
+    globalThis.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404 });
 
     await expect(fetchCatalogue()).rejects.toThrow(
       'Impossible de récupérer le catalogue (HTTP 404)'

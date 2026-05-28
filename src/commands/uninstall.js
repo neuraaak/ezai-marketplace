@@ -38,45 +38,57 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
   }
 }
 
-async function runUninstall(skillName, options) {
-  const baseDestRoot = options.dest || process.cwd();
+async function runUninstall(skillName, options, catalogue) {
+  const baseDestRoot = options.dest || os.homedir();
   const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
 
-  if (!fs.existsSync(agentsSkillsDir)) {
-    console.log('Aucun skill installé (dossier .agents/skills/ introuvable).\n');
-    return;
-  }
+  // Source de vérité : seuls les skills du catalogue peuvent être désinstallés
+  const { plugins } = await catalogue.fetchCatalogue();
+  const catalogueNames = new Set(plugins.map((p) => p.name));
 
   let targets;
   if (skillName) {
+    if (!catalogueNames.has(skillName)) {
+      console.error(`"${skillName}" n'est pas un skill du catalogue ezai.`);
+      console.error('Utilisez `ezai list` pour voir les skills disponibles.');
+      process.exit(1);
+    }
     const skillDir = path.join(agentsSkillsDir, skillName);
     if (!fs.existsSync(skillDir)) {
-      console.error(`Skill "${skillName}" non trouvé dans ${agentsSkillsDir}`);
+      console.error(`Skill "${skillName}" non installé dans ${agentsSkillsDir}`);
       process.exit(1);
     }
     targets = [skillName];
   } else {
-    targets = fs
+    if (!fs.existsSync(agentsSkillsDir)) {
+      console.log('Aucun skill installé (dossier .agents/skills/ introuvable).\n');
+      return;
+    }
+    // Intersection : installés ET dans le catalogue
+    const installed = fs
       .readdirSync(agentsSkillsDir, { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name);
+    targets = installed.filter((name) => catalogueNames.has(name));
 
     if (targets.length === 0) {
-      console.log('Aucun skill installé.\n');
+      console.log('Aucun skill ezai installé.\n');
       return;
     }
   }
 
   const platformDirs = options._platformDirs || resolvePlatforms(options);
 
+  // 1. Supprimer les symlinks plateformes en premier
+  unlinkFromPlatforms(targets, platformDirs);
+
+  // 2. Supprimer les fichiers dans .agents/skills/
+  console.log('');
   for (const name of targets) {
     const skillDir = path.join(agentsSkillsDir, name);
     fs.rmSync(skillDir, { recursive: true, force: true });
     console.log(`  - ${name}`);
   }
-
-  console.log('');
-  unlinkFromPlatforms(targets, platformDirs);
 
   const label = targets.length === 1 ? `"${targets[0]}"` : `${targets.length} skills`;
   console.log(`\n${label} désinstallé(s) de ${agentsSkillsDir}\n`);
