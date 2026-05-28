@@ -1,28 +1,90 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "ezai-marketplace",
-  "owner": {
-    "name": "ezai"
-  },
   "version": "1.0.0",
+  "description": "Curated marketplace of AI skills for senior developers (Python / JS/TS)",
+  "owner": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
   "updatedAt": "2026-05-28",
   "plugins": [
     {
-      "name": "ezai-dev-skills",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/Neuraaak/ezai-marketplace.git",
-        "path": "plugins/ezai-dev-skills",
-        "ref": "main",
-        "sha": "d55943182bdc5925f0516ce1595463d529d6f520"
-      },
-      "path": "plugins/ezai-dev-skills",
-      "version": "1.0.0",
-      "description": "Bundle de 7 skills pour développeurs senior (Python / JS/TS) : persona, architecture, qualité, config, performance, formatage, documentation.",
-      "author": {
-        "name": "ezai"
-      },
+      "name": "ezai-code-formatter",
+      "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
+      "source": "./plugins/ezai-code-formatter",
       "category": "development",
-      "skills": "skills/"
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-docs-writer",
+      "description": "Produce documentation content for software projects: MkDocs pages, API references, changelogs, and technical writing in a consistent style.",
+      "source": "./plugins/ezai-docs-writer",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-persona-senior-dev",
+      "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
+      "source": "./plugins/ezai-persona-senior-dev",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-project-architect",
+      "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, and design patterns (Repository, Service, Factory).",
+      "source": "./plugins/ezai-project-architect",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-project-config",
+      "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, CI/CD.",
+      "source": "./plugins/ezai-project-config",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-project-performance",
+      "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, and caching strategies.",
+      "source": "./plugins/ezai-project-performance",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
+      "name": "ezai-project-quality",
+      "description": "Testing, security, and input validation standards for Python and JS/TS projects: test architecture with pytest/Vitest, security patterns, and code quality enforcement.",
+      "source": "./plugins/ezai-project-quality",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
     }
   ]
 }

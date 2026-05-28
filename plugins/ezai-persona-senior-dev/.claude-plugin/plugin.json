@@ -1,0 +1,10 @@
+{
+  "name": "ezai-persona-senior-dev",
+  "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
+  "version": "1.0.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development"
+}

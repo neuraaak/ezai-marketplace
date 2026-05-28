@@ -1,7 +1,7 @@
 ---
 name: ezai-docs-writer
 description:
-  "[CLAUDE] - Invoke this skill when a user wants to produce documentation
+  "Invoke this skill when a user wants to produce documentation
   content for a software project: writing MkDocs pages of any type (homepage,
   getting-started, API reference, CLI reference, How-To guide, example page), adding or
   completing docstrings on undocumented classes or methods, or auditing a
