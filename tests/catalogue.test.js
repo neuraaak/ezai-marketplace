@@ -2,7 +2,7 @@ const { fetchCatalogue, filterPlugins } = require('../lib/catalogue');
 
 describe('fetchCatalogue', () => {
   beforeEach(() => {
-    global.fetch = jest.fn();
+    globalThis.fetch = jest.fn();
   });
 
   afterEach(() => {
@@ -16,7 +16,7 @@ describe('fetchCatalogue', () => {
         { name: 'skill-test', description: 'Un test', category: 'dev', version: '1.0.0', path: 'plugins/skill-test' }
       ]
     };
-    global.fetch.mockResolvedValue({
+    globalThis.fetch.mockResolvedValue({
       ok: true,
       json: async () => mockData
     });
@@ -24,11 +24,11 @@ describe('fetchCatalogue', () => {
     const result = await fetchCatalogue();
 
     expect(result).toEqual(mockData);
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
   });
 
   it('lève une erreur si le fetch échoue', async () => {
-    global.fetch.mockResolvedValue({ ok: false, status: 404 });
+    globalThis.fetch.mockResolvedValue({ ok: false, status: 404 });
 
     await expect(fetchCatalogue()).rejects.toThrow('Impossible de récupérer le catalogue (HTTP 404)');
   });
