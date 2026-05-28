@@ -12,7 +12,7 @@
     "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged && npm test"
+    "pre-commit": "node scripts/build-index.js && git add .claude-plugin/marketplace.json && npx lint-staged && npm test"
   },
   "lint-staged": {
     "*.js": [

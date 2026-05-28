@@ -1,5 +1,5 @@
 ---
-name: project-architect
+name: ezai-project-architect
 description:
   "[CLAUDE] - Architecture and design standards for Python and JS/TS projects.
   Covers module structure, public API surface, design patterns (Repository,
