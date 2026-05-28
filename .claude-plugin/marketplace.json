@@ -1,5 +1,16 @@
 {
-  "version": "1.0.0",
-  "updatedAt": "2026-05-28",
-  "plugins": []
+    "version": "1.0.0",
+    "updatedAt": "2026-05-28",
+    "plugins": [
+        {
+            "name": "skill-test",
+            "version": "1.0.0",
+            "description": "Plugin de test pour valider l'installation",
+            "category": "dev",
+            "path": "plugins/skill-test",
+            "skills": [
+                "skills/test/SKILL.md"
+            ]
+        }
+    ]
 }
