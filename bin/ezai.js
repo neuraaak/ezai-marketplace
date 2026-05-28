@@ -43,9 +43,12 @@ program
   );
 
 program
-  .command('install <plugin>')
-  .description('Installer un plugin dans .agents/')
+  .command('install [plugin]')
+  .description('Installer un plugin (ou tous si aucun nom fourni) dans .agents/')
   .option('--dest <chemin>', 'Répertoire de destination (défaut : répertoire courant)')
+  .option('--claude', 'Déployer les symlinks vers ~/.claude/skills/')
+  .option('--gemini', 'Déployer les symlinks vers ~/.gemini/skills/')
+  .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
   .action((plugin, options) =>
     runInstall(plugin, options, catalogue).catch((err) => {
       console.error(err.message);
