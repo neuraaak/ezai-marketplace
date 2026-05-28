@@ -1,4 +1,4 @@
-const { fetchCatalogue, filterPlugins } = require('../lib/catalogue');
+const { fetchCatalogue, filterPlugins } = require('../src/catalogue');
 
 describe('fetchCatalogue', () => {
   beforeEach(() => {

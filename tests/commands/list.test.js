@@ -1,6 +1,6 @@
-const { formatList } = require('../../lib/commands/list');
-const { formatSearch } = require('../../lib/commands/search');
-const { formatInfo } = require('../../lib/commands/info');
+const { formatList } = require('../../src/commands/list');
+const { formatSearch } = require('../../src/commands/search');
+const { formatInfo } = require('../../src/commands/info');
 
 const plugins = [
   { name: 'skill-seo', description: 'Expert SEO', category: 'marketing', version: '1.0.0' },

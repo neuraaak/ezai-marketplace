@@ -5,7 +5,7 @@ const {
   resolvePluginFiles,
   buildDestPath,
   assertSafeRelPath,
-} = require('../../lib/commands/install');
+} = require('../../src/commands/install');
 
 describe('resolvePluginFiles', () => {
   let tmpDir;

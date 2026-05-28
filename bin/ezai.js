@@ -2,11 +2,11 @@
 'use strict';
 
 const { Command } = require('commander');
-const catalogue = require('../lib/catalogue');
-const { runList } = require('../lib/commands/list');
-const { runSearch } = require('../lib/commands/search');
-const { runInfo } = require('../lib/commands/info');
-const { runInstall } = require('../lib/commands/install');
+const catalogue = require('../src/catalogue');
+const { runList } = require('../src/commands/list');
+const { runSearch } = require('../src/commands/search');
+const { runInfo } = require('../src/commands/info');
+const { runInstall } = require('../src/commands/install');
 
 const program = new Command();
 
