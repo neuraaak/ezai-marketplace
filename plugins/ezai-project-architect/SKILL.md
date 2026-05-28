@@ -1,7 +1,7 @@
 ---
 name: ezai-project-architect
 description:
-  "[CLAUDE] - Architecture and design standards for Python and JS/TS projects.
+  "Architecture and design standards for Python and JS/TS projects.
   Covers module structure, public API surface, design patterns (Repository,
   Factory, Composition), Hexagonal architecture (Ports & Adapters), and type
   system contracts. Load this sub-skill from persona-senior-dev, or invoke

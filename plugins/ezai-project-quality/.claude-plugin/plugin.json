@@ -1,0 +1,10 @@
+{
+  "name": "ezai-project-quality",
+  "description": "Testing, security, and input validation standards for Python and JS/TS projects: test architecture with pytest/Vitest, security patterns, and code quality enforcement.",
+  "version": "1.0.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development"
+}

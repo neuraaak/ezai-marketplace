@@ -1,7 +1,7 @@
 ---
 name: ezai-project-config
 description:
-  "[CLAUDE] - Toolchain setup, project configuration, and infrastructure
+  "Toolchain setup, project configuration, and infrastructure
   standards for Python and JS/TS projects. Covers pyproject.toml / package.json
   structure, build backends, linters, type checkers, Docker multi-stage builds,
   lockfiles, and observability setup. Load from persona-senior-dev, or invoke

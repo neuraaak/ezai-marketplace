@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
 function assertSafeRelPath(p) {
@@ -8,11 +9,12 @@ function assertSafeRelPath(p) {
   }
 }
 
-function collectFiles(dir, baseDir, result) {
+function collectFiles(dir, baseDir, result, excludeDirs = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (excludeDirs.includes(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      collectFiles(fullPath, baseDir, result);
+      collectFiles(fullPath, baseDir, result, excludeDirs);
     } else {
       const dest = path.relative(baseDir, fullPath).replace(/\\/g, '/');
       result.push({ src: fullPath, dest });
@@ -57,6 +59,46 @@ function collectSkills(pluginDir, skillsRelDir) {
     });
 }
 
+const DEFAULT_PLATFORMS = [
+  { name: 'Claude Code', dir: path.join(os.homedir(), '.claude') },
+  { name: 'Gemini CLI', dir: path.join(os.homedir(), '.gemini') },
+  { name: 'Copilot', dir: path.join(os.homedir(), '.copilot') },
+];
+
+function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS) {
+  const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+  let linked = 0;
+
+  for (const platform of platformDirs) {
+    if (!fs.existsSync(platform.dir)) continue;
+
+    const skillsDir = path.join(platform.dir, 'skills');
+    try {
+      fs.mkdirSync(skillsDir, { recursive: true });
+    } catch {
+      console.warn(`  [warn] ${platform.name} : impossible de créer ${skillsDir}`);
+      continue;
+    }
+
+    for (const skillName of skillNames) {
+      const src = path.resolve(path.join(agentsDir, skillName));
+      const dest = path.join(skillsDir, skillName);
+      try {
+        fs.rmSync(dest, { recursive: true, force: true });
+        fs.symlinkSync(src, dest, symlinkType);
+        console.log(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
+        linked++;
+      } catch (err) {
+        console.warn(
+          `  [warn] ${platform.name} : impossible de créer le lien pour ${skillName} — ${err.message}`
+        );
+      }
+    }
+  }
+
+  if (linked > 0) console.log('');
+}
+
 function buildDestPath(pluginName, destRoot) {
   const base = destRoot || process.cwd();
   return path.join(base, '.agents', pluginName);
@@ -72,33 +114,34 @@ async function runInstall(pluginName, options, catalogue) {
     process.exit(1);
   }
 
-  assertSafeRelPath(plugin.path);
+  const pluginRelPath = (plugin.source || plugin.path || '').replace(/^\.\//, '');
+  assertSafeRelPath(pluginRelPath);
   const repoRoot = path.resolve(__dirname, '..', '..');
-  const pluginDir = path.join(repoRoot, plugin.path);
-  const skillsRelDir = plugin.skills || 'skills/';
+  const pluginDir = path.join(repoRoot, pluginRelPath);
   const baseDestRoot = options.dest || process.cwd();
 
-  const skills = collectSkills(pluginDir, skillsRelDir);
+  const destDir = path.join(baseDestRoot, '.agents', 'skills', pluginName);
+  fs.mkdirSync(destDir, { recursive: true });
 
-  for (const skill of skills) {
-    const destDir = path.join(baseDestRoot, '.agents', 'skills', skill.name);
-    fs.mkdirSync(destDir, { recursive: true });
+  const files = [];
+  collectFiles(pluginDir, pluginDir, files, ['.claude-plugin']);
 
-    for (const { src, dest } of skill.files) {
-      const destFile = path.join(destDir, dest);
-      const resolved = path.resolve(destFile);
-      if (!resolved.startsWith(path.resolve(destDir) + path.sep)) {
-        throw new Error(`tentative d'écriture hors du répertoire cible : ${resolved}`);
-      }
-      fs.mkdirSync(path.dirname(destFile), { recursive: true });
-      fs.copyFileSync(src, destFile);
-      console.log(`  + ${skill.name}/${dest}`);
+  for (const { src, dest } of files) {
+    const destFile = path.join(destDir, dest);
+    const resolved = path.resolve(destFile);
+    if (!resolved.startsWith(path.resolve(destDir) + path.sep)) {
+      throw new Error(`tentative d'écriture hors du répertoire cible : ${resolved}`);
     }
+    fs.mkdirSync(path.dirname(destFile), { recursive: true });
+    fs.copyFileSync(src, destFile);
+    console.log(`  + ${pluginName}/${dest}`);
   }
 
-  console.log(
-    `\nPlugin "${pluginName}" installé dans ${path.join(baseDestRoot, '.agents', 'skills')}\n`
-  );
+  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
+  console.log('');
+  linkToPlatforms([pluginName], agentsSkillsDir);
+
+  console.log(`Plugin "${pluginName}" installé dans ${agentsSkillsDir}\n`);
 }
 
 module.exports = {
@@ -107,4 +150,5 @@ module.exports = {
   buildDestPath,
   runInstall,
   collectSkills,
+  linkToPlatforms,
 };

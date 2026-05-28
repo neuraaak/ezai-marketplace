@@ -1,0 +1,10 @@
+{
+  "name": "ezai-project-config",
+  "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, CI/CD.",
+  "version": "1.0.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development"
+}

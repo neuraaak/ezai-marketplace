@@ -1,0 +1,10 @@
+{
+  "name": "ezai-code-formatter",
+  "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
+  "version": "1.0.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development"
+}

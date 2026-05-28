@@ -3,31 +3,27 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
 const OUTPUT = path.join(ROOT, '.claude-plugin', 'marketplace.json');
 
-const REPO_URL = 'https://github.com/Neuraaak/ezai-marketplace.git';
-const REPO_REF = 'main';
-
 function today() {
   return new Date().toISOString().split('T')[0];
-}
-
-function gitSha() {
-  try {
-    return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT }).toString().trim();
-  } catch {
-    return null;
-  }
 }
 
 function buildIndex() {
   if (!fs.existsSync(PLUGINS_DIR)) {
     console.log('Dossier plugins/ introuvable. Catalogue vide généré.');
-    return { version: '1.0.0', updatedAt: today(), plugins: [] };
+    return {
+      $schema: 'https://json.schemastore.org/claude-code-marketplace.json',
+      name: 'ezai-marketplace',
+      version: '1.0.0',
+      description: 'Marketplace of AI skills for developers',
+      owner: { name: 'ezai', email: 'floriansalort@gmail.com' },
+      updatedAt: today(),
+      plugins: [],
+    };
   }
 
   const entries = fs
@@ -40,31 +36,24 @@ function buildIndex() {
         return null;
       }
       const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
-      const sha = gitSha();
-      const gitSource = {
-        source: 'git-subdir',
-        url: REPO_URL,
-        path: `plugins/${d.name}`,
-        ref: REPO_REF,
-        ...(sha && { sha }),
-      };
-      return {
+      const entry = {
         name: meta.name,
-        source: gitSource,
-        path: `plugins/${d.name}`,
-        version: meta.version || '1.0.0',
         description: meta.description || '',
-        author: meta.author || {},
-        category: meta.category || 'general',
-        skills: meta.skills || 'skills/',
+        source: `./plugins/${d.name}`,
+        category: meta.category || 'development',
       };
+      if (meta.version) entry.version = meta.version;
+      if (meta.author) entry.author = meta.author;
+      return entry;
     })
     .filter(Boolean);
 
   return {
+    $schema: 'https://json.schemastore.org/claude-code-marketplace.json',
     name: 'ezai-marketplace',
-    owner: { name: 'ezai' },
     version: '1.0.0',
+    description: 'Curated marketplace of AI skills for senior developers (Python / JS/TS)',
+    owner: { name: 'ezai', email: 'floriansalort@gmail.com' },
     updatedAt: today(),
     plugins: entries,
   };

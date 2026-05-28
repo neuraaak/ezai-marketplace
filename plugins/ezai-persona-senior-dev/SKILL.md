@@ -1,7 +1,7 @@
 ---
 name: ezai-persona-senior-dev
 description:
-  "[CLAUDE] - Elite Senior Developer persona for enterprise-grade Python and
+  "Elite Senior Developer persona for enterprise-grade Python and
   JavaScript/TypeScript projects. Invoke for any significant development task:
   implementing features, refactoring, debugging, code review, or architecture
   decisions. Works for both Python (3.11+) and JS/TS (ES2026 / Node.js 24+).
