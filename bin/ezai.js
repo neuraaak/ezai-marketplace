@@ -7,6 +7,7 @@ const { runList } = require('../src/commands/list');
 const { runSearch } = require('../src/commands/search');
 const { runInfo } = require('../src/commands/info');
 const { runInstall } = require('../src/commands/install');
+const { runUninstall } = require('../src/commands/uninstall');
 
 const program = new Command();
 
@@ -51,6 +52,20 @@ program
   .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
   .action((plugin, options) =>
     runInstall(plugin, options, catalogue).catch((err) => {
+      console.error(err.message);
+      process.exit(1);
+    })
+  );
+
+program
+  .command('uninstall [skill]')
+  .description('Désinstaller un skill (ou tous si aucun nom fourni)')
+  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire courant)')
+  .option('--claude', 'Supprimer uniquement les symlinks ~/.claude/skills/')
+  .option('--gemini', 'Supprimer uniquement les symlinks ~/.gemini/skills/')
+  .option('--copilot', 'Supprimer uniquement les symlinks ~/.copilot/skills/')
+  .action((skill, options) =>
+    runUninstall(skill, options).catch((err) => {
       console.error(err.message);
       process.exit(1);
     })
