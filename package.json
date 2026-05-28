@@ -1,7 +1,20 @@
 {
   "name": "ezai-marketplace",
-  "version": "1.0.0",
-  "description": "CLI pour installer des skills IA depuis le marketplace ezai",
+  "version": "1.0.1",
+  "description": "CLI to install AI skills from the ezai marketplace into Claude Code, Gemini CLI, and Copilot",
+  "author": {
+    "name": "Florian Salort",
+    "email": "floriansalort@outlook.fr",
+    "url": "https://github.com/Neuraaak"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Neuraaak/ezai-marketplace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Neuraaak/ezai-marketplace/issues"
+  },
+  "homepage": "https://github.com/Neuraaak/ezai-marketplace#readme",
   "files": [
     "bin/",
     "src/",
@@ -14,6 +27,7 @@
   },
   "scripts": {
     "test": "jest",
+    "lint": "eslint src/ bin/",
     "build-index": "node scripts/build-index.js",
     "prepare": "simple-git-hooks"
   },
