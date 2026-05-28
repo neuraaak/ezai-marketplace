@@ -3,13 +3,25 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
 const OUTPUT = path.join(ROOT, '.claude-plugin', 'marketplace.json');
 
+const REPO_URL = 'https://github.com/Neuraaak/ezai-marketplace.git';
+const REPO_REF = 'main';
+
 function today() {
   return new Date().toISOString().split('T')[0];
+}
+
+function gitSha() {
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT }).toString().trim();
+  } catch {
+    return null;
+  }
 }
 
 function buildIndex() {
@@ -28,9 +40,17 @@ function buildIndex() {
         return null;
       }
       const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+      const sha = gitSha();
+      const gitSource = {
+        source: 'git-subdir',
+        url: REPO_URL,
+        path: `plugins/${d.name}`,
+        ref: REPO_REF,
+        ...(sha && { sha }),
+      };
       return {
         name: meta.name,
-        source: `./plugins/${d.name}`,
+        source: gitSource,
         path: `plugins/${d.name}`,
         version: meta.version || '1.0.0',
         description: meta.description || '',
