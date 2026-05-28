@@ -27,6 +27,14 @@ function makeSymlink(platformDir, skillName, target) {
   return dest;
 }
 
+function mockCatalogue(...skillNames) {
+  return {
+    fetchCatalogue: async () => ({
+      plugins: skillNames.map((name) => ({ name, description: '', source: `./plugins/${name}` })),
+    }),
+  };
+}
+
 // --- resolvePlatforms ---
 
 describe('resolvePlatforms', () => {
@@ -101,38 +109,61 @@ describe('runUninstall', () => {
   it('supprime un skill spécifique', async () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
     makeSkill(agentsSkillsDir, 'ezai-code-formatter');
+    const catalogue = mockCatalogue('ezai-code-formatter');
 
-    await runUninstall('ezai-code-formatter', { dest: tmpDir });
+    await runUninstall('ezai-code-formatter', { dest: tmpDir }, catalogue);
 
     expect(fs.existsSync(path.join(agentsSkillsDir, 'ezai-code-formatter'))).toBe(false);
   });
 
-  it('supprime tous les skills si aucun nom fourni', async () => {
+  it('supprime uniquement les skills du catalogue (pas les skills tiers)', async () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
     makeSkill(agentsSkillsDir, 'ezai-code-formatter');
-    makeSkill(agentsSkillsDir, 'ezai-docs-writer');
+    makeSkill(agentsSkillsDir, 'other-tool-skill'); // skill tiers, pas dans le catalogue
+    const catalogue = mockCatalogue('ezai-code-formatter');
 
-    await runUninstall(undefined, { dest: tmpDir });
+    await runUninstall(undefined, { dest: tmpDir }, catalogue);
 
     expect(fs.existsSync(path.join(agentsSkillsDir, 'ezai-code-formatter'))).toBe(false);
-    expect(fs.existsSync(path.join(agentsSkillsDir, 'ezai-docs-writer'))).toBe(false);
+    expect(fs.existsSync(path.join(agentsSkillsDir, 'other-tool-skill'))).toBe(true);
   });
 
-  it('supprime aussi les symlinks plateformes', async () => {
+  it('supprime les symlinks avant les fichiers', async () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
     const skillDir = makeSkill(agentsSkillsDir, 'ezai-code-formatter');
     const platform = path.join(tmpDir, 'platform');
-    const dest = makeSymlink(platform, 'ezai-code-formatter', skillDir);
+    const symlinkDest = makeSymlink(platform, 'ezai-code-formatter', skillDir);
+    const catalogue = mockCatalogue('ezai-code-formatter');
 
-    await runUninstall('ezai-code-formatter', {
-      dest: tmpDir,
-      _platformDirs: [{ name: 'P', dir: platform }],
+    await runUninstall(
+      'ezai-code-formatter',
+      {
+        dest: tmpDir,
+        _platformDirs: [{ name: 'P', dir: platform }],
+      },
+      catalogue
+    );
+
+    expect(fs.existsSync(symlinkDest)).toBe(false);
+    expect(fs.existsSync(path.join(agentsSkillsDir, 'ezai-code-formatter'))).toBe(false);
+  });
+
+  it('refuse de désinstaller un skill absent du catalogue', async () => {
+    const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
+    makeSkill(agentsSkillsDir, 'foreign-skill');
+    const catalogue = mockCatalogue('ezai-code-formatter');
+
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('exit');
     });
-
-    expect(fs.existsSync(dest)).toBe(false);
+    await expect(runUninstall('foreign-skill', { dest: tmpDir }, catalogue)).rejects.toThrow(
+      'exit'
+    );
+    exitSpy.mockRestore();
   });
 
   it("ne lève pas d'erreur si .agents/skills/ est absent", async () => {
-    await expect(runUninstall(undefined, { dest: tmpDir })).resolves.not.toThrow();
+    const catalogue = mockCatalogue('ezai-code-formatter');
+    await expect(runUninstall(undefined, { dest: tmpDir }, catalogue)).resolves.not.toThrow();
   });
 });

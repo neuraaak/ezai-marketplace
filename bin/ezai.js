@@ -46,7 +46,7 @@ program
 program
   .command('install [plugin]')
   .description('Installer un plugin (ou tous si aucun nom fourni) dans .agents/')
-  .option('--dest <chemin>', 'Répertoire de destination (défaut : répertoire courant)')
+  .option('--dest <chemin>', 'Répertoire de destination (défaut : répertoire home)')
   .option('--claude', 'Déployer les symlinks vers ~/.claude/skills/')
   .option('--gemini', 'Déployer les symlinks vers ~/.gemini/skills/')
   .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
@@ -60,12 +60,12 @@ program
 program
   .command('uninstall [skill]')
   .description('Désinstaller un skill (ou tous si aucun nom fourni)')
-  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire courant)')
+  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire home)')
   .option('--claude', 'Supprimer uniquement les symlinks ~/.claude/skills/')
   .option('--gemini', 'Supprimer uniquement les symlinks ~/.gemini/skills/')
   .option('--copilot', 'Supprimer uniquement les symlinks ~/.copilot/skills/')
   .action((skill, options) =>
-    runUninstall(skill, options).catch((err) => {
+    runUninstall(skill, options, catalogue).catch((err) => {
       console.error(err.message);
       process.exit(1);
     })
