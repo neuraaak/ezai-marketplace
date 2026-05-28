@@ -13,12 +13,18 @@ describe('fetchCatalogue', () => {
     const mockData = {
       version: '1.0.0',
       plugins: [
-        { name: 'skill-test', description: 'Un test', category: 'dev', version: '1.0.0', path: 'plugins/skill-test' }
-      ]
+        {
+          name: 'skill-test',
+          description: 'Un test',
+          category: 'dev',
+          version: '1.0.0',
+          path: 'plugins/skill-test',
+        },
+      ],
     };
     globalThis.fetch.mockResolvedValue({
       ok: true,
-      json: async () => mockData
+      json: async () => mockData,
     });
 
     const result = await fetchCatalogue();
@@ -30,7 +36,9 @@ describe('fetchCatalogue', () => {
   it('lève une erreur si le fetch échoue', async () => {
     globalThis.fetch.mockResolvedValue({ ok: false, status: 404 });
 
-    await expect(fetchCatalogue()).rejects.toThrow('Impossible de récupérer le catalogue (HTTP 404)');
+    await expect(fetchCatalogue()).rejects.toThrow(
+      'Impossible de récupérer le catalogue (HTTP 404)'
+    );
   });
 });
 
@@ -38,7 +46,7 @@ describe('filterPlugins', () => {
   const plugins = [
     { name: 'skill-seo', description: 'Expert SEO', category: 'marketing' },
     { name: 'skill-code', description: 'Code reviewer', category: 'dev' },
-    { name: 'skill-data', description: 'Data analyst', category: 'dev' }
+    { name: 'skill-data', description: 'Data analyst', category: 'dev' },
   ];
 
   it('filtre par nom', () => {

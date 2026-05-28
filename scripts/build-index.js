@@ -18,7 +18,8 @@ function buildIndex() {
     return { version: '1.0.0', updatedAt: today(), plugins: [] };
   }
 
-  const entries = fs.readdirSync(PLUGINS_DIR, { withFileTypes: true })
+  const entries = fs
+    .readdirSync(PLUGINS_DIR, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => {
       const pluginJsonPath = path.join(PLUGINS_DIR, d.name, '.claude-plugin', 'plugin.json');
@@ -33,7 +34,7 @@ function buildIndex() {
         description: meta.description || '',
         category: meta.category || 'general',
         path: `plugins/${d.name}`,
-        skills: meta.skills || []
+        skills: meta.skills || [],
       };
     })
     .filter(Boolean);

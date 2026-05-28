@@ -4,7 +4,7 @@ const { formatInfo } = require('../../lib/commands/info');
 
 const plugins = [
   { name: 'skill-seo', description: 'Expert SEO', category: 'marketing', version: '1.0.0' },
-  { name: 'skill-code', description: 'Code reviewer', category: 'dev', version: '2.1.0' }
+  { name: 'skill-code', description: 'Code reviewer', category: 'dev', version: '2.1.0' },
 ];
 
 describe('formatList', () => {
