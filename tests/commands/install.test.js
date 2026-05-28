@@ -6,6 +6,7 @@ const {
   buildDestPath,
   assertSafeRelPath,
   collectSkills,
+  linkToPlatforms,
 } = require('../../src/commands/install');
 
 // --- helpers ---
@@ -151,6 +152,115 @@ describe('resolvePluginFiles — path traversal', () => {
     expect(() =>
       resolvePluginFiles({ path: 'plugins/skill-test', skills: '../../outside/' }, '/repo')
     ).toThrow('chemin non sûr');
+  });
+});
+
+// --- linkToPlatforms ---
+
+describe('linkToPlatforms', () => {
+  let tmpDir;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ezai-link-test-'));
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  function makeSkillInAgents(agentsDir, skillName) {
+    const skillDir = path.join(agentsDir, skillName);
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), `# ${skillName}`);
+    return skillDir;
+  }
+
+  it('crée un symlink dans chaque plateforme détectée', () => {
+    const agentsDir = path.join(tmpDir, 'agents');
+    makeSkillInAgents(agentsDir, 'ezai-code-formatter');
+
+    const platformA = path.join(tmpDir, 'platformA');
+    const platformB = path.join(tmpDir, 'platformB');
+    fs.mkdirSync(platformA);
+    fs.mkdirSync(platformB);
+
+    linkToPlatforms(['ezai-code-formatter'], agentsDir, [
+      { name: 'Platform A', dir: platformA },
+      { name: 'Platform B', dir: platformB },
+    ]);
+
+    expect(fs.existsSync(path.join(platformA, 'skills', 'ezai-code-formatter', 'SKILL.md'))).toBe(
+      true
+    );
+    expect(fs.existsSync(path.join(platformB, 'skills', 'ezai-code-formatter', 'SKILL.md'))).toBe(
+      true
+    );
+  });
+
+  it("crée le dossier skills/ s'il n'existe pas", () => {
+    const agentsDir = path.join(tmpDir, 'agents');
+    makeSkillInAgents(agentsDir, 'ezai-docs-writer');
+
+    const platform = path.join(tmpDir, 'platform');
+    fs.mkdirSync(platform);
+
+    linkToPlatforms(['ezai-docs-writer'], agentsDir, [{ name: 'P', dir: platform }]);
+
+    expect(fs.existsSync(path.join(platform, 'skills', 'ezai-docs-writer', 'SKILL.md'))).toBe(true);
+  });
+
+  it('écrase un symlink existant', () => {
+    const agentsDir = path.join(tmpDir, 'agents');
+    makeSkillInAgents(agentsDir, 'ezai-code-formatter');
+
+    const platform = path.join(tmpDir, 'platform');
+    const skillsDir = path.join(platform, 'skills');
+    const dest = path.join(skillsDir, 'ezai-code-formatter');
+    fs.mkdirSync(skillsDir, { recursive: true });
+    const decoy = path.join(tmpDir, 'decoy');
+    fs.mkdirSync(decoy);
+    const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+    fs.symlinkSync(decoy, dest, symlinkType);
+
+    linkToPlatforms(['ezai-code-formatter'], agentsDir, [{ name: 'P', dir: platform }]);
+
+    expect(fs.existsSync(path.join(dest, 'SKILL.md'))).toBe(true);
+  });
+
+  it('ignore les plateformes dont le répertoire racine est absent', () => {
+    const agentsDir = path.join(tmpDir, 'agents');
+    makeSkillInAgents(agentsDir, 'ezai-code-formatter');
+
+    const missingPlatform = path.join(tmpDir, 'does-not-exist');
+
+    expect(() =>
+      linkToPlatforms(['ezai-code-formatter'], agentsDir, [{ name: 'Ghost', dir: missingPlatform }])
+    ).not.toThrow();
+
+    expect(fs.existsSync(path.join(missingPlatform, 'skills'))).toBe(false);
+  });
+
+  it("continue sur les autres plateformes si l'une échoue", () => {
+    const agentsDir = path.join(tmpDir, 'agents');
+    makeSkillInAgents(agentsDir, 'ezai-code-formatter');
+
+    const goodPlatform = path.join(tmpDir, 'good');
+    fs.mkdirSync(goodPlatform);
+
+    const badPlatform = path.join(tmpDir, 'bad');
+    fs.mkdirSync(badPlatform);
+    fs.writeFileSync(path.join(badPlatform, 'skills'), 'not-a-dir');
+
+    expect(() =>
+      linkToPlatforms(['ezai-code-formatter'], agentsDir, [
+        { name: 'Bad', dir: badPlatform },
+        { name: 'Good', dir: goodPlatform },
+      ])
+    ).not.toThrow();
+
+    expect(
+      fs.existsSync(path.join(goodPlatform, 'skills', 'ezai-code-formatter', 'SKILL.md'))
+    ).toBe(true);
   });
 });
 

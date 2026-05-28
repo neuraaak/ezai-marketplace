@@ -1,7 +1,7 @@
 ---
 name: ezai-project-quality
 description:
-  "[CLAUDE] - Testing, security, and input validation standards for Python and
+  "Testing, security, and input validation standards for Python and
   JS/TS projects. Covers test architecture (pytest / node:test / Vitest),
   property-based testing (hypothesis / fast-check), input validation at I/O
   boundaries (Pydantic / Zod), secret management, and production hardening.

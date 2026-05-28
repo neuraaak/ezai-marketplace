@@ -1,7 +1,7 @@
 ---
 name: ezai-project-performance
 description:
-  "[CLAUDE] - Concurrency, async patterns, and performance optimization for
+  "Concurrency, async patterns, and performance optimization for
   Python and JS/TS projects. Covers async/await model selection, threading vs
   multiprocessing (Python 3.14+ GIL-less), Web Workers (JS), generator patterns
   for large datasets, and profiling guidance. Load from persona-senior-dev, or

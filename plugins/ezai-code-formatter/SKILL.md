@@ -1,7 +1,7 @@
 ---
 name: ezai-code-formatter
 description:
-  "[CLAUDE] - Apply this skill when a source file's visual structure needs to match
+  "Apply this skill when a source file's visual structure needs to match
   project conventions — not its logic. This means: adding section header comments (IMPORTS,
   CONSTANTS, CLASSES, FUNCTIONS), inserting `# /////` or `# ---` separator lines, sorting
   imports into Standard → third-party → local groups, or reorganizing class members
