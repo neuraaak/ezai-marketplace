@@ -30,17 +30,24 @@ function buildIndex() {
       const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
       return {
         name: meta.name,
+        source: `./plugins/${d.name}`,
+        path: `plugins/${d.name}`,
         version: meta.version || '1.0.0',
         description: meta.description || '',
         author: meta.author || {},
         category: meta.category || 'general',
-        path: `plugins/${d.name}`,
         skills: meta.skills || 'skills/',
       };
     })
     .filter(Boolean);
 
-  return { version: '1.0.0', updatedAt: today(), plugins: entries };
+  return {
+    name: 'ezai-marketplace',
+    owner: { name: 'ezai' },
+    version: '1.0.0',
+    updatedAt: today(),
+    plugins: entries,
+  };
 }
 
 const catalogue = buildIndex();
