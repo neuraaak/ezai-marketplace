@@ -32,9 +32,10 @@ function buildIndex() {
         name: meta.name,
         version: meta.version || '1.0.0',
         description: meta.description || '',
+        author: meta.author || {},
         category: meta.category || 'general',
         path: `plugins/${d.name}`,
-        skills: meta.skills || [],
+        skills: meta.skills || 'skills/',
       };
     })
     .filter(Boolean);

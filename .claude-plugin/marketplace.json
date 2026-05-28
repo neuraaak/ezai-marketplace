@@ -1,5 +1,17 @@
 {
   "version": "1.0.0",
   "updatedAt": "2026-05-28",
-  "plugins": []
+  "plugins": [
+    {
+      "name": "ezai-dev-skills",
+      "version": "1.0.0",
+      "description": "Bundle de 7 skills pour développeurs senior (Python / JS/TS) : persona, architecture, qualité, config, performance, formatage, documentation.",
+      "author": {
+        "name": "ezai"
+      },
+      "category": "development",
+      "path": "plugins/ezai-dev-skills",
+      "skills": "skills/"
+    }
+  ]
 }
