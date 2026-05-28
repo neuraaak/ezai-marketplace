@@ -7,6 +7,7 @@ const {
   assertSafeRelPath,
   collectSkills,
   linkToPlatforms,
+  resolvePlatforms,
 } = require('../../src/commands/install');
 
 // --- helpers ---
@@ -261,6 +262,35 @@ describe('linkToPlatforms', () => {
     expect(
       fs.existsSync(path.join(goodPlatform, 'skills', 'ezai-code-formatter', 'SKILL.md'))
     ).toBe(true);
+  });
+});
+
+// --- resolvePlatforms ---
+
+describe('resolvePlatforms', () => {
+  it('retourne toutes les plateformes par défaut (aucun flag)', () => {
+    const result = resolvePlatforms({});
+    expect(result.map((p) => p.name)).toEqual(['Claude Code', 'Gemini CLI', 'Copilot']);
+  });
+
+  it('filtre uniquement Claude Code avec --claude', () => {
+    const result = resolvePlatforms({ claude: true });
+    expect(result.map((p) => p.name)).toEqual(['Claude Code']);
+  });
+
+  it('filtre uniquement Gemini CLI avec --gemini', () => {
+    const result = resolvePlatforms({ gemini: true });
+    expect(result.map((p) => p.name)).toEqual(['Gemini CLI']);
+  });
+
+  it('filtre uniquement Copilot avec --copilot', () => {
+    const result = resolvePlatforms({ copilot: true });
+    expect(result.map((p) => p.name)).toEqual(['Copilot']);
+  });
+
+  it('combine plusieurs flags', () => {
+    const result = resolvePlatforms({ claude: true, copilot: true });
+    expect(result.map((p) => p.name)).toEqual(['Claude Code', 'Copilot']);
   });
 });
 

@@ -104,44 +104,66 @@ function buildDestPath(pluginName, destRoot) {
   return path.join(base, '.agents', pluginName);
 }
 
+function resolvePlatforms(options = {}) {
+  const deployAll = !options.claude && !options.gemini && !options.copilot;
+  return DEFAULT_PLATFORMS.filter(({ name }) => {
+    if (deployAll) return true;
+    if (options.claude && name === 'Claude Code') return true;
+    if (options.gemini && name === 'Gemini CLI') return true;
+    if (options.copilot && name === 'Copilot') return true;
+    return false;
+  });
+}
+
 async function runInstall(pluginName, options, catalogue) {
   const { plugins } = await catalogue.fetchCatalogue();
-  const plugin = plugins.find((p) => p.name === pluginName);
 
-  if (!plugin) {
+  const targets = pluginName ? plugins.filter((p) => p.name === pluginName) : plugins;
+
+  if (pluginName && targets.length === 0) {
     console.error(`Plugin "${pluginName}" introuvable dans le catalogue.`);
     console.error('Utilisez `ezai list` pour voir les plugins disponibles.');
     process.exit(1);
   }
 
-  const pluginRelPath = (plugin.source || plugin.path || '').replace(/^\.\//, '');
-  assertSafeRelPath(pluginRelPath);
-  const repoRoot = path.resolve(__dirname, '..', '..');
-  const pluginDir = path.join(repoRoot, pluginRelPath);
   const baseDestRoot = options.dest || process.cwd();
+  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
+  const platformDirs = resolvePlatforms(options);
+  const installedNames = [];
 
-  const destDir = path.join(baseDestRoot, '.agents', 'skills', pluginName);
-  fs.mkdirSync(destDir, { recursive: true });
+  for (const plugin of targets) {
+    const rawSource = plugin.source;
+    const pluginRelPath = (
+      typeof rawSource === 'string' ? rawSource : rawSource?.path || plugin.path || ''
+    ).replace(/^\.\//, '');
+    assertSafeRelPath(pluginRelPath);
+    const repoRoot = path.resolve(__dirname, '..', '..');
+    const pluginDir = path.join(repoRoot, pluginRelPath);
+    const destDir = path.join(agentsSkillsDir, plugin.name);
+    fs.mkdirSync(destDir, { recursive: true });
 
-  const files = [];
-  collectFiles(pluginDir, pluginDir, files, ['.claude-plugin']);
+    const files = [];
+    collectFiles(pluginDir, pluginDir, files, ['.claude-plugin']);
 
-  for (const { src, dest } of files) {
-    const destFile = path.join(destDir, dest);
-    const resolved = path.resolve(destFile);
-    if (!resolved.startsWith(path.resolve(destDir) + path.sep)) {
-      throw new Error(`tentative d'écriture hors du répertoire cible : ${resolved}`);
+    for (const { src, dest } of files) {
+      const destFile = path.join(destDir, dest);
+      const resolved = path.resolve(destFile);
+      if (!resolved.startsWith(path.resolve(destDir) + path.sep)) {
+        throw new Error(`tentative d'écriture hors du répertoire cible : ${resolved}`);
+      }
+      fs.mkdirSync(path.dirname(destFile), { recursive: true });
+      fs.copyFileSync(src, destFile);
+      console.log(`  + ${plugin.name}/${dest}`);
     }
-    fs.mkdirSync(path.dirname(destFile), { recursive: true });
-    fs.copyFileSync(src, destFile);
-    console.log(`  + ${pluginName}/${dest}`);
+    installedNames.push(plugin.name);
   }
 
-  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
   console.log('');
-  linkToPlatforms([pluginName], agentsSkillsDir);
+  linkToPlatforms(installedNames, agentsSkillsDir, platformDirs);
 
-  console.log(`Plugin "${pluginName}" installé dans ${agentsSkillsDir}\n`);
+  const label =
+    installedNames.length === 1 ? `"${installedNames[0]}"` : `${installedNames.length} plugins`;
+  console.log(`${label} installé(s) dans ${agentsSkillsDir}\n`);
 }
 
 module.exports = {
@@ -151,4 +173,5 @@ module.exports = {
   runInstall,
   collectSkills,
   linkToPlatforms,
+  resolvePlatforms,
 };
