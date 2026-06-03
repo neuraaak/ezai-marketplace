@@ -11,7 +11,7 @@ description:
   'harden this', 'how should I test', 'is this input sanitized'."
 ---
 
-Testing, security, and quality standards. Read `references/index.md` to confirm the language subdirectory, then load the relevant file.
+Testing, security, and quality standards. If a tool to read files is available, read `references/index.md` to determine the language subdirectory, then read the relevant quality file. If no file-reading tool is available, ask the user which language applies and proceed with the cross-language principles below. If any referenced file cannot be read, notify the user that the language-specific standards file is unavailable and fall back to the cross-language principles in this prompt.
 
 ## Language routing
 
@@ -19,6 +19,8 @@ Testing, security, and quality standards. Read `references/index.md` to confirm 
 | :---------------------- | :--------------------------------- |
 | Python                  | `references/python/quality.md`     |
 | JavaScript / TypeScript | `references/javascript/quality.md` |
+
+Mixed (Python + JS/TS) — load both `references/python/quality.md` and `references/javascript/quality.md` and apply each to its respective files.
 
 ## Cross-language principles
 

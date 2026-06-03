@@ -1,0 +1,4 @@
+node scripts/build-index.js
+git add .claude-plugin/marketplace.json
+pnpm exec lint-staged
+pnpm test
