@@ -12,7 +12,7 @@ Load this file when writing or auditing docstrings, checking emoji usage, or rev
 - **EMOJI:** Allowed in nav titles, H2–H6 section headings, and admonition titles. Never in prose sentences, docstrings, or code comments.
 - **CLI:** Treat CLI as a Reference sub-section (`cli/`). One page per command group for large CLIs.
 - **EXAMPLES:** `examples/` is a standalone section, not Diátaxis. Each example is one H2, self-contained, copy-paste ready.
-- **BADGES:** Place on `docs/index.md` only, on a single line after H1, using shields.io `flat` style.
+- **BADGES:** Place on both `README.md` and `docs/index.md`, immediately after H1, using shields.io `flat` style. Keep the two blocks in sync. See `common/readme.md` for the canonical badge set.
 
 ---
 
@@ -122,30 +122,32 @@ Never inside docstrings — mkdocstrings does not interpret Material annotations
 Allowed in **nav titles**, **section headings (H2–H6)**, and **admonition titles** only.
 Never in prose sentences, docstrings, or code comments.
 
+> **Scope:** The table below governs **documentation pages** (`docs/`). The `README.md` has its own section emoji set — see the section structure table in `common/readme.md`, which is authoritative for the README. Where the two differ (e.g. Key Features `🎯` in README vs `✨` on the homepage), do not reconcile one against the other.
+
 ### Standard emoji set for section headings
 
 | Section type       | Emoji | Usage                                     |
 | :----------------- | :---- | :---------------------------------------- |
-| Quick start        | 🚀    | Installation + minimal usage on homepage  |
-| Key features       | ✨    | Feature list on homepage                  |
-| Documentation nav  | 📚    | Navigation table on homepage              |
-| Requirements       | 📋    | Dependency / Python version list          |
-| License            | ⚖️    | License reference                         |
-| Prerequisites      | 🔧    | Required knowledge and tools              |
-| Steps              | 📝    | Numbered steps in How-To / Tutorial       |
-| Result / outcome   | ✅    | Success state at end of guide or tutorial |
-| Next steps         | ➡️    | Links to related pages                    |
-| CLI usage          | 💻    | Command syntax block                      |
-| CLI options        | ⚙️    | Option/flag tables                        |
-| CLI commands       | 📋    | Command listing tables                    |
-| CLI examples       | 🧪    | Short CLI invocation snippets             |
-| Code examples      | 🚀    | First / basic example block               |
-| Additional example | 💡    | Second and subsequent example blocks      |
-| Test suite         | 🧪    | Running tests section                     |
-| Coverage           | 📊    | Coverage reporting section                |
-| New test           | ✏️    | Writing tests section                     |
-| Modules (API)      | 📦    | Module listing table in `api/index.md`    |
-| Full reference     | 🔍    | Link to mkdocstrings auto-dump            |
+| Quick start        | 🚀     | Installation + minimal usage on homepage  |
+| Key features       | ✨     | Feature list on homepage                  |
+| Documentation nav  | 📚     | Navigation table on homepage              |
+| Requirements       | 📋     | Dependency / Python version list          |
+| License            | ⚖️     | License reference                         |
+| Prerequisites      | 🔧     | Required knowledge and tools              |
+| Steps              | 📝     | Numbered steps in How-To / Tutorial       |
+| Result / outcome   | ✅     | Success state at end of guide or tutorial |
+| Next steps         | ➡️     | Links to related pages                    |
+| CLI usage          | 💻     | Command syntax block                      |
+| CLI options        | ⚙️     | Option/flag tables                        |
+| CLI commands       | 📋     | Command listing tables                    |
+| CLI examples       | 🧪     | Short CLI invocation snippets             |
+| Code examples      | 🚀     | First / basic example block               |
+| Additional example | 💡     | Second and subsequent example blocks      |
+| Test suite         | 🧪     | Running tests section                     |
+| Coverage           | 📊     | Coverage reporting section                |
+| New test           | ✏️     | Writing tests section                     |
+| Modules (API)      | 📦     | Module listing table in `api/index.md`    |
+| Full reference     | 🔍     | Link to mkdocstrings auto-dump            |
 
 ---
 
@@ -170,8 +172,8 @@ Never in prose sentences, docstrings, or code comments.
 - `api/index.md` is a human-curated navigation index; `api/reference/index.md` is the full mkdocstrings dump.
 - `cli/` contains static Reference pages — no instructions, no narrative.
 - `examples/` contains self-contained snippets; each example is one H2 section.
-- `docs/index.md` carries the badges block, a quick-start snippet, and the navigation table.
+- `README.md` and `docs/index.md` both carry the badges block (kept in sync); the homepage also has a quick-start snippet and the navigation table.
 - Emojis appear in nav titles, H2–H6 headings, and admonition titles only — never in prose.
-- All headings in sentence case.
+- All headings in sentence case, **except `README.md` headings**, which use Title Case (see `common/readme.md`).
 - No step-by-step instructions appear in Explanation pages.
 - No theory or "why" blocks appear inside How-To steps.

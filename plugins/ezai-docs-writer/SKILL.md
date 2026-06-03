@@ -45,6 +45,13 @@ Within each language subdirectory, load only the file(s) needed:
 
 For JS/TS page templates, also load `references/python/quadrants-templates.md` — templates are language-agnostic.
 
+**Common** (`references/common/`):
+
+| File                | Load when…                                                |
+| :------------------ | :-------------------------------------------------------- |
+| `readme.md`         | Generating or auditing a `README.md`                      |
+| `badge-registry.md` | Selecting tool badges (linter, type checker, pkg manager) |
+
 Most tasks need only one file. Full docs audit → load all files for the language.
 
 ## Workflow
@@ -55,6 +62,8 @@ Most tasks need only one file. Full docs audit → load all files for the langua
 
 2. **Bootstrap context**
    - Load the relevant reference file(s) for the detected language.
+   - If the task targets a `README.md`, also load `references/common/readme.md`.
+   - When emitting a badge block (README or `docs/index.md`), also load `references/common/badge-registry.md` to map detected tools to their badges.
    - Read the project's doc config file (`mkdocs.yml`, `docusaurus.config.js`, etc.) and package manifest to understand the public API and nav layout.
 
 3. **Classify the request (Diátaxis)**
