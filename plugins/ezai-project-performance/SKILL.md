@@ -4,7 +4,7 @@ description:
   "Concurrency, async patterns, and performance optimization for
   Python and JS/TS projects. Covers async/await model selection, threading vs
   multiprocessing (Python 3.14+ GIL-less), Web Workers (JS), generator patterns
-  for large datasets, and profiling guidance. Load from persona-senior-dev, or
+  for large datasets, and profiling guidance. Load from ezai-persona-senior-dev, or
   invoke directly for performance tasks.
 
   Triggers on: 'this is slow', 'memory issue', 'concurrent requests', 'async

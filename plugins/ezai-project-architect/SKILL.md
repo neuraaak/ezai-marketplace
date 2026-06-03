@@ -4,7 +4,7 @@ description:
   "Architecture and design standards for Python and JS/TS projects.
   Covers module structure, public API surface, design patterns (Repository,
   Factory, Composition), Hexagonal architecture (Ports & Adapters), and type
-  system contracts. Load this sub-skill from persona-senior-dev, or invoke
+  system contracts. Load this sub-skill from ezai-persona-senior-dev, or invoke
   directly when the task is purely about design: defining a class hierarchy,
   structuring a new module, choosing between patterns, or designing a Port interface.
 
@@ -27,6 +27,6 @@ These apply regardless of language:
 
 - **Composition over inheritance** — prefer small, composable units over deep class hierarchies.
 - **Explicit public surface** — always define what is public and what is internal.
-- **Ports & Adapters** — when Hexagonal applies (see Watchguard in `persona-senior-dev`), define contracts as structural interfaces, not base classes.
+- **Ports & Adapters** — when Hexagonal applies (see Watchguard in `ezai-persona-senior-dev`), define contracts as structural interfaces, not base classes.
 - **Repository pattern** — abstract all data access behind a repository interface; business logic never imports a DB driver directly.
 - **Feature-based modules** — organize by business domain, not technical type (`user/`, not `models/`+`controllers/`).
