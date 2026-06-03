@@ -4,7 +4,7 @@ description:
   "Toolchain setup, project configuration, and infrastructure
   standards for Python and JS/TS projects. Covers pyproject.toml / package.json
   structure, build backends, linters, type checkers, Docker multi-stage builds,
-  lockfiles, and observability setup. Load from persona-senior-dev, or invoke
+  lockfiles, and observability setup. Load from ezai-persona-senior-dev, or invoke
   directly for setup tasks.
 
   Triggers on: 'set up the project', 'configure ruff/ty/uv', 'write a Dockerfile',

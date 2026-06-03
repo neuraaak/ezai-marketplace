@@ -1,7 +1,5 @@
 # Config & Toolchain — JavaScript / TypeScript
 
-Sources: `js-core-syntax.instructions.md`, `core-ops-infrastructure.instructions.md`
-
 ## Rules
 
 - **VERSION:** Target ES2026 / Node.js 24+ minimum.

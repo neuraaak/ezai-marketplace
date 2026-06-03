@@ -1,7 +1,5 @@
 # Quality — JavaScript / TypeScript
 
-Sources: `js-testing-quality.instructions.md`, `js-security-ops.instructions.md`, `core-security-sanitization.instructions.md`
-
 ## Test framework
 
 Prefer `node:test` (native, zero dependencies). Use `Vitest` for Vite-based projects.

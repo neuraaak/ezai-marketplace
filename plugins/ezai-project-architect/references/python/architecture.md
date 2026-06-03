@@ -1,7 +1,5 @@
 # Architecture & Design — Python
 
-Sources: `python-architecture-design.instructions.md`, `python-typing.instructions.md`, `core-hexagonal-architecture.instructions.md`
-
 ## Visibility & API surface
 
 | Prefix   | Meaning   | Use for                                               |

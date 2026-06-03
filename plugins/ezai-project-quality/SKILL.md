@@ -5,7 +5,7 @@ description:
   JS/TS projects. Covers test architecture (pytest / node:test / Vitest),
   property-based testing (hypothesis / fast-check), input validation at I/O
   boundaries (Pydantic / Zod), secret management, and production hardening.
-  Load from persona-senior-dev, or invoke directly for quality-specific tasks.
+  Load from ezai-persona-senior-dev, or invoke directly for quality-specific tasks.
 
   Triggers on: 'write tests for', 'add validation for', 'security review',
   'harden this', 'how should I test', 'is this input sanitized'."
