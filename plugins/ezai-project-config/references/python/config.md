@@ -1,7 +1,5 @@
 # Config & Toolchain — Python
 
-Sources: `python-core.instructions.md`, `python-project-config.instructions.md`, `core-ops-infrastructure.instructions.md`
-
 ## Rules
 
 - **VENV:** Always `.venv`. Never install globally.

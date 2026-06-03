@@ -1,6 +1,3 @@
-[Source: src/shared/instructions/languages/javascript/js-style-layout.instructions.md — section: Docstrings]
-[Skill location: agents/claude/skills/docs-writer/references/javascript/standards.md]
-
 # JavaScript/TypeScript Documentation Standards
 
 Load this file when writing or auditing JSDoc docstrings, or reviewing doc quality for JS/TS projects.
@@ -103,10 +100,10 @@ Typical JS/TS doc site stack: **VitePress** (Vue-powered, fast) or **Docusaurus*
 
 ## Anti-Patterns
 
-| Anti-pattern | Problem | Fix |
-| :--- | :--- | :--- |
-| `@param {any} foo` in TypeScript | Defeats type safety | Use TypeScript signature types |
-| `{type}` annotations in TypeScript JSDoc | Redundant, diverges from source | Remove `{type}` from `@param` in `.ts` files |
-| Tutorial that explains "why" at each step | Wrong quadrant, cognitive overload | Move theory to Explanation page |
-| Reference page with chatty prose | Slows down lookup | Trim to facts; link to Explanation for context |
-| One page covering all four quadrant types | Navigation impossible | Decompose into separate pages |
+| Anti-pattern                              | Problem                            | Fix                                            |
+| :---------------------------------------- | :--------------------------------- | :--------------------------------------------- |
+| `@param {any} foo` in TypeScript          | Defeats type safety                | Use TypeScript signature types                 |
+| `{type}` annotations in TypeScript JSDoc  | Redundant, diverges from source    | Remove `{type}` from `@param` in `.ts` files   |
+| Tutorial that explains "why" at each step | Wrong quadrant, cognitive overload | Move theory to Explanation page                |
+| Reference page with chatty prose          | Slows down lookup                  | Trim to facts; link to Explanation for context |
+| One page covering all four quadrant types | Navigation impossible              | Decompose into separate pages                  |

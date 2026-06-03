@@ -1,7 +1,5 @@
 # Architecture & Design — JavaScript / TypeScript
 
-Sources: `js-architecture-design.instructions.md`, `js-typing-ts6.instructions.md`
-
 ## Module organization
 
 - **ESM-first:** `"type": "module"` in `package.json`. Always.

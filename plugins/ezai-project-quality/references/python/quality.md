@@ -1,7 +1,5 @@
 # Quality — Python
 
-Sources: `python-testing-quality.instructions.md`, `python-security-ops.instructions.md`, `core-security-sanitization.instructions.md`
-
 ## Test structure
 
 ```txt
