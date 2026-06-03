@@ -11,7 +11,7 @@ description:
   'set up pre-commit', 'configure tsconfig', 'add OpenTelemetry', 'lockfile issue'."
 ---
 
-Project toolchain, configuration, and infrastructure standards. Read `references/index.md` to confirm the language subdirectory, then load the relevant file.
+Project toolchain, configuration, and infrastructure standards. Use the language routing table below to select the relevant reference file. Only consult `references/index.md` if the language cannot be determined from the user's request or the routing table. If `references/index.md` or the routed config file is not available in context, notify the user with: "I could not locate [filename]. Please provide it or confirm the language so I can proceed."
 
 ## Language routing
 
@@ -19,6 +19,8 @@ Project toolchain, configuration, and infrastructure standards. Read `references
 | :---------------------- | :-------------------------------- |
 | Python                  | `references/python/config.md`     |
 | JavaScript / TypeScript | `references/javascript/config.md` |
+
+For monorepos or projects using both Python and JS/TS, load both `references/python/config.md` and `references/javascript/config.md` and apply each to its respective subdirectory.
 
 ## Cross-language infrastructure principles
 

@@ -20,6 +20,8 @@ You are an expert in open-source library documentation (2026), proficient in MkD
 
 First, read `references/index.md` to identify the language subdirectory and which files to load.
 
+If `references/index.md` is not found, infer the language subdirectory from file extensions in the project root and proceed. Note the missing index file in the `<thinking>` block.
+
 Then load only what the task requires:
 
 | Language              | Subdirectory             |
@@ -47,33 +49,43 @@ For JS/TS page templates, also load `references/python/quadrants-templates.md` �
 
 **Common** (`references/common/`):
 
-| File                | Load when…                                                |
-| :------------------ | :-------------------------------------------------------- |
-| `readme.md`         | Generating or auditing a `README.md`                      |
-| `badge-registry.md` | Selecting tool badges (linter, type checker, pkg manager) |
+| File       | Load when…                           |
+| :--------- | :----------------------------------- |
+| `readme.md` | Generating or auditing a `README.md` |
 
-Most tasks need only one file. Full docs audit → load all files for the language.
+**Badges** — load the pair matching the project:
+
+- `github/badge-registry.md` + `python/badge-registry.md` (Python + GitHub)
+- `gitlab/badge-registry.md` + `python/badge-registry.md` (Python + GitLab)
+- `github/badge-registry.md` + `javascript/badge-registry.md` (JS/TS + GitHub)
+- `gitlab/badge-registry.md` + `javascript/badge-registry.md` (JS/TS + GitLab)
+
+Most tasks need only one file. Full docs audit → load all files for the language. A full docs audit is defined as a request that asks to review, audit, or assess the entire documentation site rather than a specific page or section. For targeted audits of a single page or type, load only the relevant file.
 
 ## Workflow
 
 1. **Detect the language**
    - Identify the project language from file extensions, `pyproject.toml`, `package.json`, etc.
    - Read `references/index.md` to confirm the subdirectory and available files.
+    - Detect the documentation language (French or English) from existing `.md` files or explicit user instruction. Generate all documentation content in the detected language. Default to English if undetectable.
 
 2. **Bootstrap context**
    - Load the relevant reference file(s) for the detected language.
    - If the task targets a `README.md`, also load `references/common/readme.md`.
-   - When emitting a badge block (README or `docs/index.md`), also load `references/common/badge-registry.md` to map detected tools to their badges.
+   - When emitting a badge block (README or `docs/index.md`), detect the platform (GitHub vs GitLab) and load the matching pair: `{platform}/badge-registry.md` + `{language}/badge-registry.md`.
    - Read the project's doc config file (`mkdocs.yml`, `docusaurus.config.js`, etc.) and package manifest to understand the public API and nav layout.
+    - If neither `mkdocs.yml` nor `docusaurus.config.js` is present, look for `conf.py` (Sphinx) or `vitepress.config.ts` (VitePress). If no recognized config is found, note this in the `<thinking>` block and proceed based on the directory structure alone, flagging that nav validation is unavailable.
 
 3. **Classify the request (Diátaxis)**
    - Use `<thinking>` to assign exactly one type: Tutorial, How-To, Reference (API/CLI), Examples, or Explanation.
+    - Examples: a standalone, minimal code snippet page that demonstrates a single feature without teaching or guiding; distinct from Tutorial (learning-oriented, multi-step) and How-To (goal-oriented, assumes competence).
+    - If the content spans two quadrants equally, prefer the type matching the user's stated goal (learning -> Tutorial, task completion -> How-To). If still ambiguous, ask the user to confirm before generating.
    - Confirm the target file path matches the nav structure from the quadrants-templates file.
 
 4. **Generate content**
    - Apply the page template for the identified type.
    - Write docstrings in the project's canonical style (Google-style for Python — types omitted in body).
-   - Apply the standard emoji set to H2–H6 headings only — never in prose or docstrings.
+    - Apply the standard emoji set to nav titles, H2–H6 headings, and admonition titles only — never in prose or docstrings.
    - Ensure every code example is self-contained and runnable.
    - For `docs/index.md`: include the badges block and navigation table.
 
@@ -111,6 +123,7 @@ Rules: first line is a complete sentence ending with a period. Use `Args`, `Retu
 Start with a `<thinking>` block identifying:
 
 - The detected language and subdirectory used
+- The detected documentation language (French or English)
 - The Diátaxis type
 - The target file path
 - Which reference file(s) loaded
