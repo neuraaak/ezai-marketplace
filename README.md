@@ -32,15 +32,15 @@ Skills are copied to `~/.agents/skills/<name>/` and symlinked into each platform
 
 ## 📦 Available skills
 
-| Skill | Description |
-| :---- | :---------- |
-| `ezai-code-formatter` | Apply visual source structure: section headers, import ordering, spacing — without touching logic |
-| `ezai-docs-writer` | Produce MkDocs pages, API references, changelogs, and technical writing |
-| `ezai-persona-senior-dev` | Elite Senior Developer persona for enterprise-grade Python and JS/TS projects |
-| `ezai-project-architect` | Architecture and design standards: module structure, public API surface, design patterns |
-| `ezai-project-config` | Toolchain setup and configuration: pyproject.toml, package.json, linters, CI/CD |
-| `ezai-project-performance` | Concurrency, async patterns, profiling, and caching strategies |
-| `ezai-project-quality` | Testing, security, and input validation standards |
+| Skill                      | Description                                                                                       |
+| :------------------------- | :------------------------------------------------------------------------------------------------ |
+| `ezai-code-formatter`      | Apply visual source structure: section headers, import ordering, spacing — without touching logic |
+| `ezai-docs-writer`         | Produce MkDocs pages, API references, changelogs, and technical writing                           |
+| `ezai-persona-senior-dev`  | Elite Senior Developer persona for enterprise-grade Python and JS/TS projects                     |
+| `ezai-project-architect`   | Architecture and design standards: module structure, public API surface, design patterns          |
+| `ezai-project-config`      | Toolchain setup and configuration: pyproject.toml, package.json, linters, CI/CD                   |
+| `ezai-project-performance` | Concurrency, async patterns, profiling, and caching strategies                                    |
+| `ezai-project-quality`     | Testing, security, and input validation standards                                                 |
 
 ## 💻 CLI reference
 
@@ -87,12 +87,12 @@ ezai install --claude
 ezai install ezai-docs-writer --gemini --copilot
 ```
 
-| Option | Description |
-| :----- | :---------- |
+| Option          | Description                                                       |
+| :-------------- | :---------------------------------------------------------------- |
 | `--dest <path>` | Override the base destination directory (default: home directory) |
-| `--claude` | Deploy symlinks to `~/.claude/skills/` only |
-| `--gemini` | Deploy symlinks to `~/.gemini/skills/` only |
-| `--copilot` | Deploy symlinks to `~/.copilot/skills/` only |
+| `--claude`      | Deploy symlinks to `~/.claude/skills/` only                       |
+| `--gemini`      | Deploy symlinks to `~/.gemini/skills/` only                       |
+| `--copilot`     | Deploy symlinks to `~/.copilot/skills/` only                      |
 
 When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
 
@@ -111,18 +111,18 @@ ezai uninstall ezai-code-formatter
 ezai uninstall ezai-code-formatter --claude
 ```
 
-| Option | Description |
-| :----- | :---------- |
+| Option          | Description                                           |
+| :-------------- | :---------------------------------------------------- |
 | `--dest <path>` | Override the base directory (default: home directory) |
-| `--claude` | Remove symlinks from `~/.claude/skills/` only |
-| `--gemini` | Remove symlinks from `~/.gemini/skills/` only |
-| `--copilot` | Remove symlinks from `~/.copilot/skills/` only |
+| `--claude`      | Remove symlinks from `~/.claude/skills/` only         |
+| `--gemini`      | Remove symlinks from `~/.gemini/skills/` only         |
+| `--copilot`     | Remove symlinks from `~/.copilot/skills/` only        |
 
 Skills not present in the marketplace catalogue are never touched, regardless of what is found in `~/.agents/skills/`.
 
 ## ⚙️ How it works
 
-```
+```text
 npm install -g ezai-marketplace
         │
         ▼

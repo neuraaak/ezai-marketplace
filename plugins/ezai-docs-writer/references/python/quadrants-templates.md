@@ -260,7 +260,7 @@ The homepage combines elements from all quadrants but belongs to none.
 ```markdown
 # Project name
 
-[badges line]
+[badges block — same set as README.md, see `common/readme.md`]
 
 **project-name** — one-sentence description.
 
