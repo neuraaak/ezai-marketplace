@@ -41,6 +41,19 @@ For page templates (Tutorial, How-To, Reference, Explanation, CLI, Examples, Hom
 
 ---
 
+---
+
+## Common (`common/`)
+
+Language-agnostic references shared across all projects.
+
+| File                       | Load when…                                                          | Contents                                                                                                                                                |
+| :------------------------- | :------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `common/readme.md`         | Generating or auditing a `README.md`                                | Project profile (public-oss vs internal), badges block (GitHub vs GitLab, Python vs JS/TS), section structure with emoji, docs nav table, anti-patterns |
+| `common/badge-registry.md` | Selecting tool badges (linter, type checker, package manager, etc.) | Catalog of tool badges by role for Python and JS/TS, with detection signals and logo slugs                                                              |
+
+---
+
 ## Adding a new language
 
 1. Create a `<language>/` subdirectory here.
