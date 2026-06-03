@@ -10,6 +10,17 @@
   "updatedAt": "2026-06-03",
   "plugins": [
     {
+      "name": "ezai-cicd-expert",
+      "description": "CI/CD pipeline expert for GitHub Actions and GitLab CI on Python and JS/TS projects: write, audit, and debug pipelines, plus strategy on caching, secrets, environments, and deploy gates.",
+      "source": "./plugins/ezai-cicd-expert",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
       "name": "ezai-code-formatter",
       "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
       "source": "./plugins/ezai-code-formatter",

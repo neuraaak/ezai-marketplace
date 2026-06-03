@@ -50,56 +50,18 @@ The badges block appears in **two places** in every project — keep them in syn
 
 Use `style=flat` for all badges.
 
-### GitHub projects
+Badge data lives in two registries — load the pair that matches the project:
 
-```markdown
-[![PyPI version](https://img.shields.io/pypi/v/{pkg}?style=flat&logo=pypi&logoColor=white)](https://pypi.org/project/{pkg}/)
-[![Python versions](https://img.shields.io/pypi/pyversions/{pkg}?style=flat&logo=python&logoColor=white)](https://pypi.org/project/{pkg}/)
-[![PyPI status](https://img.shields.io/pypi/status/{pkg}?style=flat&logo=pypi&logoColor=white)](https://pypi.org/project/{pkg}/)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/{owner}/{repo}/blob/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/{owner}/{repo}/{workflow}.yml?style=flat&label=publish&logo=githubactions&logoColor=white)](https://github.com/{owner}/{repo}/actions/workflows/{workflow}.yml)
-[![Docs](https://img.shields.io/badge/docs-Github%20Pages-blue?style=flat&logo=materialformkdocs&logoColor=white)](https://{owner}.github.io/{repo}/)
-```
+- **Python + GitHub** → `github/badge-registry.md` + `python/badge-registry.md`
+- **Python + GitLab** → `gitlab/badge-registry.md` + `python/badge-registry.md`
+- **JS/TS + GitHub** → `github/badge-registry.md` + `javascript/badge-registry.md`
+- **JS/TS + GitLab** → `gitlab/badge-registry.md` + `javascript/badge-registry.md`
 
-These six are the **core badges** — present on (almost) every project.
+**Platform registry** (`github/` or `gitlab/`) — core badges: CI, Docs, License (platform-specific URLs), and internal-profile static variants.
 
-> **Tool badges** (package manager, linter, formatter, type checker, test runner, coverage, bundler) are project-specific. Do not hard-code any stack. Detect which tools the project actually uses, then emit their badges from **`common/badge-registry.md`**. A project that configures none of them gets none.
+**Language registry** (`python/` or `javascript/`) — version badges (PyPI or npm) + tool badges (package manager, linter, formatter, type checker, test runner, etc.), with detection signals.
 
-### GitLab projects
-
-Replace the CI and Docs badges — all others are identical:
-
-```markdown
-[![CI](https://img.shields.io/gitlab/pipeline-status/{owner}/{repo}?branch=main&style=flat&logo=gitlab&logoColor=white)](https://gitlab.com/{owner}/{repo}/-/pipelines)
-[![Docs](https://img.shields.io/badge/docs-GitLab%20Pages-blue?style=flat&logo=gitlab&logoColor=white)](https://{owner}.gitlab.io/{repo}/)
-```
-
-### JavaScript/TypeScript projects (npm)
-
-Replace the PyPI badges with npm equivalents:
-
-```markdown
-[![npm version](https://img.shields.io/npm/v/{pkg}?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/package/{pkg})
-[![node versions](https://img.shields.io/node/v/{pkg}?style=flat&logo=nodedotjs&logoColor=white)](https://www.npmjs.com/package/{pkg})
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/{owner}/{repo}/blob/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/{owner}/{repo}/{workflow}.yml?style=flat&label=ci&logo=githubactions&logoColor=white)](https://github.com/{owner}/{repo}/actions)
-[![Docs](https://img.shields.io/badge/docs-Github%20Pages-blue?style=flat&logo=readme&logoColor=white)](https://{owner}.github.io/{repo}/)
-```
-
-### Internal profile — static badges only
-
-A private registry is unreachable by shields.io, so **never use dynamic version/status badges** — they render as `invalid` or leak internal endpoints. Use static badges with hard-coded values, and drop any badge that would query a public service (PyPI/npm version, PyPI status).
-
-Keep only badges whose value is known at write time:
-
-```markdown
-[![version](https://img.shields.io/badge/version-{version}-blue?style=flat)](#)
-[![python](https://img.shields.io/badge/python-3.11%2B-blue?style=flat&logo=python&logoColor=white)](#)
-[![license](https://img.shields.io/badge/license-Proprietary-red?style=flat)](#)
-[![status](https://img.shields.io/badge/status-internal-lightgrey?style=flat)](#)
-```
-
-Update `{version}` manually on each release — it does not auto-refresh. Tool badges (`uv`/`ruff`/`ty`) follow the same conditional rule as above and stay dynamic (they point at public tool repos, not your registry).
+Emit only badges whose detection condition is met. Never hard-code a tool stack.
 
 ---
 
