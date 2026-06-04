@@ -27,7 +27,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
       try {
         if (fs.existsSync(dest)) {
           fs.rmSync(dest, { recursive: true, force: true });
-          console.log(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
+          console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
         }
       } catch (err) {
         console.warn(
@@ -83,11 +83,11 @@ async function runUninstall(skillName, options, catalogue) {
   unlinkFromPlatforms(targets, platformDirs);
 
   // 2. Supprimer les fichiers dans .agents/skills/
-  console.log('');
+  console.info('');
   for (const name of targets) {
     const skillDir = path.join(agentsSkillsDir, name);
     fs.rmSync(skillDir, { recursive: true, force: true });
-    console.log(`  - ${name}`);
+    console.info(`  - ${name}`);
   }
 
   const label = targets.length === 1 ? `"${targets[0]}"` : `${targets.length} skills`;

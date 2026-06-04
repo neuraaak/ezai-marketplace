@@ -86,7 +86,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
       try {
         fs.rmSync(dest, { recursive: true, force: true });
         fs.symlinkSync(src, dest, symlinkType);
-        console.log(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
+        console.info(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
         linked++;
       } catch (err) {
         console.warn(
@@ -96,7 +96,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
     }
   }
 
-  if (linked > 0) console.log('');
+  if (linked > 0) console.info('');
 }
 
 function buildDestPath(pluginName, destRoot) {
@@ -153,12 +153,12 @@ async function runInstall(pluginName, options, catalogue) {
       }
       fs.mkdirSync(path.dirname(destFile), { recursive: true });
       fs.copyFileSync(src, destFile);
-      console.log(`  + ${plugin.name}/${dest}`);
+      console.info(`  + ${plugin.name}/${dest}`);
     }
     installedNames.push(plugin.name);
   }
 
-  console.log('');
+  console.info('');
   linkToPlatforms(installedNames, agentsSkillsDir, platformDirs);
 
   const label =
