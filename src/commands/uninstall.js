@@ -31,7 +31,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
         }
       } catch (err) {
         console.warn(
-          `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`
+          `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`,
         );
       }
     }
@@ -51,17 +51,17 @@ async function runUninstall(skillName, options, catalogue) {
     if (!catalogueNames.has(skillName)) {
       console.error(`"${skillName}" n'est pas un skill du catalogue ezai.`);
       console.error('Utilisez `ezai list` pour voir les skills disponibles.');
-      process.exit(1);
+      throw new Error(`"${skillName}" n'est pas un skill du catalogue ezai`);
     }
     const skillDir = path.join(agentsSkillsDir, skillName);
     if (!fs.existsSync(skillDir)) {
       console.error(`Skill "${skillName}" non installé dans ${agentsSkillsDir}`);
-      process.exit(1);
+      throw new Error(`Skill "${skillName}" non installé`);
     }
     targets = [skillName];
   } else {
     if (!fs.existsSync(agentsSkillsDir)) {
-      console.log('Aucun skill installé (dossier .agents/skills/ introuvable).\n');
+      console.info('Aucun skill installé (dossier .agents/skills/ introuvable).\n');
       return;
     }
     // Intersection : installés ET dans le catalogue
@@ -72,7 +72,7 @@ async function runUninstall(skillName, options, catalogue) {
     targets = installed.filter((name) => catalogueNames.has(name));
 
     if (targets.length === 0) {
-      console.log('Aucun skill ezai installé.\n');
+      console.info('Aucun skill ezai installé.\n');
       return;
     }
   }
@@ -91,7 +91,7 @@ async function runUninstall(skillName, options, catalogue) {
   }
 
   const label = targets.length === 1 ? `"${targets[0]}"` : `${targets.length} skills`;
-  console.log(`\n${label} désinstallé(s) de ${agentsSkillsDir}\n`);
+  console.info(`\n${label} désinstallé(s) de ${agentsSkillsDir}\n`);
 }
 
 module.exports = { runUninstall, unlinkFromPlatforms, resolvePlatforms };

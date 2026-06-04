@@ -1,45 +1,49 @@
 const js = require('@eslint/js');
+const globals = require('globals');
 
 module.exports = [
   js.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2022,
+      sourceType: 'module',
       globals: {
-        require: 'readonly',
-        module: 'readonly',
-        exports: 'readonly',
-        process: 'readonly',
-        console: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
+        ...globals.node,
+        ...globals.jest,
         fetch: 'readonly',
       },
     },
     rules: {
+      // Best Practices
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-var': 'error',
       'prefer-const': 'error',
-      eqeqeq: 'error',
+      eqeqeq: ['error', 'always'],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-process-exit': 'error',
+      'no-return-await': 'error',
+
+      // Style
+      quotes: ['error', 'single'],
+      semi: ['error', 'always'],
+      indent: ['error', 2],
+      'comma-dangle': ['error', 'always-multiline'],
+      'object-curly-spacing': ['error', 'always'],
+      'array-bracket-spacing': ['error', 'never'],
+
+      // ES6+
+      'prefer-arrow-callback': 'error',
+      'prefer-template': 'error',
+      'object-shorthand': ['error', 'always'],
     },
   },
   {
     files: ['tests/**/*.js'],
-    languageOptions: {
-      globals: {
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        jest: 'readonly',
-        globalThis: 'readonly',
-      },
+    rules: {
+      'no-console': 'off',
     },
   },
   {
-    ignores: ['node_modules/', 'coverage/'],
+    ignores: ['node_modules/', 'coverage/', 'dist/', '.vscode/'],
   },
 ];

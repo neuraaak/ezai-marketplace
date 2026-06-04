@@ -5,9 +5,9 @@ function formatList(plugins) {
 
 async function runList(catalogue) {
   const { plugins } = await catalogue.fetchCatalogue();
-  console.log('\nPlugins disponibles :\n');
-  console.log(formatList(plugins));
-  console.log();
+  console.info('\nPlugins disponibles :\n');
+  console.info(formatList(plugins));
+  console.info();
 }
 
 module.exports = { formatList, runList };
