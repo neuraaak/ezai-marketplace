@@ -1,6 +1,12 @@
 # Project Config — References Index
 
-Route to the correct language subdirectory based on the project language.
+Route to the correct language subdirectory. Always load `common/config.md` for cross-language infrastructure principles.
+
+## Common (`common/`)
+
+| File               | Load when…                  | Contents                                                                    |
+| :----------------- | :-------------------------- | :-------------------------------------------------------------------------- |
+| `common/config.md` | Every config/toolchain task | Lockfiles, Docker multi-stage, Observability, health checks, no latest tags |
 
 ## Supported languages
 
