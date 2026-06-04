@@ -9,11 +9,11 @@ on:
   workflow_dispatch:
     inputs:
       skip_tests:
-        description: "Skip tests before publishing (not recommended)"
+        description: 'Skip tests before publishing (not recommended)'
         required: false
-        default: "false"
+        default: 'false'
         type: choice
-        options: ["false", "true"]
+        options: ['false', 'true']
   workflow_call:
     inputs:
       version:
@@ -57,10 +57,10 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: "11"
+          version: '11'
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "22"
+          node-version: '22'
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -90,8 +90,8 @@ jobs:
 
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "22"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Publish
         run: npm publish --provenance --access public --ignore-scripts
