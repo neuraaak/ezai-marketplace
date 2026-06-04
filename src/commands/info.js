@@ -13,7 +13,7 @@ function formatInfo(plugin) {
 async function runInfo(name, catalogue) {
   const { plugins } = await catalogue.fetchCatalogue();
   const plugin = plugins.find((p) => p.name === name) || null;
-  console.log(formatInfo(plugin));
+  console.info(formatInfo(plugin));
 }
 
 module.exports = { formatInfo, runInfo };
