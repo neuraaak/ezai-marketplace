@@ -19,8 +19,8 @@ program
   .action(() =>
     runList(catalogue).catch((err) => {
       console.error(err.message);
-      process.exit(1);
-    })
+      throw err;
+    }),
   );
 
 program
@@ -29,18 +29,18 @@ program
   .action((terme) =>
     runSearch(terme, catalogue).catch((err) => {
       console.error(err.message);
-      process.exit(1);
-    })
+      throw err;
+    }),
   );
 
 program
   .command('info <plugin>')
-  .description("Afficher les détails d'un plugin")
+  .description('Afficher les détails d\'un plugin')
   .action((plugin) =>
     runInfo(plugin, catalogue).catch((err) => {
       console.error(err.message);
-      process.exit(1);
-    })
+      throw err;
+    }),
   );
 
 program
@@ -53,8 +53,8 @@ program
   .action((plugin, options) =>
     runInstall(plugin, options, catalogue).catch((err) => {
       console.error(err.message);
-      process.exit(1);
-    })
+      throw err;
+    }),
   );
 
 program
@@ -67,8 +67,8 @@ program
   .action((skill, options) =>
     runUninstall(skill, options, catalogue).catch((err) => {
       console.error(err.message);
-      process.exit(1);
-    })
+      throw err;
+    }),
   );
 
 program.parse();

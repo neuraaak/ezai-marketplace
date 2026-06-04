@@ -8,9 +8,9 @@ function formatSearch(plugins, term) {
 
 async function runSearch(term, catalogue) {
   const { plugins } = await catalogue.fetchCatalogue();
-  console.log(`\nRésultats pour "${term}" :\n`);
-  console.log(formatSearch(plugins, term));
-  console.log();
+  console.info(`\nRésultats pour "${term}" :\n`);
+  console.info(formatSearch(plugins, term));
+  console.info();
 }
 
 module.exports = { formatSearch, runSearch };

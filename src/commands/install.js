@@ -90,7 +90,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
         linked++;
       } catch (err) {
         console.warn(
-          `  [warn] ${platform.name} : impossible de créer le lien pour ${skillName} — ${err.message}`
+          `  [warn] ${platform.name} : impossible de créer le lien pour ${skillName} — ${err.message}`,
         );
       }
     }
@@ -123,7 +123,7 @@ async function runInstall(pluginName, options, catalogue) {
   if (pluginName && targets.length === 0) {
     console.error(`Plugin "${pluginName}" introuvable dans le catalogue.`);
     console.error('Utilisez `ezai list` pour voir les plugins disponibles.');
-    process.exit(1);
+    throw new Error(`Plugin "${pluginName}" introuvable`);
   }
 
   const baseDestRoot = options.dest || os.homedir();
@@ -163,7 +163,7 @@ async function runInstall(pluginName, options, catalogue) {
 
   const label =
     installedNames.length === 1 ? `"${installedNames[0]}"` : `${installedNames.length} plugins`;
-  console.log(`${label} installé(s) dans ${agentsSkillsDir}\n`);
+  console.info(`${label} installé(s) dans ${agentsSkillsDir}\n`);
 }
 
 module.exports = {
