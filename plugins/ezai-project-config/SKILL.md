@@ -11,7 +11,7 @@ description:
   'set up pre-commit', 'configure tsconfig', 'add OpenTelemetry', 'lockfile issue'."
 ---
 
-Project toolchain, configuration, and infrastructure standards. Use the language routing table below to select the relevant reference file. Only consult `references/index.md` if the language cannot be determined from the user's request or the routing table. If `references/index.md` or the routed config file is not available in context, notify the user with: "I could not locate [filename]. Please provide it or confirm the language so I can proceed."
+Project toolchain, configuration, and infrastructure standards. Load the language file from the routing table below, then load `references/common/config.md` for cross-language infrastructure principles.
 
 ## Language routing
 
@@ -20,12 +20,4 @@ Project toolchain, configuration, and infrastructure standards. Use the language
 | Python                  | `references/python/config.md`     |
 | JavaScript / TypeScript | `references/javascript/config.md` |
 
-For monorepos or projects using both Python and JS/TS, load both `references/python/config.md` and `references/javascript/config.md` and apply each to its respective subdirectory.
-
-## Cross-language infrastructure principles
-
-- **Lockfiles:** Always commit lockfiles (`uv.lock`, `pnpm-lock.yaml`) for reproducible builds.
-- **Docker:** Multi-stage builds — separate build-time deps from the runtime image. Non-root user in production.
-- **Observability:** OpenTelemetry for tracing, metrics, and structured logs. JSON output.
-- **Health checks:** Define `HEALTHCHECK` in Docker for orchestration awareness.
-- **Never `latest` tags** in Docker — pin to exact versions.
+For monorepos using both, load both language files and apply each to its respective subdirectory. If a file is unavailable, notify the user with: "I could not locate [filename]. Please provide it or confirm the language."

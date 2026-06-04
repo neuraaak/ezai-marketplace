@@ -1,24 +1,10 @@
 # VitePress — Plugins & Deployment
 
-Load this file when configuring VitePress (`.vitepress/config.js`), wiring the sidebar/navbar, building the API reference, adding version switching, or deploying the docs site.
+Load this file when wiring the sidebar/navbar, building the API reference, adding version switching, or deploying the docs site. For the canonical `docs/.vitepress/config.mts` itself, load `toolchain.md`.
 
 Stack: **VitePress + TypeDoc + vitepress-versioning-plugin**, deployed to GitHub Pages.
 
----
-
-## Config file (`.vitepress/config.js`)
-
-Set these keys per project — derive each value from the project, never hard-code another project's value:
-
-| Key                       | Value to set                                                      |
-| :------------------------ | :---------------------------------------------------------------- |
-| `title`                   | `<Project>` (shown in the navbar)                                 |
-| `description`             | one-line site description                                         |
-| `base`                    | `/<project>/` — required when serving from a GitHub Pages subpath |
-| `themeConfig.socialLinks` | the repo link (and others the site uses)                          |
-| `themeConfig.footer`      | license + copyright                                               |
-
-`base` must match the Pages subpath exactly, with leading and trailing slashes — a mismatch breaks every asset and internal link.
+For the canonical config file (`docs/.vitepress/config.mts`), the recommended stack table, and the config-location/extension rules, load `toolchain.md`. This file covers only the operational wiring and deployment.
 
 ---
 
@@ -59,14 +45,7 @@ In TypeScript, omit `{type}` from JSDoc `@param` tags — the TypeScript signatu
 
 ## Versioning (`vitepress-versioning-plugin`)
 
-Adds a version-switcher dropdown to the navbar and serves versioned snapshots — the JS analogue of mike. Install with `pnpm add -D vitepress-versioning-plugin`, then wrap the config:
-
-```js
-import { withVersioning } from "vitepress-versioning-plugin";
-export default withVersioning(defineConfig({ /* … */ }), {
-  versioning: { latestVersion: "<x.y.z>" },
-});
-```
+Adds a version-switcher dropdown to the navbar and serves versioned snapshots — the JS analogue of mike. Install with `pnpm add -D vitepress-versioning-plugin`, then wire it via `defineVersionedConfig` with `versioning` as an inner key — see `toolchain.md` for the canonical config (the old `withVersioning(...)` wrapper does not exist in this plugin).
 
 Snapshot the current docs at release time, then commit the result:
 
@@ -102,12 +81,16 @@ Grant only `pages: write` + `id-token: write` on the deploy job (workflow defaul
 
 ## Anti-patterns
 
-| Anti-pattern                                      | Problem                                | Fix                                                   |
-| :------------------------------------------------ | :------------------------------------- | :---------------------------------------------------- |
-| `defineConfig(…)` without `withVersioning`        | Version switcher never appears         | Wrap the config with `withVersioning`                 |
-| `latestVersion` out of sync with `package.json`   | Switcher mislabels the current version | Derive it from `package.json` at config time          |
-| Hand-editing files in `versioned_docs/`           | Snapshot diverges from source          | Edit `docs/`, then re-run the snapshot command        |
-| Committing `docs/` but not `versioned_docs/`      | CI build is missing old versions       | Commit `versioned_docs/`                              |
-| `base` missing or mismatched to the Pages subpath | All assets and links 404               | Set `base: "/<project>/"` exactly                     |
-| Building before TypeDoc regenerates `docs/api`    | Stale or missing API reference         | Run `typedoc` before `vitepress build`                |
-| `pnpm install` without rebuilding native binaries | Build fails on missing `esbuild`       | `pnpm rebuild esbuild es5-ext vue-demi` after install |
+| Anti-pattern                                      | Problem                                       | Fix                                                   |
+| :------------------------------------------------ | :-------------------------------------------- | :---------------------------------------------------- |
+| Config at repo-root `.vitepress/` under `build docs` | Config never loaded; site builds with defaults | Place it at `docs/.vitepress/config.mts`              |
+| `config.js`/`config.ts` in a CommonJS package     | *"ESM file cannot be loaded by require"* crash | Use the `.mts`/`.mjs` extension                       |
+| `withVersioning(defineConfig(…))`                 | Export does not exist; config load throws     | Use `defineVersionedConfig(config, __dirname)`        |
+| Sidebar as an array with versioning enabled       | Plugin disables versioning silently           | Use the object form `{ '/': [...] }`                  |
+| `latestVersion` out of sync with `package.json`   | Switcher mislabels the current version        | Derive it from `package.json` at config time          |
+| Hand-editing files in `versioned_docs/`           | Snapshot diverges from source                 | Edit `docs/`, then re-run the snapshot command        |
+| Committing `docs/` but not `versioned_docs/`      | CI build is missing old versions              | Commit `versioned_docs/`                              |
+| `base` missing or mismatched to the Pages subpath | All assets and links 404                      | Set `base: "/<project>/"` exactly                     |
+| `lastUpdated: true` with a shallow CI checkout    | Every page shows the same date                | Set `fetch-depth: 0` in the checkout step             |
+| Building before TypeDoc regenerates `docs/api`    | Stale or missing API reference                | Run `typedoc` before `vitepress build`                |
+| `pnpm install` without rebuilding native binaries | Build fails on missing `esbuild`              | `pnpm rebuild esbuild es5-ext vue-demi` after install |

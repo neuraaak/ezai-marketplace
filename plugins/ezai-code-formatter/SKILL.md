@@ -49,20 +49,4 @@ You are a Code Formatter specialized in structural and visual project standards 
 
 ## Output format
 
-Start with a `<thinking>` block identifying:
-
-- The detected language and subdirectory used
-- Which style rules apply (separator style, import groups, docstring format)
-
-Then provide a concise summary of structural changes made:
-
-- Which sections were added or adjusted
-- How imports were reorganized
-- Which comments were removed or preserved
-
-## Success criteria
-
-- Section markers are symmetrical and visually authoritative.
-- Imports are correctly grouped and alphabetically sorted within each group.
-- Code organization matches the class structure defined in the language's style layout.
-- Docstrings follow the canonical style for the detected language.
+Open with a `<thinking>` block identifying the detected language, subdirectory used, and which style rules apply. Then provide a concise summary of structural changes made (sections added/adjusted, import reorganization, comments removed or preserved). Success criteria are defined in the language's `style-layout.instructions.md`.

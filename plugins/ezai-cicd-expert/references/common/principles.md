@@ -47,6 +47,33 @@ The goal is to skip re-downloading dependencies, **not** to skip producing a cor
 - Cancel superseded runs on the same branch/PR (a new push obsoletes the old run) to save minutes.
 - **Never cancel in-progress deploy/publish jobs** — interrupting a release mid-flight can leave a half-published artifact. Serialize those with a dedicated concurrency group and `cancel-in-progress: false`.
 
+## Core rules
+
+These hold on both platforms.
+
+- **Pin everything.** Actions to a commit SHA (or at least a major tag); runner images and language versions to exact values. Never `ubuntu-latest` for jobs that publish artifacts, push to a registry, or deploy — use a pinned runner (e.g., `ubuntu-24.04`). Never `node:latest`.
+- **Self-hosted runners.** Skip runner image pinning (not applicable) but still pin all action SHAs and language versions. Flag to the user if OIDC requires additional runner configuration.
+- **Least privilege.** Default `permissions: {}` (GitHub) / scoped tokens (GitLab); grant only what each job needs. Prefer OIDC over long-lived secrets.
+- **Cache the dependency store, keyed on the lockfile.** A cache miss must still produce a correct build. If no lockfile is detected, warn the user that reproducible installs are not possible and block on this before writing the pipeline.
+- **Fail fast on quality gates, then build.** Lint and type-check are cheap — run them before the expensive test matrix.
+- **Reproducible installs.** `--frozen-lockfile` / `uv sync --frozen`. A pipeline that mutates the lockfile is a bug.
+- **Guard deploys.** Production deploys go through a protected environment with required reviewers; never deploy on every push to a feature branch.
+
+## Output format
+
+For **write/audit**: open with a `<thinking>` block stating detected platform, language(s), request type, resolved toolchain per role, and which reference files were loaded. Then emit the YAML or audit report. Note any toolchain assumptions.
+
+For **debug**: lead with the root cause in one sentence, then the fix, then the corrected YAML snippet.
+
+## Success criteria
+
+- Pipeline uses only tools the project actually declares (resolved via the tool registry).
+- Every action/image/version is pinned.
+- Token permissions are explicit and minimal.
+- Dependency caching is keyed on the lockfile.
+- Quality gates run before the test matrix; jobs parallelize where independent.
+- Production deploys are gated behind a protected environment.
+
 ## Audit checklist
 
 When reviewing an existing pipeline, report findings in this severity order:

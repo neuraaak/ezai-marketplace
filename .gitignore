@@ -36,6 +36,20 @@ node_modules/
 *.csv
 version_info.txt
 
+# Fichiers temporaires
+*.pid
+*.tmp
+*.temp
+_temp/
+temp/
+tmp/
+tmpclaude-*
+.remember/
+docs/superpowers/
+!docs/
+.vscode/settings.json
+docs/.vitepress/dist/
+
 # =============================================================================
 # FICHIERS SYSTÈME (COMMUNS)
 # =============================================================================
@@ -65,17 +79,5 @@ $RECYCLE.BIN/
 *.old
 *.orig
 *.rej
+.claude/settings.json
 
-# Fichiers temporaires
-*.pid
-*.tmp
-*.temp
-_temp/
-temp/
-tmp/
-tmpclaude-*
-.remember/
-docs/superpowers/
-!docs/
-.vscode/settings.json
-docs/.vitepress/dist/
