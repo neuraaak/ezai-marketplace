@@ -22,7 +22,7 @@ function filterPlugins(plugins, term) {
     (p) =>
       p.name.toLowerCase().includes(lower) ||
       (p.category || '').toLowerCase().includes(lower) ||
-      p.description.toLowerCase().includes(lower)
+      p.description.toLowerCase().includes(lower),
   );
 }
 
