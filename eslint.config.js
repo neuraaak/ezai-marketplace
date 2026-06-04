@@ -19,7 +19,7 @@ module.exports = [
       'no-var': 'error',
       'prefer-const': 'error',
       eqeqeq: ['error', 'always'],
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-process-exit': 'error',
       'no-return-await': 'error',
 
