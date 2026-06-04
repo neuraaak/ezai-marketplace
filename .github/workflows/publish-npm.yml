@@ -1,0 +1,104 @@
+name: Publish to npm
+
+# Called by auto-tag.yml when a new version tag is created, or manually via
+# workflow_dispatch. Publishes to npm using OIDC Trusted Publishing (no stored
+# NPM_TOKEN). Requires an npm Trusted Publisher configured at:
+# https://www.npmjs.com/settings/<org>/packages → ezai-marketplace → Publishing
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: "Skip tests before publishing (not recommended)"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: publish
+  cancel-in-progress: false # never interrupt a live publish
+
+env:
+  PACKAGE_NAME: ezai-marketplace
+
+jobs:
+  validate:
+    name: Validate & Pack
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Extract and verify version
+        id: version
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ -n "${{ inputs.version }}" ] && [ "${{ inputs.version }}" != "$PKG_VERSION" ]; then
+            echo "::error::Version mismatch: input=${{ inputs.version }}, package.json=$PKG_VERSION"
+            exit 1
+          fi
+          echo "version=$PKG_VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $PKG_VERSION"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "11"
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+
+      - name: Run tests
+        if: github.event.inputs.skip_tests != 'true'
+        run: pnpm test
+
+      - name: Dry-run pack (verify publishable files)
+        run: npm pack --dry-run
+
+  publish:
+    name: Publish to npm (OIDC)
+    needs: validate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write # mint OIDC token for npm Trusted Publishing
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ needs.validate.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish
+        run: npm publish --provenance --access public
+
+      - name: Summary
+        run: |
+          echo "## Published to npm" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package**: ${{ env.PACKAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
