@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - "docs/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - "cliff.toml"
+      - 'docs/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'cliff.toml'
   workflow_dispatch:
   workflow_call:
     inputs:
@@ -39,10 +39,10 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: "11"
+          version: '11'
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "22"
+          node-version: '22'
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm rebuild esbuild es5-ext vue-demi # native binaries needed by vitepress + versioning plugin
