@@ -30,7 +30,7 @@ export default defineVersionedConfig(
 
     // Version-switcher dropdown — the VitePress analogue of mike. latestVersion must equal package.json version.
     versioning: {
-      latestVersion: '1.1.0',
+      latestVersion: '1.1.2',
     },
 
     themeConfig: {
@@ -44,6 +44,8 @@ export default defineVersionedConfig(
         { text: 'CLI Reference', link: '/cli/' },
         { text: 'Skills', link: '/skills/' },
         { text: 'Guides', link: '/guides/' },
+        { text: 'Examples', link: '/examples/' },
+        { text: 'Concepts', link: '/concepts/' },
       ],
 
       // Multi-sidebar object form (keyed by path) — required by vitepress-versioning-plugin;
@@ -64,6 +66,21 @@ export default defineVersionedConfig(
           {
             text: 'Guides',
             items: [{ text: 'Overview', link: '/guides/' }],
+          },
+          {
+            text: 'Examples',
+            items: [{ text: 'CLI scenarios', link: '/examples/' }],
+          },
+          {
+            text: 'Concepts',
+            items: [
+              { text: 'Overview', link: '/concepts/' },
+              { text: 'How skill installation works', link: '/concepts/how-skills-work' },
+            ],
+          },
+          {
+            text: 'More',
+            items: [{ text: 'Changelog', link: '/changelog' }],
           },
         ],
       },
