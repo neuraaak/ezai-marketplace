@@ -93,7 +93,7 @@ Use this order. All H2 headings carry an emoji prefix.
 
 > **Heading case:** README headings use **Title Case** (e.g. "Quick Start", "Development Setup") — this is an exception to the sentence-case rule that applies to `docs/` pages.
 >
-> **Emoji set:** The emojis in the table below are authoritative for the README. They may differ from the `docs/` homepage set in `python/standards.md` (e.g. Key Features `🎯` here vs `✨` on the homepage) — this divergence is intentional; do not reconcile.
+> **Emoji set:** The emojis in the table below are authoritative for the README. They may differ from the `docs/` homepage set in `common/standards.md` (e.g. Key Features `🎯` here vs `✨` on the homepage) — this divergence is intentional; do not reconcile.
 
 | #   | Heading                 | Required                     | Notes                                                                                                             |
 | --- | ----------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------- |
