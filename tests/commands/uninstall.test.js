@@ -83,12 +83,12 @@ describe('unlinkFromPlatforms', () => {
     expect(fs.existsSync(dest)).toBe(false);
   });
 
-  it('ne lève pas d\'erreur si le symlink est absent', () => {
+  it("ne lève pas d'erreur si le symlink est absent", () => {
     const platform = path.join(tmpDir, 'platform');
     fs.mkdirSync(platform);
 
     expect(() =>
-      unlinkFromPlatforms(['ezai-code-formatter'], [{ name: 'P', dir: platform }]),
+      unlinkFromPlatforms(['ezai-code-formatter'], [{ name: 'P', dir: platform }])
     ).not.toThrow();
   });
 });
@@ -141,7 +141,7 @@ describe('runUninstall', () => {
         dest: tmpDir,
         _platformDirs: [{ name: 'P', dir: platform }],
       },
-      catalogue,
+      catalogue
     );
 
     expect(fs.existsSync(symlinkDest)).toBe(false);
@@ -154,11 +154,11 @@ describe('runUninstall', () => {
     const catalogue = mockCatalogue('ezai-code-formatter');
 
     await expect(runUninstall('foreign-skill', { dest: tmpDir }, catalogue)).rejects.toThrow(
-      '"foreign-skill" n\'est pas un skill du catalogue ezai',
+      '"foreign-skill" n\'est pas un skill du catalogue ezai'
     );
   });
 
-  it('ne lève pas d\'erreur si .agents/skills/ est absent', async () => {
+  it("ne lève pas d'erreur si .agents/skills/ est absent", async () => {
     const catalogue = mockCatalogue('ezai-code-formatter');
     await expect(runUninstall(undefined, { dest: tmpDir }, catalogue)).resolves.not.toThrow();
   });

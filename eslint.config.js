@@ -1,5 +1,6 @@
 const js = require('@eslint/js');
 const globals = require('globals');
+const prettier = require('eslint-config-prettier/flat');
 
 module.exports = [
   js.configs.recommended,
@@ -23,14 +24,6 @@ module.exports = [
       'no-process-exit': 'error',
       'no-return-await': 'error',
 
-      // Style
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
-      indent: ['error', 2],
-      'comma-dangle': ['error', 'always-multiline'],
-      'object-curly-spacing': ['error', 'always'],
-      'array-bracket-spacing': ['error', 'never'],
-
       // ES6+
       'prefer-arrow-callback': 'error',
       'prefer-template': 'error',
@@ -46,4 +39,6 @@ module.exports = [
   {
     ignores: ['node_modules/', 'coverage/', 'dist/', '.vscode/'],
   },
+  // Must be last: disables all ESLint rules that conflict with Prettier.
+  prettier,
 ];
