@@ -94,7 +94,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Publish
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public --ignore-scripts
 
       - name: Summary
         run: |
