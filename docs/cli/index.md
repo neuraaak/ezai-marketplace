@@ -116,7 +116,7 @@ ezai install --dest /opt/ai-tools
 
 ## `ezai uninstall [skill]`
 
-Removes marketplace-managed skills from `~/.agents/skills/` and their platform symlinks. Skills not present in the catalogue catalogue are never touched.
+Removes marketplace-managed skills from `~/.agents/skills/` and their platform symlinks. Skills not present in the catalogue are never touched.
 
 ```bash
 ezai uninstall [skill] [OPTIONS]
