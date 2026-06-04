@@ -31,7 +31,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
         }
       } catch (err) {
         console.warn(
-          `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`,
+          `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`
         );
       }
     }

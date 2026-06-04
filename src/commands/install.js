@@ -90,7 +90,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
         linked++;
       } catch (err) {
         console.warn(
-          `  [warn] ${platform.name} : impossible de créer le lien pour ${skillName} — ${err.message}`,
+          `  [warn] ${platform.name} : impossible de créer le lien pour ${skillName} — ${err.message}`
         );
       }
     }
