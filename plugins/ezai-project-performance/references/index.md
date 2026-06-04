@@ -1,6 +1,12 @@
 # Project Performance — References Index
 
-Route to the correct language subdirectory based on the project language.
+Route to the correct language subdirectory. Always load `common/performance.md` for cross-language principles.
+
+## Common (`common/`)
+
+| File                    | Load when…             | Contents                                                      |
+| :---------------------- | :--------------------- | :------------------------------------------------------------ |
+| `common/performance.md` | Every performance task | Profile first, workload model, stream vs buffer, cancellation |
 
 ## Supported languages
 
