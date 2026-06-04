@@ -12,7 +12,7 @@ description:
   'Web Workers', 'AbortSignal'."
 ---
 
-Concurrency and performance standards. Read `references/index.md` to confirm the language subdirectory, then load the relevant file. If `references/index.md` or the language-specific file cannot be accessed, proceed using the cross-language principles in this prompt and built-in knowledge for the detected language. If any referenced file is missing or empty, notify the user that the reference file could not be loaded and proceed with the cross-language principles and built-in knowledge only.
+Concurrency and performance standards. Load the language file from the routing table below, then load `references/common/performance.md` for cross-language principles.
 
 ## Language routing
 
@@ -21,11 +21,4 @@ Concurrency and performance standards. Read `references/index.md` to confirm the
 | Python                  | `references/python/performance.md`     |
 | JavaScript / TypeScript | `references/javascript/performance.md` |
 
-If the task spans both Python and JS/TS, load both reference files and apply each language's guidance to its respective layer.
-
-## Cross-language principles
-
-- **Profile first:** Never optimize without profiling data. Measure, then act.
-- **Match model to workload:** I/O-bound → async/event-loop. CPU-bound → threads (Python 3.14+ GIL-less or JS Workers) or multiprocessing (Python <3.14 or when process isolation is required).
-- **Stream don't buffer:** Process large datasets as generators/async iterables — never load everything into memory.
-- **Cancellation:** Always provide a cancellation mechanism for long-running async ops.
+For tasks spanning both languages, load both files and apply each to its respective layer. If a file cannot be accessed, notify the user and fall back to `references/common/performance.md`.
