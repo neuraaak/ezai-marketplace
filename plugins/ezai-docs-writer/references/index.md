@@ -16,7 +16,7 @@ Route to the correct files based on the project language **and** platform.
 | GitHub   | `github.com` remote / `.github/`       | `github/badge-registry.md` |
 | GitLab   | `gitlab.com` remote / `.gitlab-ci.yml` | `gitlab/badge-registry.md` |
 
-When emitting a badge block, load the **pair**: platform registry + language registry. For JS/TS page templates, also load `python/quadrants-templates.md` — templates are language-agnostic.
+When emitting a badge block, load the **pair**: platform registry + language registry. For page templates (any language), load `common/quadrants-templates.md` — templates are language-agnostic.
 
 ---
 
@@ -24,8 +24,8 @@ When emitting a badge block, load the **pair**: platform registry + language reg
 
 Stack: MkDocs + Material + mkdocstrings + Diátaxis framework.
 
-- `python/quadrants-templates.md` — generating or auditing any doc page
-- `python/standards.md` — writing/auditing docstrings, checking emoji/admonitions, reviewing quality
+- `python/standards.md` — Python/MkDocs specifics: Google-style docstrings, admonition/annotation syntax (pair with `common/standards.md`)
+- `python/toolchain.md` — choosing the docs tool stack, scaffolding `mkdocs.yml` from scratch (canonical config + best practices)
 - `python/plugins-deploy.md` — configuring MkDocs plugins, deploying with mike, release cascade (auto-tag → publish-pypi → docs), git-cliff changelog
 - `python/badge-registry.md` — emitting a badge block (PyPI version + tool badges)
 
@@ -35,16 +35,19 @@ Stack: MkDocs + Material + mkdocstrings + Diátaxis framework.
 
 Stack: VitePress or Docusaurus + TypeDoc + JSDoc/TSDoc + Diátaxis framework.
 
-- `javascript/standards.md` — writing/auditing JSDoc, reviewing JS/TS doc quality
+- `javascript/standards.md` — JS/TS specifics: JSDoc/TSDoc syntax, VitePress admonition syntax (pair with `common/standards.md`)
+- `javascript/toolchain.md` — choosing the docs tool stack, scaffolding `docs/.vitepress/config.mts` from scratch (canonical config + best practices)
+- `javascript/plugins-deploy.md` — wiring VitePress nav/sidebar, API reference, versioning, deploying to GitHub Pages
 - `javascript/badge-registry.md` — emitting a badge block (npm version + tool badges)
-- `javascript/plugins-deploy.md` — configuring VitePress plugins (versioning, sidebar), deploying to GitHub Pages
 
-For page templates, use `python/quadrants-templates.md` — replace Python snippets with TypeScript/JavaScript equivalents.
+For page templates, use `common/quadrants-templates.md` — replace Python snippets with TypeScript/JavaScript equivalents.
 
 ---
 
 ## Common (`common/`)
 
+- `common/standards.md` — language-agnostic doc standards: Diátaxis rules, emoji set, admonition semantics, anti-patterns (always pair with the language `standards.md`)
+- `common/quadrants-templates.md` — Diátaxis quadrants & page templates (any language)
 - `common/readme.md` — generating or auditing a `README.md`
 
 ---

@@ -1,21 +1,16 @@
-# JavaScript/TypeScript Documentation Standards
+# JavaScript/TypeScript Documentation Standards (JSDoc/TSDoc + VitePress)
 
-Load this file when writing or auditing JSDoc docstrings, or reviewing doc quality for JS/TS projects.
+Load this file together with `common/standards.md` (the language-agnostic rules: Diátaxis, emoji set, admonition semantics, anti-patterns). This file holds only the JS/TS specifics: JSDoc/TSDoc syntax, the TypeScript type rule, and VitePress admonition syntax.
 
-## Core Rules
+**Docstring rule:** JSDoc (Google-style) for all public functions, classes, and types. In TypeScript, prefer signature types over JSDoc `{type}` annotations — let the type system be the authority.
 
-- **FRAMEWORK:** Same 4 Diátaxis quadrants as Python — Tutorial, How-To, Reference, Explanation. The framework is language-agnostic.
-- **PURITY:** Never mix quadrant types within a single page.
-- **DOCSTRINGS:** JSDoc (Google-style) for all public functions, classes, and types.
-- **CASE:** Sentence case for all page titles and headings.
-- **EMOJI:** Allowed in nav titles, H2–H6 section headings, and admonition titles. Never in prose or JSDoc comments.
-- **TYPES:** In TypeScript projects, prefer signature types over JSDoc `{type}` annotations — let the type system be the authority.
+For the API-reference toolchain (TypeDoc + `typedoc-plugin-markdown`, run order) and the canonical site config, see `toolchain.md`.
 
 ---
 
-## JSDoc Docstrings
+## JSDoc/TSDoc Docstrings
 
-Use JSDoc for all public symbols. In TypeScript, omit `{type}` from `@param` — the TypeScript signature already captures it.
+In TypeScript, omit `{type}` from `@param` — the TypeScript signature already captures it.
 
 ```typescript
 /**
@@ -66,44 +61,39 @@ Recognized tags: `@param`, `@returns`, `@throws`, `@example`, `@deprecated`, `@s
 
 ---
 
-## API Reference Toolchain
+## Admonition syntax (VitePress)
 
-**TypeDoc** generates API reference from JSDoc/TSDoc comments (the JS equivalent of mkdocstrings + MkDocs Material).
+Semantics (when to use each type) live in `common/standards.md`. VitePress uses container directives, not `!!!`:
 
-```json
-// typedoc.json
-{
-  "entryPoints": ["src/index.ts"],
-  "out": "docs/api",
-  "plugin": ["typedoc-plugin-markdown"]
-}
+```markdown
+::: tip Performance
+Pin the package manager in CI to avoid lockfile drift.
+:::
+
+::: warning
+This method mutates the input array in place.
+:::
+
+::: details Implementation detail
+Collapsible — use for information that is true but not critical to the flow.
+:::
 ```
 
-`typedoc-plugin-markdown` outputs `.md` files consumable by VitePress or Docusaurus instead of standalone HTML.
-
-Run order:
-
-```bash
-npx typedoc   # generates docs/api/*.md from source
-npx vitepress build docs   # builds the full site
-```
+VitePress containers: `tip`, `info`, `warning`, `danger`, `details`. Map the universal types from `common/standards.md` onto these (`note` → `info`, `example` → a fenced code block, `abstract` → lead paragraph).
 
 ---
 
-## Page Structure
+## Page structure
 
-Diátaxis nav structure and page templates apply identically to JS/TS projects. Refer to `python/quadrants-templates.md` for the full template set — every template is language-agnostic; only replace Python-specific code snippets with TypeScript/JavaScript equivalents.
-
-Typical JS/TS doc site stack: **VitePress** (Vue-powered, fast) or **Docusaurus** (React-powered, rich ecosystem) — equivalent to MkDocs Material for Python.
+Diátaxis nav structure and page templates apply identically to JS/TS projects — load `common/quadrants-templates.md`; every template is language-agnostic, only replace Python code snippets with TypeScript/JavaScript equivalents.
 
 ---
 
-## Anti-Patterns
+## JS/TS-specific anti-patterns
 
-| Anti-pattern                              | Problem                            | Fix                                            |
-| :---------------------------------------- | :--------------------------------- | :--------------------------------------------- |
-| `@param {any} foo` in TypeScript          | Defeats type safety                | Use TypeScript signature types                 |
-| `{type}` annotations in TypeScript JSDoc  | Redundant, diverges from source    | Remove `{type}` from `@param` in `.ts` files   |
-| Tutorial that explains "why" at each step | Wrong quadrant, cognitive overload | Move theory to Explanation page                |
-| Reference page with chatty prose          | Slows down lookup                  | Trim to facts; link to Explanation for context |
-| One page covering all four quadrant types | Navigation impossible              | Decompose into separate pages                  |
+The Diátaxis anti-patterns live in `common/standards.md`. These are language-specific:
+
+| Anti-pattern                             | Problem                         | Fix                                          |
+| :--------------------------------------- | :------------------------------ | :------------------------------------------- |
+| `@param {any} foo` in TypeScript         | Defeats type safety             | Use TypeScript signature types               |
+| `{type}` annotations in TypeScript JSDoc | Redundant, diverges from source | Remove `{type}` from `@param` in `.ts` files |
