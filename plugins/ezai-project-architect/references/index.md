@@ -1,6 +1,12 @@
 # Project Architect — References Index
 
-Route to the correct language subdirectory based on the project language.
+Route to the correct language subdirectory. Always load `common/architecture.md` for cross-language principles.
+
+## Common (`common/`)
+
+| File                     | Load when…              | Contents                                                         |
+| :----------------------- | :---------------------- | :--------------------------------------------------------------- |
+| `common/architecture.md` | Every architecture task | Composition, Ports & Adapters, Repository, feature-based modules |
 
 ## Supported languages
 

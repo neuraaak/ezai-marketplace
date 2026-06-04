@@ -1,6 +1,12 @@
 # Project Quality — References Index
 
-Route to the correct language subdirectory based on the project language.
+Route to the correct language subdirectory. Always load `common/quality.md` for cross-language principles.
+
+## Common (`common/`)
+
+| File                | Load when…         | Contents                                                                          |
+| :------------------ | :----------------- | :-------------------------------------------------------------------------------- |
+| `common/quality.md` | Every quality task | Boundary validation, secrets management, fakes vs mocks, coverage, property-based |
 
 ## Supported languages
 
