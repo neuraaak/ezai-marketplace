@@ -1,6 +1,6 @@
 {
   "name": "ezai-marketplace",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "CLI to install AI skills from the ezai marketplace into Claude Code, Gemini CLI, and Copilot",
   "author": {
     "name": "Florian Salort",
@@ -33,7 +33,8 @@
     "release": "pnpm publish --access public --no-git-checks",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "changelog": "git-cliff -o docs/changelog.md"
   },
   "lint-staged": {
     "*.js": [
