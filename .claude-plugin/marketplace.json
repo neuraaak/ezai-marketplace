@@ -43,6 +43,17 @@
       }
     },
     {
+      "name": "ezai-persona-docs-specialist",
+      "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
+      "source": "./plugins/ezai-persona-docs-specialist",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
       "name": "ezai-persona-senior-dev",
       "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
       "source": "./plugins/ezai-persona-senior-dev",
