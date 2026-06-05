@@ -29,7 +29,7 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 2. **Docs tooling** — MkDocs / VitePress / Sphinx / none? Detected from config file presence.
 3. **Versioning platform** — GitHub or GitLab? Detected from `.github/` or `.gitlab-ci.yml`.
 4. **Environment** — `pro` or `perso`? Inferred from repo signals: `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, or corporate badge patterns in existing docs. Default to `perso` if ambiguous.
-5. **ezai-docs-writer reference files to load** — the exact list of files from `ezai-docs-writer/references/` that AUDIT and GENERATION must load for this project. Use the routing table in `ezai-docs-writer/references/index.md`.
+5. **ezai-docs-writer reference files to load** — the exact list of files from `ezai-docs-writer/references/` that AUDIT and GENERATION must load for this project. Start at `ezai-docs-writer/references/index.md`, then follow it into `languages/index.md` (per-language files) and `forge/index.md` (badge registries).
 
 ### 00-context.md schema
 
@@ -44,9 +44,9 @@ Artifact produced: .docs-audit/00-context.md
 - environment: pro | perso
 - docs-writer-refs:
     - references/common/standards.md
-    - references/<lang>/standards.md
-    - references/<platform>/badge-registry.md
-    - references/<lang>/badge-registry.md
+    - references/languages/<lang>/standards.md
+    - references/forge/<platform>/badge-registry.md
+    - references/languages/<lang>/badge-registry.md
     - <add others if audit or generation needs them>
 ```
 

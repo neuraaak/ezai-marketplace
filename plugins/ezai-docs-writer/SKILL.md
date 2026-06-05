@@ -19,20 +19,21 @@ You are an expert in open-source library documentation (2026), proficient in MkD
 
 ## References
 
-First, read `references/index.md`. It is the router: it maps language → subdirectory, platform → badge registry, and lists every reference file with a "load when" line. Load only what the task needs — do not preload.
+First, read `references/index.md`. It is the **root router**: it points to three groups — `languages/` (per-language references, via `languages/index.md`), `forge/` (badge registries per git host, via `forge/index.md`), and `common/` (language-agnostic rules). It loads nothing by itself; follow it to the group you need. Load only what the task needs — do not preload.
 
-| Language              | Subdirectory             |
-| :-------------------- | :----------------------- |
-| Python                | `references/python/`     |
-| JavaScript/TypeScript | `references/javascript/` |
+| Group       | Index                | Holds                                                      |
+| :---------- | :------------------- | :-------------------------------------------------------- |
+| `languages/` | `languages/index.md` | Python and JS/TS: standards, toolchain, plugins-deploy, badges |
+| `forge/`    | `forge/index.md`     | GitHub and GitLab badge registries (badges only)          |
+| `common/`   | —                    | Diátaxis rules, page templates, README rules              |
 
-Loading rule of thumb (the detailed table lives in `index.md`):
+Loading rule of thumb (the detailed tables live in the group index files):
 
-- **Any doc-writing task** → the language `standards.md` **paired with** `common/standards.md`.
+- **Any doc-writing task** → the language `standards.md` (under `languages/<lang>/`) **paired with** `common/standards.md`.
 - **Generating a page** → add `common/quadrants-templates.md`.
 - **A `README.md`** → add `common/readme.md`.
-- **Tool stack / config scaffolding** → the language `toolchain.md`; **plugins / deploying** → the language `plugins-deploy.md`.
-- **A badge block** → the platform + language `badge-registry.md` pair (see `index.md`).
+- **Tool stack / config scaffolding** → `languages/<lang>/toolchain.md`; **plugins / deploying** → `languages/<lang>/plugins-deploy.md`.
+- **A badge block** → the `forge/<host>/badge-registry.md` + `languages/<lang>/badge-registry.md` pair (see `forge/index.md`).
 
 Most tasks need two or three files. If `references/index.md` is missing, infer the language from file extensions and note it in the `<thinking>` block.
 
@@ -40,13 +41,13 @@ Most tasks need two or three files. If `references/index.md` is missing, infer t
 
 1. **Detect the language**
    - Identify the project language from file extensions, `pyproject.toml`, `package.json`, etc.
-   - Read `references/index.md` to confirm the subdirectory and available files.
+   - Read `references/index.md`, then `languages/index.md`, to confirm the subdirectory and available files.
     - Detect the documentation language (French or English) from existing `.md` files or explicit user instruction. Generate all documentation content in the detected language. Default to English if undetectable.
 
 2. **Bootstrap context**
    - Load the relevant reference file(s) for the detected language.
    - If the task targets a `README.md`, also load `references/common/readme.md`.
-   - When emitting a badge block (README or `docs/index.md`), detect the platform (GitHub vs GitLab) and load the matching pair: `{platform}/badge-registry.md` + `{language}/badge-registry.md`.
+   - When emitting a badge block (README or `docs/index.md`), detect the forge (GitHub vs GitLab) and load the matching pair: `forge/{host}/badge-registry.md` + `languages/{language}/badge-registry.md`.
    - Read the project's doc config file (`mkdocs.yml`, `docusaurus.config.js`, etc.) and package manifest to understand the public API and nav layout.
     - If neither `mkdocs.yml` nor `docusaurus.config.js` is present, look for `conf.py` (Sphinx) or `docs/.vitepress/config.*` (VitePress). If no recognized config is found, note this in the `<thinking>` block and proceed based on the directory structure alone, flagging that nav validation is unavailable.
 

@@ -1,6 +1,6 @@
 # Badge Registry — Python
 
-Python-specific badges: PyPI version/status + tool badges. Combine with the platform badge registry (`github/badge-registry.md` or `gitlab/badge-registry.md`) for the full badge block.
+Python-specific badges: PyPI version/status + tool badges. Combine with the forge badge registry (`forge/github/badge-registry.md` or `forge/gitlab/badge-registry.md`) for the full badge block.
 
 This file is **data, not a rule**. Detect → look up → emit:
 

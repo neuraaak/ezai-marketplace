@@ -39,7 +39,7 @@ typedoc          # src → docs/api/*.md
 vitepress build docs
 ```
 
-In TypeScript, omit `{type}` from JSDoc `@param` tags — the TypeScript signature is the authority (see `javascript/standards.md`).
+In TypeScript, omit `{type}` from JSDoc `@param` tags — the TypeScript signature is the authority (see `languages/javascript/standards.md`).
 
 ---
 
@@ -81,16 +81,16 @@ Grant only `pages: write` + `id-token: write` on the deploy job (workflow defaul
 
 ## Anti-patterns
 
-| Anti-pattern                                      | Problem                                       | Fix                                                   |
-| :------------------------------------------------ | :-------------------------------------------- | :---------------------------------------------------- |
+| Anti-pattern                                         | Problem                                        | Fix                                                   |
+| :--------------------------------------------------- | :--------------------------------------------- | :---------------------------------------------------- |
 | Config at repo-root `.vitepress/` under `build docs` | Config never loaded; site builds with defaults | Place it at `docs/.vitepress/config.mts`              |
-| `config.js`/`config.ts` in a CommonJS package     | *"ESM file cannot be loaded by require"* crash | Use the `.mts`/`.mjs` extension                       |
-| `withVersioning(defineConfig(…))`                 | Export does not exist; config load throws     | Use `defineVersionedConfig(config, __dirname)`        |
-| Sidebar as an array with versioning enabled       | Plugin disables versioning silently           | Use the object form `{ '/': [...] }`                  |
-| `latestVersion` out of sync with `package.json`   | Switcher mislabels the current version        | Derive it from `package.json` at config time          |
-| Hand-editing files in `versioned_docs/`           | Snapshot diverges from source                 | Edit `docs/`, then re-run the snapshot command        |
-| Committing `docs/` but not `versioned_docs/`      | CI build is missing old versions              | Commit `versioned_docs/`                              |
-| `base` missing or mismatched to the Pages subpath | All assets and links 404                      | Set `base: "/<project>/"` exactly                     |
-| `lastUpdated: true` with a shallow CI checkout    | Every page shows the same date                | Set `fetch-depth: 0` in the checkout step             |
-| Building before TypeDoc regenerates `docs/api`    | Stale or missing API reference                | Run `typedoc` before `vitepress build`                |
-| `pnpm install` without rebuilding native binaries | Build fails on missing `esbuild`              | `pnpm rebuild esbuild es5-ext vue-demi` after install |
+| `config.js`/`config.ts` in a CommonJS package        | *"ESM file cannot be loaded by require"* crash | Use the `.mts`/`.mjs` extension                       |
+| `withVersioning(defineConfig(…))`                    | Export does not exist; config load throws      | Use `defineVersionedConfig(config, __dirname)`        |
+| Sidebar as an array with versioning enabled          | Plugin disables versioning silently            | Use the object form `{ '/': [...] }`                  |
+| `latestVersion` out of sync with `package.json`      | Switcher mislabels the current version         | Derive it from `package.json` at config time          |
+| Hand-editing files in `versioned_docs/`              | Snapshot diverges from source                  | Edit `docs/`, then re-run the snapshot command        |
+| Committing `docs/` but not `versioned_docs/`         | CI build is missing old versions               | Commit `versioned_docs/`                              |
+| `base` missing or mismatched to the Pages subpath    | All assets and links 404                       | Set `base: "/<project>/"` exactly                     |
+| `lastUpdated: true` with a shallow CI checkout       | Every page shows the same date                 | Set `fetch-depth: 0` in the checkout step             |
+| Building before TypeDoc regenerates `docs/api`       | Stale or missing API reference                 | Run `typedoc` before `vitepress build`                |
+| `pnpm install` without rebuilding native binaries    | Build fails on missing `esbuild`               | `pnpm rebuild esbuild es5-ext vue-demi` after install |

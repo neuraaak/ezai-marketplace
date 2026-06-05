@@ -1,6 +1,6 @@
 # Badge Registry — GitLab
 
-GitLab-specific badge templates. Combine with the language badge registry (`python/badge-registry.md` or `javascript/badge-registry.md`) for the full badge block.
+GitLab-specific badge templates. Combine with the language badge registry (`languages/python/badge-registry.md` or `languages/javascript/badge-registry.md`) for the full badge block.
 
 This file is **data, not a rule**. Emit only the badges whose conditions are met. Resolve all `{placeholders}` before emitting — never leave a literal `{...}` in output.
 
