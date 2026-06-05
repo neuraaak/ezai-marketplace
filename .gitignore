@@ -44,6 +44,7 @@ _temp/
 temp/
 tmp/
 tmpclaude-*
+.docs-audit/
 .remember/
 docs/superpowers/
 !docs/
