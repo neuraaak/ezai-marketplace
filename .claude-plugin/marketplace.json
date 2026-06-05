@@ -33,7 +33,7 @@
     },
     {
       "name": "ezai-docs-writer",
-      "description": "Produce documentation content for software projects: MkDocs pages, API references, changelogs, and technical writing in a consistent style.",
+      "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-persona-docs-specialist.",
       "source": "./plugins/ezai-docs-writer",
       "category": "development",
       "version": "1.0.0",
