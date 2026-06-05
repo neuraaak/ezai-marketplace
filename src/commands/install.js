@@ -16,7 +16,7 @@ function collectFiles(dir, baseDir, result, excludeDirs = []) {
     if (entry.isDirectory()) {
       collectFiles(fullPath, baseDir, result, excludeDirs);
     } else {
-      const dest = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+      const dest = path.relative(baseDir, fullPath).replaceAll('\\', '/');
       result.push({ src: fullPath, dest });
     }
   }
