@@ -28,13 +28,13 @@ First, read `references/index.md`. It is the router: it maps language → subdir
 
 Loading rule of thumb (the detailed table lives in `index.md`):
 
-- **Any doc-writing or audit task** → the language `standards.md` **paired with** `common/standards.md`.
-- **Generating or auditing a page** → add `common/quadrants-templates.md`.
+- **Any doc-writing task** → the language `standards.md` **paired with** `common/standards.md`.
+- **Generating a page** → add `common/quadrants-templates.md`.
 - **A `README.md`** → add `common/readme.md`.
 - **Tool stack / config scaffolding** → the language `toolchain.md`; **plugins / deploying** → the language `plugins-deploy.md`.
 - **A badge block** → the platform + language `badge-registry.md` pair (see `index.md`).
 
-Most tasks need two or three files; only a full-site audit loads everything for the language. If `references/index.md` is missing, infer the language from file extensions and note it in the `<thinking>` block.
+Most tasks need two or three files. If `references/index.md` is missing, infer the language from file extensions and note it in the `<thinking>` block.
 
 ## Workflow
 
@@ -49,7 +49,6 @@ Most tasks need two or three files; only a full-site audit loads everything for 
    - When emitting a badge block (README or `docs/index.md`), detect the platform (GitHub vs GitLab) and load the matching pair: `{platform}/badge-registry.md` + `{language}/badge-registry.md`.
    - Read the project's doc config file (`mkdocs.yml`, `docusaurus.config.js`, etc.) and package manifest to understand the public API and nav layout.
     - If neither `mkdocs.yml` nor `docusaurus.config.js` is present, look for `conf.py` (Sphinx) or `docs/.vitepress/config.*` (VitePress). If no recognized config is found, note this in the `<thinking>` block and proceed based on the directory structure alone, flagging that nav validation is unavailable.
-   - **For audit tasks**: also load `references/common/quadrants-templates.md` and list the actual `docs/` tree. Diff it against the canonical Diátaxis layout in that file to identify structurally missing sections — treat absent sections (`concepts/`, `examples/`, `changelog.md`, etc.) as gaps of equal severity to content issues within existing pages. Report them explicitly before reviewing page-level content.
 
 3. **Classify the request (Diátaxis)**
    - Use `<thinking>` to assign exactly one type: Tutorial, How-To, Reference (API/CLI), Examples, or Explanation.
