@@ -22,7 +22,9 @@ Before starting the pipeline, confirm the task is an audit or upgrade of an exis
 
 ## Pipeline
 
-Read `references/pipeline.md` before dispatching any stage. It defines each subagent's role, inputs, outputs, and the artifact contract in `.docs-audit/`.
+Before dispatching any stage, read these two reference files in order:
+1. `references/report-format.md` — the shared artifact schema and severity levels.
+2. `references/pipeline.md` — each subagent's role, inputs, outputs, and the artifact contract in `.docs-audit/`.
 
 The stages in order:
 
