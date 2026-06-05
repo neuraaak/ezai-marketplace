@@ -1,0 +1,23 @@
+{
+  "skill_name": "ezai-persona-docs-specialist",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audite et remets à niveau le site de docs de ce projet Python avec MkDocs. Le repo est sur GitHub.",
+      "expected_output": "Pipeline déclenché : sous-agent DETECTION produit 00-context.md (language:python, platform:github), sous-agent AUDIT produit 01-audit.md avec findings classifiés bloquant/majeur/mineur en sections A et B, agent principal rédige 02-plan.md et attend validation humaine avant de continuer.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Écris-moi une page Getting Started pour ma lib Python.",
+      "expected_output": "Scope gate déclenché : tâche = une seule page, pas un audit de site. Le skill délègue directement à ezai-docs-writer via le Skill tool et s'arrête — aucun sous-agent de pipeline lancé.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Mon site VitePress a l'air incomplet. Y a-t-il des sections manquantes ? Corrige ce qui ne va pas.",
+      "expected_output": "Pipeline complet (5 étapes) : DETECTION détecte JS/VitePress, AUDIT identifie les quadrants Diátaxis absents et les incohérences de badges, PLANNING produit un plan priorisé présenté à l'utilisateur, après approbation GENERATION invoque ezai-docs-writer pour chaque TODO, VALIDATION croise 01-audit.md et 03-changes.md et rapporte le statut par finding.",
+      "files": []
+    }
+  ]
+}
