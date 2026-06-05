@@ -35,7 +35,7 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 
 ```markdown
 ## DETECTION — YYYY-MM-DD
-Inputs read: <project root scan>
+Inputs read: pyproject.toml, package.json, mkdocs.yml, docs/.vitepress/config.*, .github/, .gitlab-ci.yml
 Artifact produced: .docs-audit/00-context.md
 
 - language: python | javascript
@@ -52,7 +52,7 @@ Artifact produced: .docs-audit/00-context.md
 
 ---
 
-## Stage 1 — AUDIT
+## Stage 1 — AUDIT *(load `report-format.md` before starting)*
 
 **Who:** Dedicated subagent (read-only).
 **Inputs:** `.docs-audit/00-context.md` + the `ezai-docs-writer` reference files listed in `docs-writer-refs` + full `docs/` tree.
@@ -80,7 +80,7 @@ Use `00-context.md` (language, platform, environment) as the control.
 
 ---
 
-## Stage 2 — PLANNING
+## Stage 2 — PLANNING *(load `report-format.md` before starting)*
 
 **Who:** Main orchestrator agent, entering plan mode.
 **Inputs:** `.docs-audit/00-context.md` + `.docs-audit/01-audit.md`
@@ -96,6 +96,7 @@ Inputs read: 00-context.md, 01-audit.md
 Artifact produced: .docs-audit/02-plan.md
 
 ### TODOs — bloquant
+# [01-ID] = finding ID from 01-audit.md (e.g. 01-003)
 - [ ] [01-ID] <short title> — <file to create or modify> — <one-line action>
 
 ### TODOs — majeur
