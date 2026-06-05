@@ -5,7 +5,7 @@ Every `.docs-audit/NN-*.md` artifact follows this schema. Keep reports concise �
 ## Header (required)
 
 ```text
-## [STAGE NAME] — <ISO date>
+## [STAGE NAME] — YYYY-MM-DD
 Inputs read: <comma-separated list of artifact files or project files>
 Artifact produced: .docs-audit/NN-stage-name.md
 ```
@@ -40,3 +40,8 @@ The ID is stable across stages: VALIDATION uses the same IDs to report status.
 - [ID] <short title> → FIXED | OPEN | REGRESSED
   Note: <optional one-line observation>
 ```
+
+- **FIXED**: the finding was addressed by GENERATION.
+- **OPEN**: the finding was not addressed or the fix was incomplete.
+- **REGRESSED**: a finding previously absent or fixed is now present in the current docs tree.
+- New findings observed in VALIDATION (not in `01-audit.md`) are out of scope — note them in a separate "Observations" section below the per-finding table.
