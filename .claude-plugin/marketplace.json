@@ -7,7 +7,7 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "updatedAt": "2026-06-05",
+  "updatedAt": "2026-06-06",
   "plugins": [
     {
       "name": "ezai-cicd-expert",
@@ -40,7 +40,37 @@
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        {
+          "id": "badges",
+          "description": "Badge block (README + docs/index.md)"
+        },
+        {
+          "id": "readme",
+          "description": "Full README.md generation or audit"
+        },
+        {
+          "id": "api-ref",
+          "description": "Docstrings → reference page"
+        },
+        {
+          "id": "tutorial",
+          "description": "Tutorial page (Diátaxis)"
+        },
+        {
+          "id": "how-to",
+          "description": "How-To guide (Diátaxis)"
+        },
+        {
+          "id": "explanation",
+          "description": "Explanation page (Diátaxis)"
+        },
+        {
+          "id": "examples",
+          "description": "Examples page (minimal runnable snippets)"
+        }
+      ]
     },
     {
       "name": "ezai-persona-docs-specialist",

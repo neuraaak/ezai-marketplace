@@ -1,3 +1,9 @@
+function formatCapabilities(capabilities) {
+  if (!capabilities || capabilities.length === 0) return '';
+  const lines = capabilities.map((c) => `  - ${c.id}: ${c.description}`).join('\n');
+  return `Capacités:\n${lines}\n`;
+}
+
 function formatInfo(plugin) {
   if (!plugin) return 'Plugin introuvable dans le catalogue.';
   return [
@@ -6,8 +12,10 @@ function formatInfo(plugin) {
     `Catégorie: ${plugin.category}`,
     `Desc.    : ${plugin.description}`,
     `Chemin   : ${plugin.path || 'n/a'}`,
-    '',
-  ].join('\n');
+    formatCapabilities(plugin.capabilities),
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 async function runInfo(name, catalogue) {

@@ -44,6 +44,7 @@ function buildIndex() {
       };
       if (meta.version) entry.version = meta.version;
       if (meta.author) entry.author = meta.author;
+      if (meta.capabilities) entry.capabilities = meta.capabilities;
       return entry;
     })
     .filter(Boolean);
