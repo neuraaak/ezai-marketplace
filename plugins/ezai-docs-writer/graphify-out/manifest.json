@@ -1,0 +1,97 @@
+{
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\.claude-plugin\\plugin.json": {
+    "mtime": 1780732890.3284228,
+    "ast_hash": "cd2f40b188c4640cb7849a96d0c6e7fb",
+    "semantic_hash": "cd2f40b188c4640cb7849a96d0c6e7fb"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\evals\\eval_set_docs_writer.json": {
+    "mtime": 1780469490.3003469,
+    "ast_hash": "ac0d3245491273f4b16838fa7b6e0e60",
+    "semantic_hash": "ac0d3245491273f4b16838fa7b6e0e60"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\SKILL.md": {
+    "mtime": 1780732895.794156,
+    "ast_hash": "a7c2e43f3b1f411e0e8898d244a6903f",
+    "semantic_hash": "a7c2e43f3b1f411e0e8898d244a6903f"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\common\\quadrants-templates.md": {
+    "mtime": 1780597118.0849943,
+    "ast_hash": "48d7e6d376727dc45e9c379171591b5b",
+    "semantic_hash": "48d7e6d376727dc45e9c379171591b5b"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\common\\readme.md": {
+    "mtime": 1780703084.734474,
+    "ast_hash": "230cde9bd23797160c76b9735b807f8e",
+    "semantic_hash": "230cde9bd23797160c76b9735b807f8e"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\common\\standards.md": {
+    "mtime": 1780703093.0701456,
+    "ast_hash": "5a1d1d8298445ee502ff46dde7ba4c0c",
+    "semantic_hash": "5a1d1d8298445ee502ff46dde7ba4c0c"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\forge\\github\\badge-registry.md": {
+    "mtime": 1780703128.6907253,
+    "ast_hash": "658f0f74e234c7978dd46a40a91af868",
+    "semantic_hash": "658f0f74e234c7978dd46a40a91af868"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\forge\\gitlab\\badge-registry.md": {
+    "mtime": 1780703137.7812667,
+    "ast_hash": "6be3a9a76797a1399603c11dce5d737f",
+    "semantic_hash": "6be3a9a76797a1399603c11dce5d737f"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\forge\\index.md": {
+    "mtime": 1780703214.2895994,
+    "ast_hash": "54738847818fb10066189215fad2a3c9",
+    "semantic_hash": "54738847818fb10066189215fad2a3c9"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\index.md": {
+    "mtime": 1780703182.2836323,
+    "ast_hash": "f38e0cb329e0de7c03ab843b6d77ad15",
+    "semantic_hash": "f38e0cb329e0de7c03ab843b6d77ad15"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\index.md": {
+    "mtime": 1780703191.9527886,
+    "ast_hash": "50f30f35ab88fc62d22a53c141175f96",
+    "semantic_hash": "50f30f35ab88fc62d22a53c141175f96"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\javascript\\badge-registry.md": {
+    "mtime": 1780703119.7823598,
+    "ast_hash": "7861be5caa1c06f4693078a460df6e85",
+    "semantic_hash": "7861be5caa1c06f4693078a460df6e85"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\javascript\\plugins-deploy.md": {
+    "mtime": 1780703243.6729486,
+    "ast_hash": "571627008ea73d17009b4b5d51ff2aae",
+    "semantic_hash": "571627008ea73d17009b4b5d51ff2aae"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\javascript\\standards.md": {
+    "mtime": 1780597118.0895095,
+    "ast_hash": "ac3fc80f3374ead3ba029aeff6ffc393",
+    "semantic_hash": "ac3fc80f3374ead3ba029aeff6ffc393"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\javascript\\toolchain.md": {
+    "mtime": 1780597118.0905166,
+    "ast_hash": "a712b0d1b96584f6d42163f092daaebe",
+    "semantic_hash": "a712b0d1b96584f6d42163f092daaebe"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\python\\badge-registry.md": {
+    "mtime": 1780703108.6959145,
+    "ast_hash": "c86fab43382e9208aef78f48914b7d36",
+    "semantic_hash": "c86fab43382e9208aef78f48914b7d36"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\python\\plugins-deploy.md": {
+    "mtime": 1780479040.1097305,
+    "ast_hash": "1d5da6ebb1189825e8aa87b4411e0bc7",
+    "semantic_hash": "1d5da6ebb1189825e8aa87b4411e0bc7"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\python\\standards.md": {
+    "mtime": 1780597118.0915165,
+    "ast_hash": "613fd2e19e1e9e6ef1bd969ea0221c81",
+    "semantic_hash": "613fd2e19e1e9e6ef1bd969ea0221c81"
+  },
+  "G:\\.root\\dev\\ezai-marketplace\\plugins\\ezai-docs-writer\\references\\languages\\python\\toolchain.md": {
+    "mtime": 1780597118.0915165,
+    "ast_hash": "c827cafe153f30a071ec9646958241db",
+    "semantic_hash": "c827cafe153f30a071ec9646958241db"
+  }
+}

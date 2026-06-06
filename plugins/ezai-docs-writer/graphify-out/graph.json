@@ -1,0 +1,1151 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "hyperedge_badge_block_generation",
+        "label": "Badge block generation requires forge registry + language registry pair",
+        "nodes": [
+          "concept_badge_pair_pattern",
+          "forge_github_badge_registry",
+          "python_badge_registry",
+          "javascript_badge_registry",
+          "forge_gitlab_badge_registry"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "plugins/ezai-docs-writer/references/common/readme.md"
+      },
+      {
+        "id": "hyperedge_diataxis_enforcement",
+        "label": "Di\u00e1taxis framework enforced across standards, templates, and all language layers",
+        "nodes": [
+          "common_standards_diataxis_framework",
+          "common_quadrants_templates",
+          "python_standards",
+          "javascript_standards",
+          "skill_ezai_docs_writer"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "plugins/ezai-docs-writer/SKILL.md"
+      },
+      {
+        "id": "hyperedge_docs_deploy_cascade",
+        "label": "Docs deploy cascade: CI generates coverage/changelog then builds and deploys with mike/vitepress-versioning",
+        "nodes": [
+          "python_plugins_deploy",
+          "javascript_plugins_deploy",
+          "concept_mike_versioning",
+          "concept_vitepress_versioning"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "plugin.json",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L1",
+      "id": "claude_plugin_plugin",
+      "community": 0,
+      "norm_label": "plugin.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L2",
+      "id": "claude_plugin_plugin_name",
+      "community": 0,
+      "norm_label": "name"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L3",
+      "id": "claude_plugin_plugin_description",
+      "community": 0,
+      "norm_label": "description"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L4",
+      "id": "claude_plugin_plugin_version",
+      "community": 0,
+      "norm_label": "version"
+    },
+    {
+      "label": "author",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L5",
+      "id": "claude_plugin_plugin_author",
+      "community": 0,
+      "norm_label": "author"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L6",
+      "id": "claude_plugin_plugin_author_name",
+      "community": 0,
+      "norm_label": "name"
+    },
+    {
+      "label": "email",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L7",
+      "id": "claude_plugin_plugin_author_email",
+      "community": 0,
+      "norm_label": "email"
+    },
+    {
+      "label": "category",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L9",
+      "id": "claude_plugin_plugin_category",
+      "community": 0,
+      "norm_label": "category"
+    },
+    {
+      "label": "capabilities",
+      "file_type": "code",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L10",
+      "id": "claude_plugin_plugin_capabilities",
+      "community": 0,
+      "norm_label": "capabilities"
+    },
+    {
+      "label": "eval_set_docs_writer.json",
+      "file_type": "code",
+      "source_file": "evals/eval_set_docs_writer.json",
+      "source_location": "L1",
+      "id": "evals_eval_set_docs_writer",
+      "community": 5,
+      "norm_label": "eval_set_docs_writer.json"
+    },
+    {
+      "label": "skill_name",
+      "file_type": "code",
+      "source_file": "evals/eval_set_docs_writer.json",
+      "source_location": "L2",
+      "id": "evals_eval_set_docs_writer_skill_name",
+      "community": 5,
+      "norm_label": "skill_name"
+    },
+    {
+      "label": "evals",
+      "file_type": "code",
+      "source_file": "evals/eval_set_docs_writer.json",
+      "source_location": "L3",
+      "id": "evals_eval_set_docs_writer_evals",
+      "community": 5,
+      "norm_label": "evals"
+    },
+    {
+      "label": "ezai-docs-writer plugin",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": "ezai",
+      "contributor": null,
+      "id": "claude_plugin_ezai_docs_writer",
+      "community": 2,
+      "norm_label": "ezai-docs-writer plugin"
+    },
+    {
+      "label": "ezai-docs-writer SKILL",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "skill_ezai_docs_writer",
+      "community": 2,
+      "norm_label": "ezai-docs-writer skill"
+    },
+    {
+      "label": "eval set docs-writer",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/evals/eval_set_docs_writer.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "evals_docs_writer",
+      "community": 2,
+      "norm_label": "eval set docs-writer"
+    },
+    {
+      "label": "References root router",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "references_index",
+      "community": 2,
+      "norm_label": "references root router"
+    },
+    {
+      "label": "Di\u00e1taxis framework",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_standards_diataxis_framework",
+      "community": 1,
+      "norm_label": "diataxis framework"
+    },
+    {
+      "label": "Emoji set for headings",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_standards_emoji_set",
+      "community": 1,
+      "norm_label": "emoji set for headings"
+    },
+    {
+      "label": "Admonition semantics",
+      "file_type": "concept",
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_standards_admonition_semantics",
+      "community": 1,
+      "norm_label": "admonition semantics"
+    },
+    {
+      "label": "Documentation writing standards (language-agnostic)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_standards",
+      "community": 1,
+      "norm_label": "documentation writing standards (language-agnostic)"
+    },
+    {
+      "label": "Di\u00e1taxis quadrants and page templates",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/common/quadrants-templates.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_quadrants_templates",
+      "community": 2,
+      "norm_label": "diataxis quadrants and page templates"
+    },
+    {
+      "label": "README reference standards",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "common_readme",
+      "community": 2,
+      "norm_label": "readme reference standards"
+    },
+    {
+      "label": "Forge index (badge routing)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/forge/index.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "forge_index",
+      "community": 4,
+      "norm_label": "forge index (badge routing)"
+    },
+    {
+      "label": "Badge registry \u2014 GitHub",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/forge/github/badge-registry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "forge_github_badge_registry",
+      "community": 4,
+      "norm_label": "badge registry \u2014 github"
+    },
+    {
+      "label": "Badge registry \u2014 GitLab",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/forge/gitlab/badge-registry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "forge_gitlab_badge_registry",
+      "community": 4,
+      "norm_label": "badge registry \u2014 gitlab"
+    },
+    {
+      "label": "Languages index (routing)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "languages_index",
+      "community": 3,
+      "norm_label": "languages index (routing)"
+    },
+    {
+      "label": "Python documentation standards (Google-style + MkDocs)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_standards",
+      "community": 1,
+      "norm_label": "python documentation standards (google-style + mkdocs)"
+    },
+    {
+      "label": "Google-style docstring convention",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_standards_google_docstring",
+      "community": 1,
+      "norm_label": "google-style docstring convention"
+    },
+    {
+      "label": "MkDocs Material annotations",
+      "file_type": "concept",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_standards_material_annotations",
+      "community": 1,
+      "norm_label": "mkdocs material annotations"
+    },
+    {
+      "label": "Python docs toolchain (MkDocs + Material canonical config)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/toolchain.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_toolchain",
+      "community": 3,
+      "norm_label": "python docs toolchain (mkdocs + material canonical config)"
+    },
+    {
+      "label": "MkDocs plugins and deployment (mike, CI)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_plugins_deploy",
+      "community": 3,
+      "norm_label": "mkdocs plugins and deployment (mike, ci)"
+    },
+    {
+      "label": "Badge registry \u2014 Python",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/badge-registry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "python_badge_registry",
+      "community": 4,
+      "norm_label": "badge registry \u2014 python"
+    },
+    {
+      "label": "JavaScript/TypeScript documentation standards (JSDoc/TSDoc + VitePress)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "javascript_standards",
+      "community": 1,
+      "norm_label": "javascript/typescript documentation standards (jsdoc/tsdoc + vitepress)"
+    },
+    {
+      "label": "JSDoc/TSDoc docstring convention",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "javascript_standards_jsdoc_tsdoc",
+      "community": 1,
+      "norm_label": "jsdoc/tsdoc docstring convention"
+    },
+    {
+      "label": "JS/TS docs toolchain (VitePress + TypeDoc canonical config)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/toolchain.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "javascript_toolchain",
+      "community": 3,
+      "norm_label": "js/ts docs toolchain (vitepress + typedoc canonical config)"
+    },
+    {
+      "label": "VitePress plugins and deployment (TypeDoc, vitepress-versioning-plugin, CI)",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/plugins-deploy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "javascript_plugins_deploy",
+      "community": 3,
+      "norm_label": "vitepress plugins and deployment (typedoc, vitepress-versioning-plugin, ci)"
+    },
+    {
+      "label": "Badge registry \u2014 JavaScript/TypeScript",
+      "file_type": "document",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/badge-registry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "javascript_badge_registry",
+      "community": 4,
+      "norm_label": "badge registry \u2014 javascript/typescript"
+    },
+    {
+      "label": "Badge pair pattern (forge + language registries)",
+      "file_type": "concept",
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_badge_pair_pattern",
+      "community": 4,
+      "norm_label": "badge pair pattern (forge + language registries)"
+    },
+    {
+      "label": "public-oss vs internal README profile",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_public_oss_vs_internal_profile",
+      "community": 2,
+      "norm_label": "public-oss vs internal readme profile"
+    },
+    {
+      "label": "mike versioning strategy",
+      "file_type": "concept",
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_mike_versioning",
+      "community": 3,
+      "norm_label": "mike versioning strategy"
+    },
+    {
+      "label": "vitepress-versioning-plugin strategy",
+      "file_type": "concept",
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/toolchain.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_vitepress_versioning",
+      "community": 3,
+      "norm_label": "vitepress-versioning-plugin strategy"
+    },
+    {
+      "label": "api/index.md (curated) vs api/reference/index.md (auto-dump) split",
+      "file_type": "rationale",
+      "source_file": "plugins/ezai-docs-writer/references/common/quadrants-templates.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_api_index_vs_reference",
+      "community": 2,
+      "norm_label": "api/index.md (curated) vs api/reference/index.md (auto-dump) split"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_author",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_capabilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_category",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin",
+      "target": "claude_plugin_plugin_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin_author",
+      "target": "claude_plugin_plugin_author_email",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude-plugin/plugin.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "claude_plugin_plugin_author",
+      "target": "claude_plugin_plugin_author_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "evals/eval_set_docs_writer.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "evals_eval_set_docs_writer",
+      "target": "evals_eval_set_docs_writer_evals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "evals/eval_set_docs_writer.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "evals_eval_set_docs_writer",
+      "target": "evals_eval_set_docs_writer_skill_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "skill_ezai_docs_writer",
+      "target": "claude_plugin_ezai_docs_writer"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/evals/eval_set_docs_writer.json",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "evals_docs_writer",
+      "target": "skill_ezai_docs_writer"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "skill_ezai_docs_writer",
+      "target": "common_quadrants_templates"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "skill_ezai_docs_writer",
+      "target": "common_readme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "skill_ezai_docs_writer",
+      "target": "common_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "skill_ezai_docs_writer",
+      "target": "references_index"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "references_index",
+      "target": "common_quadrants_templates"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "references_index",
+      "target": "common_readme"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "references_index",
+      "target": "common_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "references_index",
+      "target": "forge_index"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "references_index",
+      "target": "languages_index"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_standards",
+      "target": "common_standards_diataxis_framework"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_standards",
+      "target": "common_standards_emoji_set"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_standards",
+      "target": "common_standards_admonition_semantics"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_standards",
+      "target": "common_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "python_standards",
+      "target": "common_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/quadrants-templates.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_quadrants_templates",
+      "target": "concept_api_index_vs_reference"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_standards",
+      "target": "common_quadrants_templates"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "python_standards",
+      "target": "common_quadrants_templates"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_readme",
+      "target": "concept_badge_pair_pattern"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "common_readme",
+      "target": "concept_public_oss_vs_internal_profile"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/forge/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "forge_index",
+      "target": "forge_github_badge_registry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/forge/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "forge_index",
+      "target": "forge_gitlab_badge_registry"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_badge_pair_pattern",
+      "target": "forge_github_badge_registry"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_badge_pair_pattern",
+      "target": "forge_gitlab_badge_registry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "javascript_badge_registry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "javascript_plugins_deploy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "javascript_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "javascript_toolchain"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "python_badge_registry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "python_plugins_deploy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "python_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/index.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "languages_index",
+      "target": "python_toolchain"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "python_standards",
+      "target": "python_standards_google_docstring"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "python_standards",
+      "target": "python_standards_material_annotations"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "python_standards_google_docstring",
+      "target": "javascript_standards_jsdoc_tsdoc"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/toolchain.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "python_toolchain",
+      "target": "python_plugins_deploy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "python_plugins_deploy",
+      "target": "concept_mike_versioning"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_badge_pair_pattern",
+      "target": "python_badge_registry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/plugins-deploy.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_plugins_deploy",
+      "target": "javascript_standards"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_standards",
+      "target": "javascript_standards_jsdoc_tsdoc"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/plugins-deploy.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_plugins_deploy",
+      "target": "javascript_toolchain"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/languages/javascript/toolchain.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "javascript_toolchain",
+      "target": "concept_vitepress_versioning"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_badge_pair_pattern",
+      "target": "javascript_badge_registry"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "concept_mike_versioning",
+      "target": "concept_vitepress_versioning"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyperedge_badge_block_generation",
+      "label": "Badge block generation requires forge registry + language registry pair",
+      "nodes": [
+        "concept_badge_pair_pattern",
+        "forge_github_badge_registry",
+        "python_badge_registry",
+        "javascript_badge_registry",
+        "forge_gitlab_badge_registry"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/references/common/readme.md"
+    },
+    {
+      "id": "hyperedge_diataxis_enforcement",
+      "label": "Di\u00e1taxis framework enforced across standards, templates, and all language layers",
+      "nodes": [
+        "common_standards_diataxis_framework",
+        "common_quadrants_templates",
+        "python_standards",
+        "javascript_standards",
+        "skill_ezai_docs_writer"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/ezai-docs-writer/SKILL.md"
+    },
+    {
+      "id": "hyperedge_docs_deploy_cascade",
+      "label": "Docs deploy cascade: CI generates coverage/changelog then builds and deploys with mike/vitepress-versioning",
+      "nodes": [
+        "python_plugins_deploy",
+        "javascript_plugins_deploy",
+        "concept_mike_versioning",
+        "concept_vitepress_versioning"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md"
+    }
+  ],
+  "built_at_commit": "7a26370b2ac1136f32724b1917e6d621d7b568b9"
+}

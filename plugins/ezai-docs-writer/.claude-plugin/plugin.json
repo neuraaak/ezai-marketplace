@@ -6,5 +6,14 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    { "id": "badges",      "description": "Badge block (README + docs/index.md)" },
+    { "id": "readme",      "description": "Full README.md generation or audit" },
+    { "id": "api-ref",     "description": "Docstrings → reference page" },
+    { "id": "tutorial",    "description": "Tutorial page (Diátaxis)" },
+    { "id": "how-to",      "description": "How-To guide (Diátaxis)" },
+    { "id": "explanation", "description": "Explanation page (Diátaxis)" },
+    { "id": "examples",    "description": "Examples page (minimal runnable snippets)" }
+  ]
 }

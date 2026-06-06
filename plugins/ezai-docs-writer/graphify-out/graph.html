@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out\graph.html</title>
+<script src="https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        integrity="sha384-Ux6phic9PEHJ38YtrijhkzyJ8yQlH8i/+buBR8s3mAZOJrP1gwyvAcIYl3GWtpX1"
+        crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">42 nodes &middot; 55 edges &middot; 6 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "claude_plugin_plugin", "label": "plugin.json", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 30.0, "font": {"size": 12, "color": "#ffffff"}, "title": "plugin.json", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 6}, {"id": "claude_plugin_plugin_name", "label": "name", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "name", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_description", "label": "description", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "description", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_version", "label": "version", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "version", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_author", "label": "author", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 20.0, "font": {"size": 12, "color": "#ffffff"}, "title": "author", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 3}, {"id": "claude_plugin_plugin_author_name", "label": "name", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "name", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_author_email", "label": "email", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "email", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_category", "label": "category", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "category", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_plugin_capabilities", "label": "capabilities", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "capabilities", "community": 0, "community_name": "Plugin Manifest & Metadata", "source_file": ".claude-plugin/plugin.json", "file_type": "code", "degree": 1}, {"id": "evals_eval_set_docs_writer", "label": "eval_set_docs_writer.json", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "eval_set_docs_writer.json", "community": 5, "community_name": "Eval Set", "source_file": "evals/eval_set_docs_writer.json", "file_type": "code", "degree": 2}, {"id": "evals_eval_set_docs_writer_skill_name", "label": "skill_name", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "skill_name", "community": 5, "community_name": "Eval Set", "source_file": "evals/eval_set_docs_writer.json", "file_type": "code", "degree": 1}, {"id": "evals_eval_set_docs_writer_evals", "label": "evals", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "evals", "community": 5, "community_name": "Eval Set", "source_file": "evals/eval_set_docs_writer.json", "file_type": "code", "degree": 1}, {"id": "claude_plugin_ezai_docs_writer", "label": "ezai-docs-writer plugin", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "ezai-docs-writer plugin", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/.claude-plugin/plugin.json", "file_type": "document", "degree": 1}, {"id": "skill_ezai_docs_writer", "label": "ezai-docs-writer SKILL", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 30.0, "font": {"size": 12, "color": "#ffffff"}, "title": "ezai-docs-writer SKILL", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/SKILL.md", "file_type": "document", "degree": 6}, {"id": "evals_docs_writer", "label": "eval set docs-writer", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "eval set docs-writer", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/evals/eval_set_docs_writer.json", "file_type": "document", "degree": 1}, {"id": "references_index", "label": "References root router", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 30.0, "font": {"size": 12, "color": "#ffffff"}, "title": "References root router", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/references/index.md", "file_type": "document", "degree": 6}, {"id": "common_standards_diataxis_framework", "label": "Di\u00e1taxis framework", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Di\u00e1taxis framework", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/common/standards.md", "file_type": "rationale", "degree": 1}, {"id": "common_standards_emoji_set", "label": "Emoji set for headings", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Emoji set for headings", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/common/standards.md", "file_type": "rationale", "degree": 1}, {"id": "common_standards_admonition_semantics", "label": "Admonition semantics", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "Admonition semantics", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/common/standards.md", "file_type": "concept", "degree": 1}, {"id": "common_standards", "label": "Documentation writing standards (language-agnostic)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 33.3, "font": {"size": 12, "color": "#ffffff"}, "title": "Documentation writing standards (language-agnostic)", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/common/standards.md", "file_type": "document", "degree": 7}, {"id": "common_quadrants_templates", "label": "Di\u00e1taxis quadrants and page templates", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 26.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Di\u00e1taxis quadrants and page templates", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/references/common/quadrants-templates.md", "file_type": "document", "degree": 5}, {"id": "common_readme", "label": "README reference standards", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 23.3, "font": {"size": 12, "color": "#ffffff"}, "title": "README reference standards", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/references/common/readme.md", "file_type": "document", "degree": 4}, {"id": "forge_index", "label": "Forge index (badge routing)", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 20.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Forge index (badge routing)", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/forge/index.md", "file_type": "document", "degree": 3}, {"id": "forge_github_badge_registry", "label": "Badge registry \u2014 GitHub", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Badge registry \u2014 GitHub", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/forge/github/badge-registry.md", "file_type": "document", "degree": 2}, {"id": "forge_gitlab_badge_registry", "label": "Badge registry \u2014 GitLab", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Badge registry \u2014 GitLab", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/forge/gitlab/badge-registry.md", "file_type": "document", "degree": 2}, {"id": "languages_index", "label": "Languages index (routing)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Languages index (routing)", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/index.md", "file_type": "document", "degree": 9}, {"id": "python_standards", "label": "Python documentation standards (Google-style + MkDocs)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 26.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Python documentation standards (Google-style + MkDocs)", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md", "file_type": "document", "degree": 5}, {"id": "python_standards_google_docstring", "label": "Google-style docstring convention", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Google-style docstring convention", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md", "file_type": "rationale", "degree": 2}, {"id": "python_standards_material_annotations", "label": "MkDocs Material annotations", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "MkDocs Material annotations", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/languages/python/standards.md", "file_type": "concept", "degree": 1}, {"id": "python_toolchain", "label": "Python docs toolchain (MkDocs + Material canonical config)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Python docs toolchain (MkDocs + Material canonical config)", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/python/toolchain.md", "file_type": "document", "degree": 2}, {"id": "python_plugins_deploy", "label": "MkDocs plugins and deployment (mike, CI)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 20.0, "font": {"size": 12, "color": "#ffffff"}, "title": "MkDocs plugins and deployment (mike, CI)", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md", "file_type": "document", "degree": 3}, {"id": "python_badge_registry", "label": "Badge registry \u2014 Python", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Badge registry \u2014 Python", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/languages/python/badge-registry.md", "file_type": "document", "degree": 2}, {"id": "javascript_standards", "label": "JavaScript/TypeScript documentation standards (JSDoc/TSDoc + VitePress)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 26.7, "font": {"size": 12, "color": "#ffffff"}, "title": "JavaScript/TypeScript documentation standards (JSDoc/TSDoc + VitePress)", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md", "file_type": "document", "degree": 5}, {"id": "javascript_standards_jsdoc_tsdoc", "label": "JSDoc/TSDoc docstring convention", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "JSDoc/TSDoc docstring convention", "community": 1, "community_name": "Doc Standards & Style Rules", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/standards.md", "file_type": "rationale", "degree": 2}, {"id": "javascript_toolchain", "label": "JS/TS docs toolchain (VitePress + TypeDoc canonical config)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 20.0, "font": {"size": 12, "color": "#ffffff"}, "title": "JS/TS docs toolchain (VitePress + TypeDoc canonical config)", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/toolchain.md", "file_type": "document", "degree": 3}, {"id": "javascript_plugins_deploy", "label": "VitePress plugins and deployment (TypeDoc, vitepress-versioning-plugin, CI)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 20.0, "font": {"size": 12, "color": "#ffffff"}, "title": "VitePress plugins and deployment (TypeDoc, vitepress-versioning-plugin, CI)", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/plugins-deploy.md", "file_type": "document", "degree": 3}, {"id": "javascript_badge_registry", "label": "Badge registry \u2014 JavaScript/TypeScript", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Badge registry \u2014 JavaScript/TypeScript", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/badge-registry.md", "file_type": "document", "degree": 2}, {"id": "concept_badge_pair_pattern", "label": "Badge pair pattern (forge + language registries)", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 26.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Badge pair pattern (forge + language registries)", "community": 4, "community_name": "Badge Registries", "source_file": "plugins/ezai-docs-writer/references/common/readme.md", "file_type": "concept", "degree": 5}, {"id": "concept_public_oss_vs_internal_profile", "label": "public-oss vs internal README profile", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "public-oss vs internal README profile", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/references/common/readme.md", "file_type": "rationale", "degree": 1}, {"id": "concept_mike_versioning", "label": "mike versioning strategy", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "mike versioning strategy", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md", "file_type": "concept", "degree": 2}, {"id": "concept_vitepress_versioning", "label": "vitepress-versioning-plugin strategy", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 16.7, "font": {"size": 12, "color": "#ffffff"}, "title": "vitepress-versioning-plugin strategy", "community": 3, "community_name": "Toolchain & Deployment", "source_file": "plugins/ezai-docs-writer/references/languages/javascript/toolchain.md", "file_type": "concept", "degree": 2}, {"id": "concept_api_index_vs_reference", "label": "api/index.md (curated) vs api/reference/index.md (auto-dump) split", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.3, "font": {"size": 0, "color": "#ffffff"}, "title": "api/index.md (curated) vs api/reference/index.md (auto-dump) split", "community": 2, "community_name": "Skill Core & Routing", "source_file": "plugins/ezai-docs-writer/references/common/quadrants-templates.md", "file_type": "rationale", "degree": 1}];
+const RAW_EDGES = [{"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_author", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_capabilities", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_category", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_description", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_name", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin", "to": "claude_plugin_plugin_version", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin_author", "to": "claude_plugin_plugin_author_email", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_plugin_author", "to": "claude_plugin_plugin_author_name", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "evals_eval_set_docs_writer", "to": "evals_eval_set_docs_writer_evals", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "evals_eval_set_docs_writer", "to": "evals_eval_set_docs_writer_skill_name", "label": "contains", "title": "contains [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "claude_plugin_ezai_docs_writer", "to": "skill_ezai_docs_writer", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "skill_ezai_docs_writer", "to": "evals_docs_writer", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "skill_ezai_docs_writer", "to": "common_quadrants_templates", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "skill_ezai_docs_writer", "to": "common_readme", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "skill_ezai_docs_writer", "to": "common_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "skill_ezai_docs_writer", "to": "references_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "references_index", "to": "common_quadrants_templates", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "references_index", "to": "common_readme", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "references_index", "to": "common_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "references_index", "to": "forge_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "references_index", "to": "languages_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_standards_diataxis_framework", "to": "common_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_standards_emoji_set", "to": "common_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_standards_admonition_semantics", "to": "common_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_standards", "to": "javascript_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_standards", "to": "python_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_quadrants_templates", "to": "concept_api_index_vs_reference", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_quadrants_templates", "to": "javascript_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_quadrants_templates", "to": "python_standards", "label": "references", "title": "references [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "common_readme", "to": "concept_badge_pair_pattern", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "common_readme", "to": "concept_public_oss_vs_internal_profile", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "forge_index", "to": "forge_github_badge_registry", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "forge_index", "to": "forge_gitlab_badge_registry", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "forge_github_badge_registry", "to": "concept_badge_pair_pattern", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "forge_gitlab_badge_registry", "to": "concept_badge_pair_pattern", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "javascript_badge_registry", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "javascript_plugins_deploy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "javascript_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "javascript_toolchain", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "python_badge_registry", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "python_plugins_deploy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "python_standards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "languages_index", "to": "python_toolchain", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "python_standards", "to": "python_standards_google_docstring", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "python_standards", "to": "python_standards_material_annotations", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "python_standards_google_docstring", "to": "javascript_standards_jsdoc_tsdoc", "label": "semantically_similar_to", "title": "semantically_similar_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "python_toolchain", "to": "python_plugins_deploy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "python_plugins_deploy", "to": "concept_mike_versioning", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "python_badge_registry", "to": "concept_badge_pair_pattern", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "javascript_standards", "to": "javascript_plugins_deploy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "javascript_standards", "to": "javascript_standards_jsdoc_tsdoc", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "javascript_toolchain", "to": "javascript_plugins_deploy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "javascript_toolchain", "to": "concept_vitepress_versioning", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "javascript_badge_registry", "to": "concept_badge_pair_pattern", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "concept_mike_versioning", "to": "concept_vitepress_versioning", "label": "semantically_similar_to", "title": "semantically_similar_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Plugin Manifest &amp; Metadata", "count": 9}, {"cid": 1, "color": "#F28E2B", "label": "Doc Standards &amp; Style Rules", "count": 9}, {"cid": 2, "color": "#E15759", "label": "Skill Core &amp; Routing", "count": 8}, {"cid": 3, "color": "#76B7B2", "label": "Toolchain &amp; Deployment", "count": 7}, {"cid": 4, "color": "#59A14F", "label": "Badge Registries", "count": 6}, {"cid": 5, "color": "#EDC948", "label": "Eval Set", "count": 3}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [{"id": "hyperedge_badge_block_generation", "label": "Badge block generation requires forge registry + language registry pair", "nodes": ["concept_badge_pair_pattern", "forge_github_badge_registry", "python_badge_registry", "javascript_badge_registry", "forge_gitlab_badge_registry"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "plugins/ezai-docs-writer/references/common/readme.md"}, {"id": "hyperedge_diataxis_enforcement", "label": "Di\u00e1taxis framework enforced across standards, templates, and all language layers", "nodes": ["common_standards_diataxis_framework", "common_quadrants_templates", "python_standards", "javascript_standards", "skill_ezai_docs_writer"], "relation": "implement", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "plugins/ezai-docs-writer/SKILL.md"}, {"id": "hyperedge_docs_deploy_cascade", "label": "Docs deploy cascade: CI generates coverage/changelog then builds and deploys with mike/vitepress-versioning", "nodes": ["python_plugins_deploy", "javascript_plugins_deploy", "concept_mike_versioning", "concept_vitepress_versioning"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 0.95, "source_file": "plugins/ezai-docs-writer/references/languages/python/plugins-deploy.md"}];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>
