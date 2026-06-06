@@ -96,47 +96,103 @@
     },
     {
       "name": "ezai-project-architect",
-      "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, and design patterns (Repository, Service, Factory).",
+      "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, design patterns (Repository, Factory, Composition), Hexagonal architecture, and type system contracts.",
       "source": "./plugins/ezai-project-architect",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        "feature-based-module-structure",
+        "public-api-surface",
+        "repository-pattern",
+        "hexagonal-architecture",
+        "value-objects",
+        "architecture-decision-watchguard",
+        "type-system-contracts",
+        "design-patterns-factory-composition"
+      ]
     },
     {
       "name": "ezai-project-config",
-      "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, CI/CD.",
+      "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, Docker, lockfiles, env vars, and observability.",
       "source": "./plugins/ezai-project-config",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        "pyproject-toml-structure",
+        "package-json-structure",
+        "linting-formatting-typecheck",
+        "docker-multistage",
+        "lockfile-reproducibility",
+        "env-vars-secrets",
+        "observability-opentelemetry",
+        "monorepo-tooling",
+        "pre-commit-setup"
+      ]
     },
     {
       "name": "ezai-project-performance",
-      "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, and caching strategies.",
+      "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.",
       "source": "./plugins/ezai-project-performance",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        "concurrency-model-selection",
+        "async-profiling-guidance",
+        "streaming-large-datasets",
+        "async-cancellation",
+        "build-performance-js",
+        "python-optimization-patterns",
+        "semaphore-concurrency-limiting"
+      ]
     },
     {
       "name": "ezai-project-quality",
-      "description": "Testing, security, and input validation standards for Python and JS/TS projects: test architecture with pytest/Vitest, security patterns, and code quality enforcement.",
+      "description": "Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.",
       "source": "./plugins/ezai-project-quality",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        {
+          "id": "tests",
+          "description": "Unit tests, parametrized cases, property-based invariants (pytest / Vitest)"
+        },
+        {
+          "id": "validation",
+          "description": "Schema validation at I/O boundaries (Pydantic / Zod)"
+        },
+        {
+          "id": "security",
+          "description": "Endpoint hardening, SQL injection, XSS, auth patterns"
+        },
+        {
+          "id": "secrets",
+          "description": "Secret management for dev and production environments"
+        },
+        {
+          "id": "logging",
+          "description": "Structured logging with correlation IDs"
+        },
+        {
+          "id": "review",
+          "description": "Quality and security review of existing code"
+        }
+      ]
     }
   ]
 }

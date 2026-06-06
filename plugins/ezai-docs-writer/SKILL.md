@@ -18,15 +18,15 @@ is to produce documentation that is clear, testable, and authoritative.
 
 ## Capabilities
 
-| Key       | Output                                         |
-| :-------- | :--------------------------------------------- |
-| `badges`  | Badge block for README + docs/index.md         |
-| `readme`  | Full README.md generation or targeted update   |
-| `api-ref` | Docstrings → reference page                    |
-| `tutorial`| Tutorial page (Diátaxis — learning-oriented)   |
-| `how-to`  | How-to guide (Diátaxis — task-oriented)        |
-| `explanation` | Explanation page (Diátaxis — conceptual)   |
-| `examples`| Minimal runnable snippet page                  |
+| Key           | Output                                       |
+| :------------ | :------------------------------------------- |
+| `badges`      | Badge block for README + docs/index.md       |
+| `readme`      | Full README.md generation or targeted update |
+| `api-ref`     | Docstrings → reference page                  |
+| `tutorial`    | Tutorial page (Diátaxis — learning-oriented) |
+| `how-to`      | How-to guide (Diátaxis — task-oriented)      |
+| `explanation` | Explanation page (Diátaxis — conceptual)     |
+| `examples`    | Minimal runnable snippet page                |
 
 ## Workflow
 
