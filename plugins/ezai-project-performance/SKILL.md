@@ -1,24 +1,49 @@
 ---
 name: ezai-project-performance
-description:
-  "Concurrency, async patterns, and performance optimization for
-  Python and JS/TS projects. Covers async/await model selection, threading vs
-  multiprocessing (Python 3.14+ GIL-less), Web Workers (JS), generator patterns
-  for large datasets, and profiling guidance. Load from ezai-persona-senior-dev, or
-  invoke directly for performance tasks.
+description: >
+  Optimisation des performances et modèles de concurrence pour Python et JS/TS.
+  Couvre : sélection async/await vs threading vs multiprocessing, Web Workers,
+  generators/async iterables pour grands datasets, profiling, caching, annulation.
 
-  Triggers on: 'this is slow', 'memory issue', 'concurrent requests', 'async
-  model', 'threading vs asyncio', 'stream large data', 'optimize this loop',
-  'Web Workers', 'AbortSignal'."
+  Charge depuis ezai-persona-senior-dev ou en direct pour toute tâche perf.
+
+  Déclenche sur : "c'est lent", "problème mémoire", "requêtes concurrentes",
+  "modèle async", "threading vs asyncio", "streamer de grandes données",
+  "optimiser cette boucle", "Web Workers", "AbortSignal", "profiler", "GIL",
+  "concurrent requests", "memory issue", "async model", "stream large data".
 ---
 
-Concurrency and performance standards. Load the language file from the routing table below, then load `references/common/performance.md` for cross-language principles.
+Concurrence et optimisation des performances. Suit le workflow en 3 étapes : identifier le type de charge, charger le fichier langue adapté, puis appliquer le modèle avec code complet.
+
+## Capacités
+
+| Capacité                     | Quand l'utiliser                              |
+| :--------------------------- | :-------------------------------------------- |
+| Sélection modèle concurrence | I/O-bound vs CPU-bound, Python vs JS          |
+| Profiling guidé              | Avant toute optimisation — jamais à l'aveugle |
+| Streaming grands datasets    | Fichiers multi-Go, prévenir les OOM           |
+| Annulation async             | Timeout, requêtes annulables, cleanup propre  |
+| Build performance (JS)       | Tree-shaking, lazy loading, bundler           |
+| Optimisations Python         | `__slots__`, `lru_cache`, NumPy, uvloop       |
+
+## Workflow
+
+1. **Identifier** — type de charge (I/O / CPU / mixte) + langue(s) détectées dans le projet
+2. **Charger** — fichier langue ci-dessous + `references/common/performance.md` (principes transversaux)
+3. **Appliquer** — proposer le modèle adapté avec code complet + critères de succès
 
 ## Language routing
 
-| Language                | File                                             |
+| Langue                  | Fichier                                          |
 | :---------------------- | :----------------------------------------------- |
 | Python                  | `references/languages/python/performance.md`     |
 | JavaScript / TypeScript | `references/languages/javascript/performance.md` |
 
-For tasks spanning both languages, load both files and apply each to its respective layer. If a file cannot be accessed, notify the user and fall back to `references/common/performance.md`.
+Pour des tâches couvrant les deux langues, charger les deux fichiers et appliquer chacun à sa couche respective. Si un fichier est inaccessible, notifier l'utilisateur et se rabattre sur `references/common/performance.md`.
+
+## Output format
+
+- **Choix de modèle** : tableau comparatif si plusieurs options sont valides
+- **Code** : exemple complet, annoté sur les points non-évidents uniquement
+- **Critères de succès** : liste vérifiable en fin de réponse
+- **Profiling** : toujours indiquer l'outil à utiliser avant d'optimiser

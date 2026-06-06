@@ -5,18 +5,72 @@
       "id": 1,
       "prompt": "Notre script Python charge un CSV de 4 Go avec pd.read_csv() puis itère ligne par ligne. Il consomme 8 Go de RAM. Refactorise pour traiter le fichier en streaming.",
       "expected_output": "Générateur Python avec pathlib.Path, chunked reading ou yield ligne par ligne, annotations Generator[str, None, None], aucun chargement complet en mémoire, exemple d'utilisation.",
+      "assertions": [
+        "La réponse utilise yield ou un générateur (pas pd.read_csv sans chunksize)",
+        "La réponse mentionne pathlib.Path ou open()",
+        "La réponse ne charge pas le fichier entier en mémoire",
+        "La réponse inclut un exemple d'utilisation du générateur"
+      ],
       "files": []
     },
     {
       "id": 2,
       "prompt": "J'ai une fonction async JS qui fetch 200 URLs avec un `for...of` + `await fetch()`. C'est lent. Optimise en gardant une limite de 10 requêtes simultanées.",
       "expected_output": "Remplacement par Promise.allSettled ou Array.fromAsync avec batching, AbortController pour timeout, concurrence limitée à 10 (semaphore pattern ou p-limit), TypeScript complet.",
+      "assertions": [
+        "La réponse utilise Promise.allSettled, Promise.all ou Array.fromAsync (pas await en boucle)",
+        "La réponse limite la concurrence à 10 (batching ou semaphore)",
+        "La réponse mentionne ou implémente AbortController",
+        "Le code est TypeScript valide"
+      ],
       "files": []
     },
     {
       "id": 3,
       "prompt": "On a du calcul matriciel CPU-intensif en Python 3.14. Faut-il utiliser asyncio, threading ou multiprocessing ? Explique et donne le code.",
       "expected_output": "Explication GIL-less Python 3.14 → threading recommandé pour CPU-bound, ThreadPoolExecutor avec max_workers, comparaison avec multiprocessing (overhead IPC), code complet.",
+      "assertions": [
+        "La réponse recommande threading (pas asyncio) pour du CPU-bound en Python 3.14+",
+        "La réponse explique la suppression du GIL en Python 3.14",
+        "La réponse utilise ThreadPoolExecutor",
+        "La réponse compare threading vs multiprocessing (overhead IPC)"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "J'ai une fonction Python async qui fait des appels HTTP. Je veux limiter à 5 requêtes simultanées et annuler automatiquement après 3 secondes si ça dépasse.",
+      "expected_output": "asyncio.Semaphore pour limiter la concurrence à 5, asyncio.timeout() pour le timeout 3s, gestion de TimeoutError, TaskGroup ou gather avec annulation propre.",
+      "assertions": [
+        "La réponse utilise asyncio.Semaphore avec max=5",
+        "La réponse implémente un timeout (asyncio.timeout ou asyncio.wait_for)",
+        "La réponse gère TimeoutError ou CancelledError",
+        "La réponse montre un exemple complet utilisable"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Je veux fetch une URL en JS avec un timeout de 3 secondes. Si ça dépasse, annuler proprement la requête.",
+      "expected_output": "AbortController avec setTimeout pour abort après 3s, fetch avec signal, gestion du AbortError dans le catch, pattern Promise.race optionnel.",
+      "assertions": [
+        "La réponse utilise AbortController et AbortSignal",
+        "La réponse implémente le timeout via setTimeout + controller.abort()",
+        "La réponse gère l'AbortError dans le catch",
+        "La réponse est TypeScript valide"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Ma fonction Python est lente mais je ne sais pas pourquoi. Comment profiler pour trouver le goulot d'étranglement avant d'optimiser ?",
+      "expected_output": "Présentation de cProfile (stdlib) en premier, py-spy pour les cas sans modifier le code, tracemalloc si le problème est mémoire, ordre d'investigation clair.",
+      "assertions": [
+        "La réponse mentionne cProfile ou py-spy",
+        "La réponse déconseille d'optimiser avant de mesurer",
+        "La réponse donne une commande ou un exemple de code pour démarrer le profiling",
+        "La réponse distingue profiling CPU vs mémoire (tracemalloc ou memray)"
+      ],
       "files": []
     }
   ]
