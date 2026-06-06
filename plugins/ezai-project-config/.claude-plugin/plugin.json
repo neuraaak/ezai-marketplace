@@ -1,10 +1,21 @@
 {
   "name": "ezai-project-config",
-  "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, CI/CD.",
-  "version": "1.0.0",
+  "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, Docker, lockfiles, env vars, and observability.",
+  "version": "1.1.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    "pyproject-toml-structure",
+    "package-json-structure",
+    "linting-formatting-typecheck",
+    "docker-multistage",
+    "lockfile-reproducibility",
+    "env-vars-secrets",
+    "observability-opentelemetry",
+    "monorepo-tooling",
+    "pre-commit-setup"
+  ]
 }

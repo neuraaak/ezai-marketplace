@@ -4,19 +4,78 @@
     {
       "id": 1,
       "prompt": "Génère un `pyproject.toml` complet pour une librairie Python 3.12 open-source appelée `dataflow`. Elle utilise ruff, ty, pytest, et mkdocs. Le build backend doit être hatchling.",
-      "expected_output": "pyproject.toml avec [build-system] hatchling, [project] complet, [tool.ruff.lint] avec règles commentées, [tool.ty], [tool.pytest.ini_options], emojis de section, ligne length cohérente.",
+      "expected_output": "pyproject.toml avec [build-system] hatchling, [project] complet, [tool.ruff.lint] avec règles commentées, [tool.ruff.format], [tool.ty], [tool.pytest.ini_options], emojis de section.",
+      "assertions": [
+        "La réponse inclut [build-system] avec hatchling",
+        "La réponse inclut [tool.ruff.lint] avec des règles commentées",
+        "La réponse inclut [tool.ruff.format]",
+        "La réponse inclut [tool.ty] avec strict = true",
+        "La réponse inclut [tool.pytest.ini_options]",
+        "requires-python est >= 3.11 ou >= 3.12"
+      ],
       "files": []
     },
     {
       "id": 2,
       "prompt": "Écris un Dockerfile multi-stage pour notre app Node.js 24 TypeScript. Elle doit être minimale en prod, non-root, et utiliser pnpm.",
       "expected_output": "Stage builder (pnpm install --frozen-lockfile + tsc), stage runtime (node:24-alpine, user non-root, COPY dist + node_modules), HEALTHCHECK, tag exact pas latest.",
+      "assertions": [
+        "La réponse utilise deux stages (AS builder + stage runtime)",
+        "La réponse utilise pnpm install --frozen-lockfile",
+        "L'image runtime a un utilisateur non-root",
+        "La réponse inclut HEALTHCHECK",
+        "Pas de tag latest — tag exact épinglé"
+      ],
       "files": []
     },
     {
       "id": 3,
       "prompt": "Crée un tsconfig.json pour un projet Node.js 24 ESM TypeScript strict. On veut les meilleures perf de compilation possible.",
       "expected_output": "target ES2026, module NodeNext, moduleResolution NodeNext, strict: true, noUncheckedIndexedAccess, exactOptionalPropertyTypes, types: [] pour perf, outDir/rootDir configurés.",
+      "assertions": [
+        "strict est true",
+        "module est NodeNext",
+        "moduleResolution est NodeNext",
+        "noUncheckedIndexedAccess est présent",
+        "types est [] (tableau vide pour perf)",
+        "target est ES2026 ou supérieur"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Configure pre-commit pour un projet Python avec ruff (lint + format) et ty. Donne aussi la commande pour installer les hooks.",
+      "expected_output": ".pre-commit-config.yaml avec hooks ruff et ruff-format, commande uv run pre-commit install, commande pour lancer manuellement.",
+      "assertions": [
+        "La réponse inclut un fichier .pre-commit-config.yaml",
+        "Le hook ruff avec --fix est présent",
+        "Le hook ruff-format est présent",
+        "La commande pre-commit install est donnée"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Comment gérer les variables d'environnement dans un projet Node.js TypeScript ? On a DATABASE_URL et API_KEY qui sont obligatoires.",
+      "expected_output": "Fonction getEnv avec validation au démarrage + RuntimeError si absent, .env dans .gitignore, injecter via secrets CI, mention de @t3-oss/env-nextjs pour Next.js.",
+      "assertions": [
+        "La réponse propose une validation au démarrage (fail fast)",
+        "La réponse mentionne .env dans .gitignore",
+        "La réponse ne stocke pas les secrets en dur dans le code",
+        "La réponse mentionne l'injection via secrets CI"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Configure ESLint pour un projet TypeScript avec flat config (ESLint 9+). On veut typescript-eslint en mode strict.",
+      "expected_output": "eslint.config.js avec import flat config, typescript-eslint strict, règles no-unused-vars et explicit-function-return-type, ESM syntax.",
+      "assertions": [
+        "La réponse utilise eslint.config.js (pas .eslintrc)",
+        "La réponse importe typescript-eslint",
+        "La config utilise tseslint.configs.strict ou équivalent strict",
+        "Le fichier est en syntaxe ESM (import/export)"
+      ],
       "files": []
     }
   ]

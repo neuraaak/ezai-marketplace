@@ -1,26 +1,35 @@
 # Config & Toolchain — Python
 
-## Rules
+## Règles
 
-- **VENV:** Always `.venv`. Never install globally.
-- **TOOLS:** `uv` (packages), `ruff` (lint/format), `ty` (types), `pre-commit` (gates), `mkdocs` (docs).
-- **BACKEND:** `hatchling` as build backend — no `setuptools`, no `flit`.
-- **CENTRAL:** All tool config in `pyproject.toml` — no `setup.cfg`, no `tox.ini`.
-- **VERSION:** Target Python 3.11+ minimum.
+- **VENV** : toujours `.venv`. Ne jamais installer globalement.
+- **TOOLS** : `uv` (packages), `ruff` (lint/format), `ty` (types), `pre-commit` (gates), `mkdocs` (docs).
+- **BACKEND** : `hatchling` comme build backend — pas de `setuptools`, pas de `flit`.
+- **CENTRAL** : toute config outil dans `pyproject.toml` — pas de `setup.cfg`, pas de `tox.ini`.
+- **VERSION** : Python 3.11+ minimum. Épingler dans `.python-version`.
 
-## Environment
+## Environnement
 
 ```bash
-uv venv                          # create .venv
-uv sync                          # install deps from uv.lock
-uv run pytest                    # run inside venv without activating
+uv venv                          # créer .venv
+uv sync                          # installer les deps depuis uv.lock
+uv run pytest                    # exécuter dans le venv sans l'activer
 uv run ruff check .
+uv run ruff format .
 uv run ty check
 ```
 
-## `pyproject.toml` structure
+## `.python-version`
 
-Section order (emoji markers help visual navigation):
+```text
+3.12
+```
+
+Committer ce fichier pour épingler la version Python utilisée par `uv` et `pyenv`.
+
+## `pyproject.toml` — structure complète
+
+L'ordre des sections (les emojis aident à la navigation visuelle) :
 
 ```toml
 # 🔨 Build system
@@ -35,7 +44,10 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = []
 
-# 🎨 Code quality
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "ty", "mkdocs"]
+
+# 🎨 Linting
 [tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
@@ -44,33 +56,84 @@ select = [
     "S",   # bandit (security)
     "UP",  # pyupgrade
 ]
+ignore = []
 
+# 🖌️ Formatting
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+# 🔍 Type checking
 [tool.ty]
 strict = true
 
+# 🧪 Tests
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-v --tb=short"
 ```
 
-Always document ruff rule selections with inline comments.
+Toujours documenter les sélections de règles ruff avec des commentaires inline.
 
-## Foundational syntax checklist (3.11+)
+## `pre-commit` — config
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+      - id: mypy
+```
+
+```bash
+uv run pre-commit install   # activer les hooks Git
+uv run pre-commit run --all-files  # lancer manuellement
+```
+
+## `mkdocs` — config minimale
+
+```yaml
+# mkdocs.yml
+site_name: My Project
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - API: api/
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+```
+
+## Syntaxe fondamentale (3.11+)
 
 ```python
-from __future__ import annotations  # deferred annotations — always
+from __future__ import annotations  # annotations différées — toujours
 
-from pathlib import Path             # pathlib only, no os.path
+from pathlib import Path             # pathlib uniquement, pas os.path
 
-def read_file(path: str | Path) -> bytes:   # union with |, not Union[]
+def read_file(path: str | Path) -> bytes:   # union avec |, pas Union[]
     with Path(path).open("rb") as f:
         return f.read()
 ```
 
-- `from __future__ import annotations` in every file
-- `pathlib.Path` exclusively for filesystem ops
-- `int | str` union syntax (not `Union`)
-- `with` statements for all resource cleanup
-- `t-strings` (PEP 750) for safe templates in 3.14+
+- `from __future__ import annotations` dans chaque fichier
+- `pathlib.Path` exclusivement pour les opérations filesystem
+- Syntaxe union `int | str` (pas `Union`)
+- `with` statements pour tout cleanup de ressource
+- `t-strings` (PEP 750) pour les templates sécurisés en 3.14+
 
 ## Docker multi-stage (Python)
 
@@ -88,17 +151,36 @@ USER appuser
 WORKDIR /app
 COPY --from=builder /app/.venv .venv
 COPY src/ src/
+HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 CMD [".venv/bin/python", "-m", "my_project"]
 ```
 
-- Pin exact image tags — never `python:latest`
-- `--frozen` in CI to respect the lockfile
-- Non-root user in production stage
+- Tags exacts — jamais `python:latest`
+- `--frozen` en CI pour respecter le lockfile
+- Utilisateur non-root en stage runtime
 
-## Success criteria
+## Variables d'environnement
 
-- `uv` exclusively for package management; `uv.lock` committed.
-- `pyproject.toml` is the single source of truth.
-- `from __future__ import annotations` in every Python file.
-- `hatchling` as build backend.
-- Docker images multi-stage, non-root.
+```python
+import os
+
+def get_env(key: str, default: str | None = None) -> str:
+    value = os.environ.get(key, default)
+    if value is None:
+        raise RuntimeError(f"Required environment variable '{key}' is not set")
+    return value
+
+DATABASE_URL = get_env("DATABASE_URL")
+API_KEY = get_env("API_KEY")
+```
+
+## Critères de succès
+
+- `uv` exclusivement pour la gestion des packages ; `uv.lock` commité.
+- `pyproject.toml` est la source de vérité unique.
+- `from __future__ import annotations` dans chaque fichier Python.
+- `hatchling` comme build backend.
+- `ruff lint` + `ruff format` configurés avec règles commentées.
+- `pre-commit` installé avec hooks ruff + ty.
+- Images Docker multi-stage, non-root, tags épinglés.
+- Secrets via variables d'environnement — jamais en dur.

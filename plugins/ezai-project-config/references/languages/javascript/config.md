@@ -1,13 +1,31 @@
 # Config & Toolchain — JavaScript / TypeScript
 
-## Rules
+## Règles
 
-- **VERSION:** Target ES2026 / Node.js 24+ minimum.
-- **ESM:** Always `"type": "module"` in `package.json`. Never CommonJS for new projects.
-- **MANAGER:** `pnpm` as package manager; commit `pnpm-lock.yaml`.
-- **DETERMINISM:** `pnpm install --frozen-lockfile` in CI.
+- **VERSION** : ES2026 / Node.js 24+ minimum.
+- **ESM** : toujours `"type": "module"` dans `package.json`. Jamais CommonJS pour les nouveaux projets.
+- **MANAGER** : `pnpm` comme gestionnaire de packages ; committer `pnpm-lock.yaml`.
+- **DETERMINISM** : `pnpm install --frozen-lockfile` en CI.
 
-## `package.json` essentials
+## Version pinning
+
+```text
+# .nvmrc
+24
+```
+
+Ou via Volta pour épingler sans fichier de config supplémentaire :
+
+```json
+{
+  "volta": {
+    "node": "24.1.0",
+    "pnpm": "9.0.0"
+  }
+}
+```
+
+## `package.json` — essentials
 
 ```json
 {
@@ -16,13 +34,14 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "eslint src/",
+    "format": "prettier --write src/",
     "test": "node --test",
     "typecheck": "tsc --noEmit"
   }
 }
 ```
 
-## `tsconfig.json` (TS 6.0+)
+## `tsconfig.json` (TS 5.x)
 
 ```json
 {
@@ -40,27 +59,64 @@
 }
 ```
 
-- `strict: true` is non-negotiable
-- `types: []` speeds up compilation by disabling auto-type inclusion
-- `noUncheckedIndexedAccess` catches array index bugs
+- `strict: true` non négociable
+- `types: []` accélère la compilation en désactivant l'inclusion automatique de types
+- `noUncheckedIndexedAccess` détecte les bugs d'index de tableau
 
-## Modern syntax highlights (ES2026 / Node 24+)
+## ESLint — config (flat config, ESLint 9+)
+
+```javascript
+// eslint.config.js
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.strict,
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/explicit-function-return-type": "error",
+    },
+  },
+);
+```
+
+## Syntaxe moderne (ES2026 / Node 24+)
 
 ```typescript
-// Temporal API — replace all legacy Date usage
+// Temporal API — remplace tout usage de Date
 const now = Temporal.Now.plainDateTimeISO();
 
-// Explicit Resource Management — auto-cleanup at scope end
-await using conn = await getConnection();  // [Symbol.asyncDispose]() called automatically
+// Explicit Resource Management — cleanup automatique à la fin du scope
+await using conn = await getConnection();  // [Symbol.asyncDispose]() appelé automatiquement
 
-// Array by Copy — no mutation
+// Array by Copy — pas de mutation
 const sorted = original.toSorted();
 const reversed = original.toReversed();
 
-// AbortController — standard for cancellable async ops
+// AbortController — standard pour les ops async annulables
 const controller = new AbortController();
 const result = await fetch(url, { signal: controller.signal });
 ```
+
+## Variables d'environnement
+
+```typescript
+// Validation au démarrage — fail fast si une var requise est absente
+function getEnv(key: string): string {
+  const value = process.env[key];
+  if (!value) throw new Error(`Required environment variable '${key}' is not set`);
+  return value;
+}
+
+const DATABASE_URL = getEnv("DATABASE_URL");
+const API_KEY = getEnv("API_KEY");
+```
+
+- `.env` en local uniquement — toujours dans `.gitignore`.
+- En CI : injecter via les secrets de la plateforme.
+- Pour les projets Next.js : `@t3-oss/env-nextjs` pour la validation typée des env vars.
 
 ## Docker multi-stage (Node.js)
 
@@ -80,22 +136,23 @@ USER appuser
 WORKDIR /app
 COPY --from=builder /app/dist dist/
 COPY --from=builder /app/node_modules node_modules/
+HEALTHCHECK --interval=30s --timeout=5s CMD node -e "fetch('http://localhost:3000/health').then(r => process.exit(r.ok ? 0 : 1))"
 CMD ["node", "dist/index.js"]
 ```
 
 ## Node.js Permission Model (Node 24+)
 
-Use `--permission` flag for scripts that should have limited filesystem access:
-
 ```bash
 node --permission --allow-fs-read="./data" --allow-fs-write="./output" app.js
 ```
 
-## Success criteria
+## Critères de succès
 
-- `"type": "module"` in `package.json`.
-- `strict: true` in `tsconfig.json`.
-- `pnpm-lock.yaml` committed; `--frozen-lockfile` in CI.
-- No `Date` — use `Temporal` API.
-- `using` / `await using` for resource management.
-- Docker images multi-stage, non-root, pinned tags.
+- `"type": "module"` dans `package.json`.
+- `strict: true` dans `tsconfig.json`.
+- `pnpm-lock.yaml` commité ; `--frozen-lockfile` en CI.
+- ESLint flat config avec typescript-eslint strict.
+- Pas de `Date` — utiliser l'API `Temporal`.
+- `using` / `await using` pour la gestion des ressources.
+- Secrets via variables d'environnement — validation au démarrage.
+- Images Docker multi-stage, non-root, tags épinglés.
