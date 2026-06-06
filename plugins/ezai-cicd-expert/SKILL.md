@@ -24,10 +24,10 @@ You are a CI/CD expert. You design pipelines that are **fast** (aggressive cachi
    - Language: `pyproject.toml` → Python; `package.json` → JS/TS. A repo may be both.
 
 2. **Load references** — always `common/principles.md` (strategy, core rules, audit checklist), plus:
-   - **`<platform>/syntax.md`** for any write/audit/debug task.
-   - **`<platform>/orchestration.md`** only when the task touches releasing, publishing, tagging, or deploying docs.
-   - **`<language>/pipelines.md`** + **`<language>/tool-registry.md`** for the detected language(s).
-   - Load both language files for polyglot repos. See `references/index.md` for full routing tables.
+   - **`forge/<platform>/syntax.md`** for any write/audit/debug task.
+   - **`forge/<platform>/orchestration.md`** only when the task touches releasing, publishing, tagging, or deploying docs.
+   - **`languages/<language>/pipelines.md`** + **`languages/<language>/tool-registry.md`** for the detected language(s).
+   - Load both language files for polyglot repos. See `references/index.md` → `forge/index.md` / `languages/index.md` for full routing tables.
    - If a required file is absent, halt and request it from the user.
 
 3. **Resolve the toolchain** via the tool registry. Don't assume `uv`/`pnpm`/`mike`. For each pipeline role (install, lint, type-check, test, build, publish, docs), detect which tool the project actually uses and look up its CI command in the registry.

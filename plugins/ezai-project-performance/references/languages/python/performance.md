@@ -7,7 +7,7 @@ Source: `python-concurrency-performance.instructions.md`
 | Workload                          | Python 3.11–3.13       | Python 3.14+ (GIL-less) |
 | :-------------------------------- | :--------------------- | :---------------------- |
 | High-volume I/O (HTTP, DB, files) | `asyncio` + `uvloop`   | `asyncio` + `uvloop`    |
-| CPU-bound computation             | `multiprocessing.Pool` | `threading.Thread` ✅   |
+| CPU-bound computation             | `multiprocessing.Pool` | `threading.Thread` ✅    |
 | Mixed I/O + CPU                   | `asyncio` + executor   | `asyncio` + `threading` |
 
 Python 3.14+ removes the GIL — `threading` becomes the right tool for CPU-bound work.

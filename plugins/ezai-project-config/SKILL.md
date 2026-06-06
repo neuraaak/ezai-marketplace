@@ -15,9 +15,9 @@ Project toolchain, configuration, and infrastructure standards. Load the languag
 
 ## Language routing
 
-| Language                | File                              |
-| :---------------------- | :-------------------------------- |
-| Python                  | `references/python/config.md`     |
-| JavaScript / TypeScript | `references/javascript/config.md` |
+| Language                | File                                        |
+| :---------------------- | :------------------------------------------ |
+| Python                  | `references/languages/python/config.md`     |
+| JavaScript / TypeScript | `references/languages/javascript/config.md` |
 
 For monorepos using both, load both language files and apply each to its respective subdirectory. If a file is unavailable, notify the user with: "I could not locate [filename]. Please provide it or confirm the language."

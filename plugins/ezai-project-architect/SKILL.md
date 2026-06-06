@@ -16,9 +16,9 @@ Architecture and design standards. Load the language file from the routing table
 
 ## Language routing
 
-| Language                | File                                    |
-| :---------------------- | :-------------------------------------- |
-| Python                  | `references/python/architecture.md`     |
-| JavaScript / TypeScript | `references/javascript/architecture.md` |
+| Language                | File                                             |
+| :---------------------- | :----------------------------------------------- |
+| Python                  | `references/languages/python/architecture.md`     |
+| JavaScript / TypeScript | `references/languages/javascript/architecture.md` |
 
 For polyglot repos, load both language files. If the language is not listed, load `references/common/architecture.md` only and state: "No language-specific reference exists for [language]; applying cross-language principles only." If the target file cannot be loaded, notify the user.

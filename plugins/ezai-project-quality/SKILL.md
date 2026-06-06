@@ -15,9 +15,9 @@ Testing, security, and quality standards. Load the language file from the routin
 
 ## Language routing
 
-| Language                | File                               |
-| :---------------------- | :--------------------------------- |
-| Python                  | `references/python/quality.md`     |
-| JavaScript / TypeScript | `references/javascript/quality.md` |
+| Language                | File                                        |
+| :---------------------- | :------------------------------------------ |
+| Python                  | `references/languages/python/quality.md`     |
+| JavaScript / TypeScript | `references/languages/javascript/quality.md` |
 
 For mixed repos, load both language files and apply each to its respective files. If a file cannot be read, notify the user and fall back to `references/common/quality.md`.

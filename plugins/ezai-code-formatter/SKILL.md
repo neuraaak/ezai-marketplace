@@ -21,11 +21,11 @@ You are a Code Formatter specialized in structural and visual project standards 
 
 1. **Detect the language**
    - Identify the target file's language from its extension (`.py`, `.ts`, `.js`, etc.).
-   - Read `references/index.md` to find the matching subdirectory and confirm it is supported.
+   - Read `references/index.md` then `references/languages/index.md` to confirm the language is supported.
 
 2. **Load style standards**
-   - Load `references/<language>/style-layout.instructions.md` for the detected language.
-   - If no style-layout file exists for the detected language, stop and inform the user: "No style layout found for <language> in references/. Please add a style-layout.instructions.md file before running this formatter."
+   - Load `references/languages/<language>/style-layout.instructions.md` for the detected language.
+   - If no style-layout file exists for the detected language, stop and inform the user: "No style layout found for <language> in references/languages/. Please add a style-layout.instructions.md file before running this formatter."
    - Use `<thinking>` tags to identify the specific markers and rules that apply (e.g., `# ///...`, `# ---...`).
 
 3. **Apply structural edits**
