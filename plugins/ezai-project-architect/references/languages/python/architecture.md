@@ -1,14 +1,14 @@
 # Architecture & Design — Python
 
-## Visibility & API surface
+## Visibilité & surface d'API
 
-| Prefix   | Meaning   | Use for                                               |
-| :------- | :-------- | :---------------------------------------------------- |
-| `name`   | Public    | External symbols; list in `__all__`                   |
-| `_name`  | Protected | Internal; stable within module, not external contract |
-| `__name` | Private   | Subclass name-collision avoidance only                |
+| Préfixe  | Signification | Usage                                                           |
+| :------- | :------------ | :-------------------------------------------------------------- |
+| `name`   | Public        | Symboles externes ; lister dans `__all__`                       |
+| `_name`  | Protégé       | Interne ; stable dans le module, pas un contrat externe         |
+| `__name` | Privé         | Évitement de collision de noms dans les sous-classes uniquement |
 
-Always define `__all__` in modules that export a public API:
+Toujours définir `__all__` dans les modules qui exportent une API publique :
 
 ```python
 __all__ = ["Processor", "Status"]
@@ -20,17 +20,17 @@ __all__ = ["Processor", "Status"]
 from enum import Enum
 from typing import Protocol, TypedDict
 
-# Prefer Enum over bare string constants
+# Préférer Enum aux constantes string nues
 class Status(Enum):
     PENDING = "pending"
     ACTIVE = "active"
 
-# Protocol for structural contracts (duck typing) — not abc.ABC
+# Protocol pour les contrats structurels (duck typing) — pas abc.ABC
 class OrderRepository(Protocol):
     def save(self, order: Order) -> None: ...
     def find_by_id(self, order_id: int) -> Order | None: ...
 
-# Factory via classmethod — avoid @staticmethod
+# Factory via classmethod — éviter @staticmethod
 class Processor:
     def __init__(self, name: str) -> None:
         self._name = name
@@ -40,59 +40,135 @@ class Processor:
         return cls(config["name"])
 ```
 
-## Type system
+## Value Objects — `@dataclass(frozen=True)`
+
+Un Value Object encapsule une primitive à sémantique forte. Immuable, comparable par valeur, sans identité propre.
+
+```python
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Money:
+    amount: int  # centimes — jamais de float pour les montants
+    currency: str
+
+    def __post_init__(self) -> None:
+        if self.amount < 0:
+            raise ValueError("Amount cannot be negative")
+
+@dataclass(frozen=True)
+class EmailAddress:
+    value: str
+
+    def __post_init__(self) -> None:
+        if "@" not in self.value:
+            raise ValueError(f"Invalid email: {self.value}")
+
+# Usage : Money(1000, "EUR") != Money(1000, "USD")
+# Les entités domain utilisent des Value Objects, pas des primitives nues
+```
+
+## `dataclass` vs `TypedDict` — guide de choix
+
+| Critère                                   | `@dataclass`   | `TypedDict` |
+| :---------------------------------------- | :------------- | :---------- |
+| Comportement (méthodes, validation)       | ✅              | ❌           |
+| Immuabilité (`frozen=True`)               | ✅              | ❌           |
+| Données externes sans logique (JSON, API) | ❌              | ✅           |
+| Zéro overhead runtime                     | ❌              | ✅           |
+| Value Objects domain                      | ✅              | ❌           |
+| Schéma de données structuré               | Selon contexte | ✅           |
+
+```python
+# TypedDict — données externes structurées sans logique
+class UserData(TypedDict):
+    id: int
+    email: str
+
+# dataclass — entité avec comportement ou immuabilité
+@dataclass
+class User:
+    id: int
+    email: EmailAddress
+
+    def change_email(self, new_email: EmailAddress) -> "User":
+        return User(id=self.id, email=new_email)
+```
+
+## Système de types
 
 ```python
 from __future__ import annotations
 from typing import Protocol, TypedDict, Literal, Annotated, Mapping
 
-# Native generics (no typing.List / typing.Dict)
+# Génériques natifs (pas typing.List / typing.Dict)
 items: list[str]
 counts: dict[str, int]
 
-# TypedDict — structured external data, no runtime overhead
-class UserData(TypedDict):
-    id: int
-    email: str
-
-# Literal — fixed value set
+# Literal — ensemble de valeurs fixes
 Status = Literal["pending", "active", "closed"]
 
-# Immutable config — Mapping, or frozendict in 3.14+
+# Config immuable — Mapping, ou frozendict en 3.14+
 Config = Mapping[str, str]
 ```
 
-Zero `Any`. Use `object` or `Unknown` (ty) when type is truly unknown.
+Zéro `Any`. Utiliser `object` ou `Unknown` (ty) quand le type est vraiment inconnu.
 
-## Hexagonal structure
+## Structure hexagonale
 
-```txt
+```text
 src/
-├── domain/          ← Entities, Value Objects (zero external imports)
-├── application/     ← Use Cases + Ports (Protocol interfaces)
+├── domain/          ← Entités, Value Objects (zéro imports externes)
+├── application/     ← Use Cases + Ports (interfaces Protocol)
 └── infrastructure/  ← Adapters (DB, APIs) + Composition Root
 ```
 
-Dependency rule: **always inward** — Infrastructure → Application → Domain.
+Règle de dépendance : **toujours vers l'intérieur** — Infrastructure → Application → Domain.
 
 ```python
-# application/ports.py — Port as Protocol (Application layer)
+# application/ports.py — Port comme Protocol (couche Application)
 class OrderRepository(Protocol):
     def save(self, order: Order) -> None: ...
 
-# infrastructure/adapters/sql_orders.py — Adapter (Infrastructure layer)
+# infrastructure/adapters/sql_orders.py — Adapter (couche Infrastructure)
 class SQLOrderRepository:
     def save(self, order: Order) -> None:
-        ...  # SQLAlchemy here — Domain never sees this
+        ...  # SQLAlchemy ici — le Domain ne voit jamais ceci
 ```
 
-Domain entities contain business logic — not just data bags (avoid anemic domain).
+Les entités domain contiennent la business logic — pas de simple sacs de données (éviter l'Anemic Domain Model).
 
-## Success criteria
+## Fakes pour les tests de Ports
 
-- `__all__` defines the explicit public surface.
-- `Protocol` used for all structural contracts, not `abc.ABC`.
-- No infrastructure imports in Domain or Application layers.
-- Fakes (not complex mocks) used to test Ports.
-- `from __future__ import annotations` at every file top.
-- Zero `Any`, zero `typing.List`/`typing.Dict`.
+Préférer les fakes (implémentations légères en mémoire) aux mocks complexes pour tester les Ports.
+
+```python
+# tests/fakes.py — Fake du Port OrderRepository
+class InMemoryOrderRepository:
+    def __init__(self) -> None:
+        self._store: dict[int, Order] = {}
+
+    def save(self, order: Order) -> None:
+        self._store[order.id] = order
+
+    def find_by_id(self, order_id: int) -> Order | None:
+        return self._store.get(order_id)
+
+# Dans le test — pas de mock.patch, pas de MagicMock
+def test_process_order() -> None:
+    repo = InMemoryOrderRepository()
+    service = OrderService(repo)
+    service.process(order_id=1)
+    assert repo.find_by_id(1) is not None
+```
+
+## Critères de succès
+
+- `__all__` définit la surface publique explicite.
+- `Protocol` utilisé pour tous les contrats structurels, pas `abc.ABC`.
+- Pas d'imports infrastructure dans Domain ou Application.
+- Fakes (pas de mocks complexes) utilisés pour tester les Ports.
+- `@dataclass(frozen=True)` pour les Value Objects immuables.
+- `TypedDict` pour les données externes sans logique.
+- `from __future__ import annotations` en tête de chaque fichier.
+- Zéro `Any`, zéro `typing.List`/`typing.Dict`.
