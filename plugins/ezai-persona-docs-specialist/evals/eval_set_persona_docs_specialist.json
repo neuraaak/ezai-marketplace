@@ -18,6 +18,30 @@
       "prompt": "Mon site VitePress a l'air incomplet. Y a-t-il des sections manquantes ? Corrige ce qui ne va pas.",
       "expected_output": "Pipeline complet (5 étapes) : DETECTION détecte JS/VitePress, AUDIT identifie les quadrants Diátaxis absents et les incohérences de badges, PLANNING produit un plan priorisé présenté à l'utilisateur, après approbation GENERATION invoque ezai-docs-writer pour chaque TODO, VALIDATION croise 01-audit.md et 03-changes.md et rapporte le statut par finding.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Le projet n'a pas de dossier docs/, juste un README.md à la racine. Fais un audit.",
+      "expected_output": "DETECTION détecte l'absence de docs tooling et de dossier docs/. 00-context.md indique docs-tooling:none. AUDIT traite le README comme seul document disponible et flagge l'absence de structure Diátaxis comme bloquant. PLANNING présente un plan minimal avant de continuer — le pipeline ne s'arrête pas à DETECTION.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Ajoute un badge npm et un badge CI à mon README.",
+      "expected_output": "Scope gate déclenché : tâche = modification d'un seul fichier (README), pas un audit de site complet. Délégation à ezai-docs-writer, pas de pipeline lancé.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Fais un audit complet de la doc, mais je veux juste voir les findings — pas de correctifs pour l'instant.",
+      "expected_output": "Pipeline partiel : DETECTION + AUDIT + PLANNING exécutés. Le plan 02-plan.md est présenté à l'utilisateur. Comme l'utilisateur n'approuve pas les correctifs, GENERATION n'est pas lancé. L'orchestrateur attend une décision explicite avant d'aller plus loin.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Mon site Sphinx sur GitLab a des badges qui viennent d'un ancien template corporate. Remplace-les par les bons.",
+      "expected_output": "Pipeline déclenché : DETECTION détecte Sphinx + GitLab. AUDIT flagge les badges corporate comme majeur (projet public-oss inféré) ou bloquant si profil internal confirmé. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
+      "files": []
     }
   ]
 }

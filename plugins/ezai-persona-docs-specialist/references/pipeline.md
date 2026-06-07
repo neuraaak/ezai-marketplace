@@ -118,7 +118,13 @@ Each TODO carries the finding ID from `01-audit.md` so VALIDATION can cross-refe
 
 The GENERATION subagent reads the approved plan and executes it file by file. For each TODO it **invokes `ezai-docs-writer`** via the Skill tool to produce or correct the target file. It does not write documentation content itself.
 
-If `ezai-docs-writer` is unavailable, GENERATION notes which TODOs could not be executed and why, then continues with the remaining TODOs.
+If `ezai-docs-writer` is unavailable, GENERATION must:
+
+1. Mark the TODO as `SKIPPED (ezai-docs-writer unavailable)` in `03-changes.md`.
+2. Add a top-level `## Blockers` section in `03-changes.md` listing each skipped TODO with its finding ID.
+3. Continue with the remaining TODOs that don't require docs-writer.
+
+This ensures VALIDATION can distinguish "not fixed because skipped" from "not fixed because the fix failed".
 
 ### 03-changes.md schema
 
