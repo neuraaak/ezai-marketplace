@@ -83,3 +83,4 @@ $RECYCLE.BIN/
 *.rej
 .claude/settings.json
 
+.env
