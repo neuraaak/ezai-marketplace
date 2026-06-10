@@ -75,7 +75,7 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 - [x] **Doter les 2 personas de capabilities + `composes`** 🟠 - `ezai-docs-specialist-persona` : outcomes `docs-audit`, `docs-upgrade-plan`, `docs-apply` ;
       `"composes": ["ezai-docs-writer"]`. - `ezai-senior-dev-persona` : modes d'intervention (`feature-implementation`, `code-review`,
       `architecture-decision`…) ; `"composes": ["ezai-project-architect", "ezai-project-config",
-  "ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
+"ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
 - [x] **Valider les capabilities dans `build-index.js`** 🟡
       Une fois le format unifié : vérifier que chaque skill composé existe dans le catalogue et,
       à terme, qu'une capability correspond à un fichier de référence. Débloque aussi une sortie
@@ -103,7 +103,7 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 | Moderne (assertions `contains`/`regex`/`not_contains`) | `cicd-expert`, `code-formatter`, `project-{architect,config,performance}`         |
 | Legacy (`expected_output` en prose invérifiable)       | `docs-writer`, `docs-specialist-persona`, `project-quality`, `senior-dev-persona` |
 
-- [ ] **Migrer les 4 sets legacy vers le format assertions** 🟠
+- [x] **Migrer les 4 sets legacy vers le format assertions** 🟠
       `docs-writer` (le skill de référence !), `docs-specialist-persona`, `project-quality`, `senior-dev-persona`.
       ⚠️ Ne **pas** enrichir les evals de `project-quality` (décision user) — migration de format seulement.
 - [ ] **Valider le schéma des evals** 🟡

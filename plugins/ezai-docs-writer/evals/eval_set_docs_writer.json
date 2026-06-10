@@ -6,7 +6,33 @@
       "capability": "api-ref",
       "prompt": "Écris la docstring Google-style complète pour cette fonction Python :\n\ndef calculate_discount(price: float, user_tier: str) -> float:\n    if user_tier == 'gold':\n        return price * 0.8\n    elif user_tier == 'silver':\n        return price * 0.9\n    return price",
       "expected_output": "Docstring Google-style avec sections Args, Returns, Raises, exemple dans Examples. Types cohérents avec les annotations. Pas de redondance avec le nom de la fonction.",
-      "files": []
+      "files": [],
+      "assertions": [
+        {
+          "id": "google-args-section",
+          "description": "Section Args: présente",
+          "type": "contains",
+          "value": "Args:"
+        },
+        {
+          "id": "google-returns-section",
+          "description": "Section Returns: présente",
+          "type": "contains",
+          "value": "Returns:"
+        },
+        {
+          "id": "google-examples-section",
+          "description": "Section Examples: présente",
+          "type": "contains",
+          "value": "Examples:"
+        },
+        {
+          "id": "no-placeholder",
+          "description": "Pas de placeholder TODO ou FIXME",
+          "type": "not_contains",
+          "value": "TODO"
+        }
+      ]
     },
     {
       "id": 2,
@@ -22,6 +48,32 @@
           "path": "mkdocs.yml",
           "content": "site_name: authflow\ntheme:\n  name: material\nnav:\n  - Home: index.md\n  - How-To: how-to/jwt.md"
         }
+      ],
+      "assertions": [
+        {
+          "id": "how-to-title",
+          "description": "Titre H1 commence par 'How to'",
+          "type": "regex",
+          "value": "^# How to"
+        },
+        {
+          "id": "numbered-steps",
+          "description": "Étapes numérotées présentes",
+          "type": "regex",
+          "value": "^\\d+\\."
+        },
+        {
+          "id": "admonition-present",
+          "description": "Au moins une admonition MkDocs (!!!) présente",
+          "type": "contains",
+          "value": "!!!"
+        },
+        {
+          "id": "no-theory-section",
+          "description": "Pas de section 'Why' ou 'Understanding' (pas de théorie)",
+          "type": "not_contains",
+          "value": "## Why"
+        }
       ]
     },
     {
@@ -29,7 +81,27 @@
       "capability": "api-ref",
       "prompt": "Écris le JSDoc complet pour cette fonction TypeScript :\n\nasync function fetchUserOrders(userId: string, options?: { limit?: number; cursor?: string }): Promise<{ orders: Order[]; nextCursor: string | null }>",
       "expected_output": "JSDoc TypeScript avec @param typés (pas de redondance avec les types TS inline), @returns documenté, @throws si applicable, @example avec await, format aligné avec TypeDoc.",
-      "files": []
+      "files": [],
+      "assertions": [
+        {
+          "id": "jsdoc-param",
+          "description": "@param présent",
+          "type": "contains",
+          "value": "@param"
+        },
+        {
+          "id": "jsdoc-returns",
+          "description": "@returns présent",
+          "type": "contains",
+          "value": "@returns"
+        },
+        {
+          "id": "jsdoc-example-with-await",
+          "description": "@example avec await (fonction async)",
+          "type": "regex",
+          "value": "@example[\\s\\S]*?await"
+        }
+      ]
     },
     {
       "id": 4,
@@ -40,6 +112,32 @@
         {
           "path": "pyproject.toml",
           "content": "[project]\nname = \"authflow\"\nversion = \"0.4.1\"\nrequires-python = \">=3.10\"\nlicense = { text = \"MIT\" }"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "pypi-badge",
+          "description": "Badge PyPI version présent",
+          "type": "contains",
+          "value": "pypi.org"
+        },
+        {
+          "id": "ci-badge",
+          "description": "Badge CI GitHub Actions présent",
+          "type": "regex",
+          "value": "github\\.com/acme/authflow/actions"
+        },
+        {
+          "id": "coverage-badge",
+          "description": "Badge coverage présent",
+          "type": "regex",
+          "value": "(?i)coverage"
+        },
+        {
+          "id": "no-invented-badge",
+          "description": "Pas de badge Travis, Circle CI ou autre hors registre GitHub",
+          "type": "not_contains",
+          "value": "travis-ci"
         }
       ]
     },
@@ -52,6 +150,32 @@
         {
           "path": "package.json",
           "content": "{\n  \"name\": \"ezai-fmt\",\n  \"version\": \"1.2.0\",\n  \"description\": \"Opinionated code formatter for JavaScript and TypeScript\",\n  \"license\": \"MIT\"\n}"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "h1-package-name",
+          "description": "Titre H1 = nom du package",
+          "type": "regex",
+          "value": "^# ezai-fmt"
+        },
+        {
+          "id": "npm-install",
+          "description": "Commande d'installation npm présente",
+          "type": "contains",
+          "value": "npm install"
+        },
+        {
+          "id": "no-features-section",
+          "description": "Pas de section ## Features en liste à puces",
+          "type": "not_contains",
+          "value": "## Features"
+        },
+        {
+          "id": "npm-badge",
+          "description": "Badge npm présent",
+          "type": "contains",
+          "value": "npmjs.com"
         }
       ]
     },
@@ -69,6 +193,32 @@
           "path": "mkdocs.yml",
           "content": "site_name: authflow\ntheme:\n  name: material\nnav:\n  - Home: index.md\n  - Tutorial: tutorial/getting-started.md"
         }
+      ],
+      "assertions": [
+        {
+          "id": "tutorial-title",
+          "description": "Titre H1 orienté apprentissage ('Getting started')",
+          "type": "regex",
+          "value": "^# Getting started"
+        },
+        {
+          "id": "pip-install-step",
+          "description": "Étape d'installation pip présente",
+          "type": "contains",
+          "value": "pip install"
+        },
+        {
+          "id": "no-how-to-digression",
+          "description": "Pas de titre 'How to' (pas de digression How-To dans un Tutorial)",
+          "type": "not_contains",
+          "value": "## How to"
+        },
+        {
+          "id": "prerequisites-note",
+          "description": "Admonition note sur les prérequis présente",
+          "type": "regex",
+          "value": "!!! note"
+        }
       ]
     },
     {
@@ -81,6 +231,32 @@
           "path": "mkdocs.yml",
           "content": "site_name: authflow\ntheme:\n  name: material\nnav:\n  - Home: index.md\n  - Explanation: explanation/jwt-signing.md"
         }
+      ],
+      "assertions": [
+        {
+          "id": "explanation-title",
+          "description": "Titre H1 orienté concept ('Understanding...' ou 'Why...')",
+          "type": "regex",
+          "value": "^# (Understanding|Why)"
+        },
+        {
+          "id": "no-install-command",
+          "description": "Pas de commande pip install (pas de contenu tutorial)",
+          "type": "not_contains",
+          "value": "pip install"
+        },
+        {
+          "id": "rs256-mentioned",
+          "description": "RS256 ou HS256 mentionné (trade-offs couverts)",
+          "type": "regex",
+          "value": "RS256|HS256"
+        },
+        {
+          "id": "no-numbered-steps",
+          "description": "Pas de liste d'étapes numérotées",
+          "type": "not_contains",
+          "value": "\n1. "
+        }
       ]
     },
     {
@@ -92,6 +268,32 @@
         {
           "path": "package.json",
           "content": "{\n  \"name\": \"ezai-fmt\",\n  \"version\": \"1.2.0\",\n  \"description\": \"Opinionated code formatter for JavaScript and TypeScript\",\n  \"license\": \"MIT\"\n}"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "three-h2-sections",
+          "description": "Au moins 3 sections H2 (un snippet par cas)",
+          "type": "regex",
+          "value": "(^## .+\\n){3}"
+        },
+        {
+          "id": "code-block-present",
+          "description": "Blocs de code présents",
+          "type": "contains",
+          "value": "```"
+        },
+        {
+          "id": "no-pedagogical-prose",
+          "description": "Pas d'introduction 'In this example' ou 'This section explains'",
+          "type": "not_contains",
+          "value": "In this example"
+        },
+        {
+          "id": "programmatic-api",
+          "description": "Usage programmatique Node.js présent (import ou require)",
+          "type": "regex",
+          "value": "import|require"
         }
       ]
     }
