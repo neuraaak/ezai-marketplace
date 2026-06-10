@@ -39,6 +39,7 @@
     "changelog": "git-cliff -o docs/changelog.md",
     "graphify:update": "node .scripts/run_graphify_update.js",
     "graphify:refresh": "node .scripts/run_graphify_refresh.js",
+    "graphify:cluster-plugins": "node scripts/graphify-cluster-plugins.js",
     "test:coverage": "jest --coverage"
   },
   "lint-staged": {
