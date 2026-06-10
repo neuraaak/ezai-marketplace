@@ -57,7 +57,7 @@ ezai search python
 
 ## `ezai info <skill>`
 
-Displays detailed metadata for a single skill: name, description, category, version, and author.
+Displays detailed metadata for a single skill: name, description, category, version, author, and capabilities.
 
 ```bash
 ezai info <skill>

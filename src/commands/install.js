@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
 
 function assertSafeRelPath(p) {
   if (typeof p !== 'string' || p.length === 0) throw new Error('chemin invalide');
@@ -16,54 +17,11 @@ function collectFiles(dir, baseDir, result, excludeDirs = []) {
     if (entry.isDirectory()) {
       collectFiles(fullPath, baseDir, result, excludeDirs);
     } else {
-      const dest = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+      const dest = path.relative(baseDir, fullPath).replaceAll('\\', '/');
       result.push({ src: fullPath, dest });
     }
   }
 }
-
-// Résout les fichiers d'un plugin (à plat) — utilisé pour la validation de chemins.
-function resolvePluginFiles(pluginEntry, repoRoot) {
-  assertSafeRelPath(pluginEntry.path);
-  const pluginDir = path.join(repoRoot, pluginEntry.path);
-  const skillsField = pluginEntry.skills || 'skills/';
-  const skillsDirs = Array.isArray(skillsField) ? skillsField : [skillsField];
-
-  const files = [];
-  for (const skillDir of skillsDirs) {
-    const normalized = skillDir.replace(/\/$/, '') || 'skills';
-    assertSafeRelPath(normalized);
-    const absDir = path.join(pluginDir, skillDir);
-    if (fs.existsSync(absDir)) {
-      collectFiles(absDir, pluginDir, files);
-    }
-  }
-  return files;
-}
-
-// Retourne chaque skill comme unité indépendante : [{ name, files }]
-function collectSkills(pluginDir, skillsRelDir) {
-  const normalized = skillsRelDir.replace(/\/$/, '') || 'skills';
-  assertSafeRelPath(normalized);
-  const skillsAbsDir = path.join(pluginDir, skillsRelDir);
-  if (!fs.existsSync(skillsAbsDir)) return [];
-
-  return fs
-    .readdirSync(skillsAbsDir, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => {
-      const skillAbsDir = path.join(skillsAbsDir, d.name);
-      const files = [];
-      collectFiles(skillAbsDir, skillAbsDir, files);
-      return { name: d.name, files };
-    });
-}
-
-const DEFAULT_PLATFORMS = [
-  { name: 'Claude Code', dir: path.join(os.homedir(), '.claude') },
-  { name: 'Gemini CLI', dir: path.join(os.homedir(), '.gemini') },
-  { name: 'Copilot', dir: path.join(os.homedir(), '.copilot') },
-];
 
 function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS) {
   const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
@@ -84,7 +42,22 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
       const src = path.resolve(path.join(agentsDir, skillName));
       const dest = path.join(skillsDir, skillName);
       try {
-        fs.rmSync(dest, { recursive: true, force: true });
+        try {
+          fs.readlinkSync(dest);
+          fs.rmSync(dest, { recursive: true, force: true });
+        } catch (e) {
+          if (e.code === 'ENOENT') {
+            // dest n'existe pas — ok
+          } else if (e.code === 'EINVAL') {
+            // vrai dossier (pas un lien) — ne pas supprimer
+            console.warn(
+              `  [warn] ${platform.name} : ${dest} est un dossier réel, non remplacé — supprimez-le manuellement si nécessaire`
+            );
+            continue;
+          } else {
+            throw e;
+          }
+        }
         fs.symlinkSync(src, dest, symlinkType);
         console.info(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
         linked++;
@@ -97,22 +70,6 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
   }
 
   if (linked > 0) console.info('');
-}
-
-function buildDestPath(pluginName, destRoot) {
-  const base = destRoot || process.cwd();
-  return path.join(base, '.agents', pluginName);
-}
-
-function resolvePlatforms(options = {}) {
-  const deployAll = !options.claude && !options.gemini && !options.copilot;
-  return DEFAULT_PLATFORMS.filter(({ name }) => {
-    if (deployAll) return true;
-    if (options.claude && name === 'Claude Code') return true;
-    if (options.gemini && name === 'Gemini CLI') return true;
-    if (options.copilot && name === 'Copilot') return true;
-    return false;
-  });
 }
 
 async function runInstall(pluginName, options, catalogue) {
@@ -166,12 +123,4 @@ async function runInstall(pluginName, options, catalogue) {
   console.info(`${label} installé(s) dans ${agentsSkillsDir}\n`);
 }
 
-module.exports = {
-  assertSafeRelPath,
-  resolvePluginFiles,
-  buildDestPath,
-  runInstall,
-  collectSkills,
-  linkToPlatforms,
-  resolvePlatforms,
-};
+module.exports = { assertSafeRelPath, runInstall, linkToPlatforms };

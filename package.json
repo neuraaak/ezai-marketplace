@@ -1,6 +1,6 @@
 {
   "name": "ezai-marketplace",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "CLI to install AI skills from the ezai marketplace into Claude Code, Gemini CLI, and Copilot",
   "author": {
     "name": "Florian Salort",
@@ -36,7 +36,12 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "changelog": "git-cliff -o docs/changelog.md"
+    "changelog": "git-cliff -o docs/changelog.md",
+    "graphify:update": "node .scripts/run_graphify_update.js",
+    "graphify:refresh": "node .scripts/run_graphify_refresh.js",
+    "graphify:plugin": "node .scripts/graphify-plugin.js",
+    "graphify:cluster-plugins": "node .scripts/graphify-cluster-plugins.js",
+    "test:coverage": "jest --coverage"
   },
   "lint-staged": {
     "*.js": [
@@ -60,6 +65,16 @@
   },
   "dependencies": {
     "commander": "^12.0.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 70
+      }
+    }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

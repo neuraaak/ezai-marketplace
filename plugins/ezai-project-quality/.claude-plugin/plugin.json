@@ -1,10 +1,36 @@
 {
   "name": "ezai-project-quality",
-  "description": "Testing, security, and input validation standards for Python and JS/TS projects: test architecture with pytest/Vitest, security patterns, and code quality enforcement.",
-  "version": "1.0.0",
+  "description": "Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.",
+  "version": "1.2.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "tests",
+      "description": "Unit tests, parametrized cases, property-based invariants (pytest / Vitest)"
+    },
+    {
+      "id": "validation",
+      "description": "Schema validation at I/O boundaries (Pydantic / Zod)"
+    },
+    {
+      "id": "security",
+      "description": "Endpoint hardening, SQL injection, XSS, auth patterns"
+    },
+    {
+      "id": "secrets",
+      "description": "Secret management for dev and production environments"
+    },
+    {
+      "id": "logging",
+      "description": "Structured logging with correlation IDs"
+    },
+    {
+      "id": "review",
+      "description": "Quality and security review of existing code"
+    }
+  ]
 }
