@@ -36,7 +36,7 @@ if (!arg || arg === '--help' || arg === '-h') {
   console.info('\nGenerates a graphify knowledge graph scoped to a single plugin.');
   console.info('Use "all" to process every plugin sequentially.');
   console.info('Output is written to plugins/<plugin-name>/graphify-out/\n');
-  console.info(`Available plugins:\n${  available}`);
+  console.info(`Available plugins:\n${available}`);
   process.exitCode = arg ? 0 : 1;
 } else if (arg === 'all') {
   const plugins = allPluginDirs();

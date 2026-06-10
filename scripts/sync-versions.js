@@ -19,7 +19,7 @@ for (const entry of fs.readdirSync(PLUGINS_DIR, { withFileTypes: true })) {
   if (meta.version === version) continue;
 
   meta.version = version;
-  fs.writeFileSync(pluginJsonPath, `${JSON.stringify(meta, null, 2)  }\n`, 'utf8');
+  fs.writeFileSync(pluginJsonPath, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
   console.log(`  version ${entry.name} → ${version}`);
   updated++;
 }
