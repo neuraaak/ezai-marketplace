@@ -1,4 +1,4 @@
-# Report format — ezai-persona-docs-specialist
+# Report format — ezai-docs-specialist-persona
 
 Every `.docs-audit/NN-*.md` artifact follows this schema. Keep reports concise — they are working artifacts, not prose documents.
 

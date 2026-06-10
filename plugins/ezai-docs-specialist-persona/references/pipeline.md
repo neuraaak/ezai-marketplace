@@ -1,4 +1,4 @@
-# Pipeline — ezai-persona-docs-specialist
+# Pipeline — ezai-docs-specialist-persona
 
 This file is loaded by the orchestrator when the pipeline starts. It defines the role, inputs, outputs, and artifact contract for each stage. Load `references/report-format.md` before reading this file.
 

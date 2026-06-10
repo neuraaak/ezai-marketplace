@@ -8,7 +8,7 @@ description:
   'document this class', 'add badges', or 'write an explanation page'.
 
   Scope: one file or one set of docstrings. For whole-site audits or
-  multi-page upgrades, use ezai-persona-docs-specialist instead. Not for
+  multi-page upgrades, use ezai-docs-specialist-persona instead. Not for
   source-code tasks (bug fixes, refactoring, tests, config files)."
 ---
 

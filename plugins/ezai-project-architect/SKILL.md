@@ -6,7 +6,7 @@ description: >
   (Repository, Factory, Composition), architecture Hexagonale (Ports & Adapters),
   Value Objects, et contrats du système de types.
 
-  Charge depuis ezai-persona-senior-dev ou en direct pour toute tâche de design.
+  Charge depuis ezai-senior-dev-persona ou en direct pour toute tâche de design.
 
   Déclenche sur : "how should I structure this", "design a repository for",
   "what pattern fits here", "create an interface for", "define the public API of",

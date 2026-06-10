@@ -5,7 +5,7 @@ description: >
   Couvre : sélection async/await vs threading vs multiprocessing, Web Workers,
   generators/async iterables pour grands datasets, profiling, caching, annulation.
 
-  Charge depuis ezai-persona-senior-dev ou en direct pour toute tâche perf.
+  Charge depuis ezai-senior-dev-persona ou en direct pour toute tâche perf.
 
   Déclenche sur : "c'est lent", "problème mémoire", "requêtes concurrentes",
   "modèle async", "threading vs asyncio", "streamer de grandes données",

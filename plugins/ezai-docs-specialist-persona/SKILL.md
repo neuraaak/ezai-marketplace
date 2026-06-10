@@ -1,5 +1,5 @@
 ---
-name: ezai-persona-docs-specialist
+name: ezai-docs-specialist-persona
 description: >-
   Use when the user's goal is a comprehensive health-check or overhaul of an
   entire documentation site — not writing or editing a single page. The defining

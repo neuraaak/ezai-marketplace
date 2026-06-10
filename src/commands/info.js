@@ -1,6 +1,13 @@
 function formatCapabilities(capabilities) {
   if (!capabilities || capabilities.length === 0) return '';
-  const lines = capabilities.map((c) => `  - ${c.id}: ${c.description}`).join('\n');
+  const lines = capabilities
+    .map((c) => {
+      if (typeof c === 'string') {
+        return `  - ${c}`;
+      }
+      return `  - ${c.id}: ${c.description}`;
+    })
+    .join('\n');
   return `Capacités:\n${lines}\n`;
 }
 

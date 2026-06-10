@@ -6,7 +6,7 @@ description: >
   linters, type checkers, Docker multi-stage builds, lockfiles, env vars, and
   observability setup.
 
-  Charge depuis ezai-persona-senior-dev ou en direct pour toute tâche de config.
+  Charge depuis ezai-senior-dev-persona ou en direct pour toute tâche de config.
 
   Déclenche sur : "set up the project", "configure ruff/ty/uv", "write a Dockerfile",
   "set up pre-commit", "configure tsconfig", "add OpenTelemetry", "lockfile issue",

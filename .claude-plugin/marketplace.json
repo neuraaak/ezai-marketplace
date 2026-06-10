@@ -7,7 +7,7 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "updatedAt": "2026-06-07",
+  "updatedAt": "2026-06-10",
   "plugins": [
     {
       "name": "ezai-cicd-expert",
@@ -49,8 +49,19 @@
       ]
     },
     {
+      "name": "ezai-docs-specialist-persona",
+      "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
+      "source": "./plugins/ezai-docs-specialist-persona",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
+    },
+    {
       "name": "ezai-docs-writer",
-      "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-persona-docs-specialist.",
+      "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
       "source": "./plugins/ezai-docs-writer",
       "category": "development",
       "version": "1.0.0",
@@ -88,28 +99,6 @@
           "description": "Examples page (minimal runnable snippets)"
         }
       ]
-    },
-    {
-      "name": "ezai-persona-docs-specialist",
-      "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
-      "source": "./plugins/ezai-persona-docs-specialist",
-      "category": "development",
-      "version": "1.0.0",
-      "author": {
-        "name": "ezai",
-        "email": "floriansalort@gmail.com"
-      }
-    },
-    {
-      "name": "ezai-persona-senior-dev",
-      "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
-      "source": "./plugins/ezai-persona-senior-dev",
-      "category": "development",
-      "version": "1.0.0",
-      "author": {
-        "name": "ezai",
-        "email": "floriansalort@gmail.com"
-      }
     },
     {
       "name": "ezai-project-architect",
@@ -210,6 +199,17 @@
           "description": "Quality and security review of existing code"
         }
       ]
+    },
+    {
+      "name": "ezai-senior-dev-persona",
+      "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
+      "source": "./plugins/ezai-senior-dev-persona",
+      "category": "development",
+      "version": "1.0.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      }
     }
   ]
 }

@@ -1,5 +1,5 @@
 ---
-name: ezai-persona-senior-dev
+name: ezai-senior-dev-persona
 description:
   "Elite Senior Developer persona for enterprise-grade Python and
   JavaScript/TypeScript projects. Invoke for any significant development task:
