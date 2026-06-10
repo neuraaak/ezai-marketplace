@@ -3,11 +3,12 @@
 
 // Reruns community detection + report generation on each plugin that already has
 // a graphify-out/graph.json. No API key needed — pure local clustering.
-// For initial extraction of a plugin graph, use: scripts/graphify-plugin.bat <name>
+// For initial extraction of a plugin graph, use: node .scripts/graphify-plugin.js <name>
 
 const fs = require('node:fs');
 const path = require('node:path');
 const { execSync } = require('node:child_process');
+const { wrapCmd } = require('./_env');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
@@ -26,7 +27,7 @@ const missing = plugins.filter((p) => !fs.existsSync(p.graph));
 
 if (missing.length > 0) {
   console.info(`Skipped (no graph.json): ${missing.map((p) => p.name).join(', ')}`);
-  console.info('  → run scripts/graphify-plugin.bat <name> to build a plugin graph first\n');
+  console.info('  → run: node .scripts/graphify-plugin.js <name> to build a plugin graph first\n');
 }
 
 if (ready.length > 0) {
@@ -36,7 +37,7 @@ if (ready.length > 0) {
   for (const plugin of ready) {
     console.info(`\nClustering ${plugin.name}...`);
     try {
-      execSync(`graphify cluster-only "${plugin.dir}"`, {
+      execSync(wrapCmd(`graphify cluster-only "${plugin.dir}"`), {
         stdio: 'inherit',
         shell: true,
         cwd: ROOT,

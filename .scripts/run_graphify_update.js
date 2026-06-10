@@ -3,6 +3,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const { execSync } = require('node:child_process');
+const { wrapCmd } = require('./_env');
 
 // Full AST re-extraction of the repo, wrapped in infisical for API key injection.
 // Use when the graph is stale or after structural refactors (rename, delete, move).
@@ -16,7 +17,7 @@ if (!fs.existsSync(path.join(repoRoot, 'graphify-out'))) {
 
 console.info('Re-extracting full graph at repo root...');
 
-execSync(`infisical run --path=/_API -- graphify update "${repoRoot}"`, {
+execSync(wrapCmd(`graphify update "${repoRoot}"`), {
   stdio: 'inherit',
   shell: true,
   cwd: repoRoot,

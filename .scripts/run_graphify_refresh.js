@@ -3,6 +3,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const { execSync } = require('node:child_process');
+const { wrapCmd } = require('./_env');
 
 // Semantic refresh of the single common graph at repo root.
 //
@@ -20,7 +21,7 @@ if (!fs.existsSync(graphPath)) {
 
 console.info('Re-clustering common graph at repo root...');
 
-execSync(`infisical run --path=/_API -- graphify cluster-only "${repoRoot}"`, {
+execSync(wrapCmd(`graphify cluster-only "${repoRoot}"`), {
   stdio: 'inherit',
   shell: true,
   cwd: repoRoot,
