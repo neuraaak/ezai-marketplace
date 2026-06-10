@@ -1,11 +1,10 @@
 name: CI
 
-# Quality gate on every push to main and every pull request.
+# Quality gate on every push and every pull request.
 # Release workflows never run if this one is red.
 
 on:
   push:
-    branches: [main]
     paths:
       - 'src/**'
       - 'bin/**'

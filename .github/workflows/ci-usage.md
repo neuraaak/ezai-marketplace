@@ -8,12 +8,13 @@ quality gate — release workflows never run if this one is red.
 
 | Event               | Branches | Path filter                                          |
 | ------------------- | -------- | ---------------------------------------------------- |
-| `push`              | `main`   | `src/**`, `bin/**`, `tests/**`, `package.json`, etc. |
+| `push`              | **all**  | `src/**`, `bin/**`, `tests/**`, `package.json`, etc. |
 | `pull_request`      | all      | same                                                 |
 | `workflow_dispatch` | manual   | —                                                    |
 
 Concurrent runs on the same ref are cancelled automatically (new push supersedes
-the old run). Deploy jobs are never affected because they live in separate workflows.
+the old run). Deploy/publish workflows are never triggered by CI — they live in
+`auto-tag.yml` and are gated to `main` only.
 
 ## Jobs
 
