@@ -61,7 +61,92 @@ function buildIndex() {
   };
 }
 
+const VALID_ASSERTION_TYPES = new Set([
+  'contains',
+  'regex',
+  'not_contains',
+  'import_order',
+  'no_logic_change',
+]);
+
+function validateEvals(pluginsDir) {
+  if (!fs.existsSync(pluginsDir)) return;
+  let warnings = 0;
+
+  for (const dir of fs.readdirSync(pluginsDir, { withFileTypes: true })) {
+    if (!dir.isDirectory()) continue;
+    const evalsDir = path.join(pluginsDir, dir.name, 'evals');
+    if (!fs.existsSync(evalsDir)) continue;
+
+    for (const file of fs.readdirSync(evalsDir)) {
+      if (!file.startsWith('eval_set_') || !file.endsWith('.json')) continue;
+      const filePath = path.join(evalsDir, file);
+      let data;
+      try {
+        data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      } catch {
+        console.warn(`  [eval] ${dir.name}/${file} : JSON invalide`);
+        warnings++;
+        continue;
+      }
+
+      const prefix = `  [eval] ${dir.name}/${file}`;
+      if (typeof data.skill_name !== 'string') {
+        console.warn(`${prefix} : champ skill_name manquant ou non-string`);
+        warnings++;
+      }
+      if (!Array.isArray(data.evals)) {
+        console.warn(`${prefix} : champ evals[] manquant`);
+        warnings++;
+        continue;
+      }
+
+      for (const ev of data.evals) {
+        const loc = `${prefix}#${ev.id ?? '?'}`;
+        if (typeof ev.id !== 'number') {
+          console.warn(`${loc} : id doit être un number`);
+          warnings++;
+        }
+        if (typeof ev.prompt !== 'string' || ev.prompt.trim() === '') {
+          console.warn(`${loc} : prompt manquant`);
+          warnings++;
+        }
+        if (!Array.isArray(ev.assertions)) {
+          console.warn(`${loc} : assertions[] absent (requis depuis Phase 4)`);
+          warnings++;
+          continue;
+        }
+        for (const a of ev.assertions) {
+          if (!VALID_ASSERTION_TYPES.has(a.type)) {
+            console.warn(
+              `${loc} assertion "${a.id ?? '?'}" : type "${a.type}" inconnu (valides : ${[...VALID_ASSERTION_TYPES].join(', ')})`
+            );
+            warnings++;
+          }
+          if (typeof a.value !== 'string' || a.value.trim() === '') {
+            console.warn(`${loc} assertion "${a.id ?? '?'}" : value manquante`);
+            warnings++;
+          }
+        }
+      }
+
+      if (data.skill_name && !data.skill_name.startsWith('ezai-')) {
+        console.warn(`${prefix} : skill_name "${data.skill_name}" ne commence pas par "ezai-"`);
+        warnings++;
+      }
+    }
+  }
+
+  if (warnings === 0) {
+    console.log('  Evals : OK (aucune anomalie de schéma détectée)');
+  } else {
+    console.warn(`  Evals : ${warnings} avertissement(s) de schéma`);
+  }
+}
+
 const catalogue = buildIndex();
 fs.writeFileSync(OUTPUT, JSON.stringify(catalogue, null, 2), 'utf8');
 console.log(`\nCatalogue régénéré : ${catalogue.plugins.length} plugin(s) indexé(s).`);
-console.log(`Fichier : ${OUTPUT}\n`);
+console.log(`Fichier : ${OUTPUT}`);
+validateEvals(PLUGINS_DIR);
+console.log();

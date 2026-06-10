@@ -106,9 +106,9 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 - [x] **Migrer les 4 sets legacy vers le format assertions** 🟠
       `docs-writer` (le skill de référence !), `docs-specialist-persona`, `project-quality`, `senior-dev-persona`.
       ⚠️ Ne **pas** enrichir les evals de `project-quality` (décision user) — migration de format seulement.
-- [ ] **Valider le schéma des evals** 🟡
+- [x] **Valider le schéma des evals** 🟡
       Au minimum dans `build-index.js` ou la CI ; idéalement un petit `scripts/run-evals.js` exécutable à la demande.
-- [ ] **Standardiser les trigger evals** 🟡
+- [x] **Standardiser les trigger evals** 🟡
       `trigger_evals_final.json` (code-formatter) est un concept précieux mais au nom de brouillon et non généralisé.
       → Soit un `trigger_evals.json` par plugin, soit un champ `should_trigger` / cas négatifs dans le schéma `eval_set`.
       Ajouter des cas négatifs (où le skill ne doit **pas** se déclencher), aujourd'hui absents.
