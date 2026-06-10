@@ -75,7 +75,7 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 - [x] **Doter les 2 personas de capabilities + `composes`** 🟠 - `ezai-docs-specialist-persona` : outcomes `docs-audit`, `docs-upgrade-plan`, `docs-apply` ;
       `"composes": ["ezai-docs-writer"]`. - `ezai-senior-dev-persona` : modes d'intervention (`feature-implementation`, `code-review`,
       `architecture-decision`…) ; `"composes": ["ezai-project-architect", "ezai-project-config",
-    "ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
+  "ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
 - [x] **Valider les capabilities dans `build-index.js`** 🟡
       Une fois le format unifié : vérifier que chaque skill composé existe dans le catalogue et,
       à terme, qu'une capability correspond à un fichier de référence. Débloque aussi une sortie
@@ -85,7 +85,7 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 
 ## Phase 3 — Refonte du persona senior-dev (≈ 2–4 h)
 
-- [ ] **Aligner `ezai-senior-dev-persona` sur le modèle `docs-specialist-persona`** 🟠
+- [x] **Aligner `ezai-senior-dev-persona` sur le modèle `docs-specialist-persona`** 🟠
       Le persona senior-dev est resté au format legacy ; il ne partage pas la logique d'orchestration
       adoptée par le persona docs (commit `a36e4d6`). À refondre sur le même socle : - workflow explicite par étapes avec **contrat d'artefacts** numérotés ; - fichiers `references/` dédiés (`pipeline.md`, `report-format.md`) ; - capabilities outcomes + champ `composes` (cf. Phase 2) ; - evals mises à jour en conséquence (cf. Phase 4).
 
