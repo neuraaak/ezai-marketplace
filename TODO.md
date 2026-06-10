@@ -10,38 +10,38 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 
 ## Phase 0 — Hygiène git (à faire en premier)
 
-- [ ] **Committer le renommage des personas de façon atomique** 🟢
+- [x] **Committer le renommage des personas de façon atomique** 🟢
       Le renommage `ezai-persona-{senior-dev,docs-specialist}` → `ezai-{senior-dev,docs-specialist}-persona`
       est complet et cohérent mais éclaté entre l'index et le working tree
       (`marketplace.json`, `docs/skills/index.md`, `src/commands/info.js`…).
       Inclure le fix de `info.js` (lecture des capabilities en chaînes simples — correct et nécessaire).
-- [ ] **Relancer `graphify update .`** une fois le commit du renommage passé (le graph actuel est figé sur `a36e4d6`).
+- [x] **Relancer `graphify update .`** une fois le commit du renommage passé (le graph actuel est figé sur `a36e4d6`).
 
 ---
 
 ## Phase 1 — Quick fixes CLI (≈ 1 h, fort ratio gain/effort)
 
-- [ ] **Version CLI hardcodée** 🟠 — `bin/ezai.js:14`
+- [x] **Version CLI hardcodée** 🟠 — `bin/ezai.js:14`
       `program.version('1.0.0')` alors que le package est en **1.1.2** : `ezai --version` ment.
       → `program.version(require('../package.json').version)`.
-- [ ] **Supprimer le code mort** 🟠 — `src/commands/install.js`
+- [x] **Supprimer le code mort** 🟠 — `src/commands/install.js`
       `resolvePluginFiles()`, `buildDestPath()`, `collectSkills()` ne sont utilisés que par les tests.
       Pire, `buildDestPath()` retourne `.agents/<name>` au lieu du vrai `.agents/skills/<name>` :
       un piège pour quiconque réutilise cette fonction « testée ».
       → Les supprimer (ainsi que leurs tests), ou les brancher réellement dans `runInstall`.
-- [ ] **Gestion d'erreurs du binaire** 🟡 — `bin/ezai.js`
+- [x] **Gestion d'erreurs du binaire** 🟡 — `bin/ezai.js`
       `program.parse()` (non-async) n'attrape pas les promesses rejetées des actions → message d'erreur
       **puis** stack trace d'unhandled rejection (sortie doublée, code retour non garanti).
       → `program.parseAsync().catch((err) => { console.error(err.message); process.exitCode = 1; })`
       et retirer les `.catch(rethrow)` par action.
-- [ ] **Dédupliquer `DEFAULT_PLATFORMS` + `resolvePlatforms`** 🟡
+- [x] **Dédupliquer `DEFAULT_PLATFORMS` + `resolvePlatforms`** 🟡
       Définies à l'identique dans `install.js` et `uninstall.js` → risque d'asymétrie silencieuse.
       → Extraire dans `src/platforms.js` partagé.
-- [ ] **`fetchCatalogue` sans timeout ni validation** 🟡 — `src/catalogue.js:9`
+- [x] **`fetchCatalogue` sans timeout ni validation** 🟡 — `src/catalogue.js:9`
       Un serveur muet (`EZAI_CATALOGUE_URL`) gèle le CLI indéfiniment ; un JSON sans `plugins` crashe loin
       avec une erreur cryptique.
       → `fetch(url, { signal: AbortSignal.timeout(10_000) })` + garde `Array.isArray(data.plugins)`.
-- [ ] **Pinner `pnpm/action-setup@v4` par SHA** 🟡 — `.github/workflows/ci.yml` (2 occurrences)
+- [x] **Pinner `pnpm/action-setup@v4` par SHA** 🟡 — `.github/workflows/ci.yml` (2 occurrences)
       Seule action non pinnée du repo ; incohérent avec le standard maison et avec ce que prêche
       le propre skill `ezai-cicd-expert`.
 
@@ -68,15 +68,15 @@ Légende sévérité : 🟠 modéré · 🟡 mineur · 🟢 cosmétique / opport
 | 🟡 Strings + section FR non normée | `ezai-project-{architect,config,performance}`             |
 | 🔴 Absent                          | `ezai-docs-specialist-persona`, `ezai-senior-dev-persona` |
 
-- [ ] **Migrer les 5 skills atomiques non conformes** 🟠
+- [x] **Migrer les 5 skills atomiques non conformes** 🟠
       `cicd-expert`, `code-formatter`, `project-{architect,config,performance}` :
       passer les strings en objets `{id, description}` et normaliser la section SKILL.md en
       `## Capabilities` anglais (remplace les `## Capacités` FR).
-- [ ] **Doter les 2 personas de capabilities + `composes`** 🟠 - `ezai-docs-specialist-persona` : outcomes `docs-audit`, `docs-upgrade-plan`, `docs-apply` ;
+- [x] **Doter les 2 personas de capabilities + `composes`** 🟠 - `ezai-docs-specialist-persona` : outcomes `docs-audit`, `docs-upgrade-plan`, `docs-apply` ;
       `"composes": ["ezai-docs-writer"]`. - `ezai-senior-dev-persona` : modes d'intervention (`feature-implementation`, `code-review`,
       `architecture-decision`…) ; `"composes": ["ezai-project-architect", "ezai-project-config",
-      "ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
-- [ ] **Valider les capabilities dans `build-index.js`** 🟡
+    "ezai-project-performance", "ezai-project-quality", "ezai-cicd-expert"]`.
+- [x] **Valider les capabilities dans `build-index.js`** 🟡
       Une fois le format unifié : vérifier que chaque skill composé existe dans le catalogue et,
       à terme, qu'une capability correspond à un fichier de référence. Débloque aussi une sortie
       homogène pour `ezai info <skill>` (et permettra de retirer le patch défensif string/objet de `info.js`).
