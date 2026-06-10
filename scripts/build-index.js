@@ -6,6 +6,9 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
+const { version: PKG_VERSION } = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')
+);
 const OUTPUT = path.join(ROOT, '.claude-plugin', 'marketplace.json');
 
 function today() {
@@ -18,7 +21,7 @@ function buildIndex() {
     return {
       $schema: 'https://json.schemastore.org/claude-code-marketplace.json',
       name: 'ezai-marketplace',
-      version: '1.0.0',
+      version: PKG_VERSION,
       description: 'Marketplace of AI skills for developers',
       owner: { name: 'ezai', email: 'floriansalort@gmail.com' },
       updatedAt: today(),
@@ -53,7 +56,7 @@ function buildIndex() {
   return {
     $schema: 'https://json.schemastore.org/claude-code-marketplace.json',
     name: 'ezai-marketplace',
-    version: '1.0.0',
+    version: PKG_VERSION,
     description: 'Curated marketplace of AI skills for senior developers (Python / JS/TS)',
     owner: { name: 'ezai', email: 'floriansalort@gmail.com' },
     updatedAt: today(),

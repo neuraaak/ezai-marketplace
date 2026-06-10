@@ -55,3 +55,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      - name: Coverage (threshold check)
+        if: matrix.node == '22'
+        run: pnpm test:coverage

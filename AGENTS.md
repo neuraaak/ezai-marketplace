@@ -42,13 +42,14 @@ docs/                              VitePress documentation site
 ## Commands
 
 ```bash
-pnpm test            # Jest — 48 tests must pass
+pnpm test            # Jest — all tests must pass
 pnpm lint            # ESLint v10 flat config (eslint.config.js)
 pnpm format:check    # Prettier check
 pnpm format          # Prettier write
 pnpm build-index     # Regenerate .claude-plugin/marketplace.json
 pnpm docs:dev        # VitePress dev server
 pnpm docs:build      # VitePress build (output: docs/.vitepress/dist)
+pnpm test:coverage   # Jest with coverage report (≥70 % lines required)
 ```
 
 ---
@@ -57,6 +58,7 @@ pnpm docs:build      # VitePress build (output: docs/.vitepress/dist)
 
 - **CommonJS only** — `require()` throughout, no ESM (`import`). Do not add `"type": "module"` to `package.json`.
 - **No TypeScript** — plain `.js` files.
+- **Language convention** — CLI messages and code comments are in French; documentation (`docs/`, `AGENTS.md`, plugin descriptions, `## Capabilities`) is in English. This split is intentional and must be preserved.
 - **No comments** unless the _why_ is non-obvious. Never describe what the code does.
 - **No magic numbers** — enforced by `herald.config.json`.
 - **Max 500 lines per file** — enforced by `herald.config.json`.

@@ -42,7 +42,22 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
       const src = path.resolve(path.join(agentsDir, skillName));
       const dest = path.join(skillsDir, skillName);
       try {
-        fs.rmSync(dest, { recursive: true, force: true });
+        try {
+          fs.readlinkSync(dest);
+          fs.rmSync(dest, { recursive: true, force: true });
+        } catch (e) {
+          if (e.code === 'ENOENT') {
+            // dest n'existe pas — ok
+          } else if (e.code === 'EINVAL') {
+            // vrai dossier (pas un lien) — ne pas supprimer
+            console.warn(
+              `  [warn] ${platform.name} : ${dest} est un dossier réel, non remplacé — supprimez-le manuellement si nécessaire`
+            );
+            continue;
+          } else {
+            throw e;
+          }
+        }
         fs.symlinkSync(src, dest, symlinkType);
         console.info(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
         linked++;

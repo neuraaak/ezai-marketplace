@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "ezai-marketplace",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Curated marketplace of AI skills for senior developers (Python / JS/TS)",
   "owner": {
     "name": "ezai",
@@ -14,7 +14,7 @@
       "description": "CI/CD expert for GitHub Actions and GitLab CI: write, audit, and debug pipelines; caching, matrix builds, OIDC publishing, reusable workflows, and deployment gates for Python and JS/TS projects.",
       "source": "./plugins/ezai-cicd-expert",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -55,7 +55,7 @@
       "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
       "source": "./plugins/ezai-code-formatter",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -92,7 +92,7 @@
       "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
       "source": "./plugins/ezai-docs-specialist-persona",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -120,7 +120,7 @@
       "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
       "source": "./plugins/ezai-docs-writer",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -161,7 +161,7 @@
       "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, design patterns (Repository, Factory, Composition), Hexagonal architecture, and type system contracts.",
       "source": "./plugins/ezai-project-architect",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -206,7 +206,7 @@
       "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, Docker, lockfiles, env vars, and observability.",
       "source": "./plugins/ezai-project-config",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -255,7 +255,7 @@
       "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.",
       "source": "./plugins/ezai-project-performance",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -296,7 +296,7 @@
       "description": "Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.",
       "source": "./plugins/ezai-project-quality",
       "category": "development",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -333,7 +333,7 @@
       "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
       "source": "./plugins/ezai-senior-dev-persona",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"

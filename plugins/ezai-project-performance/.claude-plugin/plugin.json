@@ -1,7 +1,7 @@
 {
   "name": "ezai-project-performance",
   "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
