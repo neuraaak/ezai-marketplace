@@ -8,12 +8,33 @@
   },
   "category": "development",
   "capabilities": [
-    "write-github-actions",
-    "write-gitlab-ci",
-    "audit-pipeline",
-    "debug-ci-failure",
-    "python-ci-pipeline",
-    "javascript-ci-pipeline",
-    "release-orchestration"
+    {
+      "id": "write-github-actions",
+      "description": "Generate a complete .github/workflows/*.yml from detected toolchain"
+    },
+    {
+      "id": "write-gitlab-ci",
+      "description": "Generate a complete .gitlab-ci.yml from detected toolchain"
+    },
+    {
+      "id": "audit-pipeline",
+      "description": "Audit an existing pipeline: security → correctness → speed → style"
+    },
+    {
+      "id": "debug-ci-failure",
+      "description": "Diagnose a failing job from logs; request debug logs if needed"
+    },
+    {
+      "id": "python-ci-pipeline",
+      "description": "Python jobs: uv/poetry/pdm, ruff/mypy/ty, pytest, OIDC PyPI trusted publishing"
+    },
+    {
+      "id": "javascript-ci-pipeline",
+      "description": "JS/TS jobs: pnpm/npm/yarn, eslint/tsc/vitest, OIDC npm provenance publishing"
+    },
+    {
+      "id": "release-orchestration",
+      "description": "Release patterns: auto-tag → publish → docs, reusable workflows, parent-child pipelines"
+    }
   ]
 }

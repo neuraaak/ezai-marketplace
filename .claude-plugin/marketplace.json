@@ -20,13 +20,34 @@
         "email": "floriansalort@gmail.com"
       },
       "capabilities": [
-        "write-github-actions",
-        "write-gitlab-ci",
-        "audit-pipeline",
-        "debug-ci-failure",
-        "python-ci-pipeline",
-        "javascript-ci-pipeline",
-        "release-orchestration"
+        {
+          "id": "write-github-actions",
+          "description": "Generate a complete .github/workflows/*.yml from detected toolchain"
+        },
+        {
+          "id": "write-gitlab-ci",
+          "description": "Generate a complete .gitlab-ci.yml from detected toolchain"
+        },
+        {
+          "id": "audit-pipeline",
+          "description": "Audit an existing pipeline: security → correctness → speed → style"
+        },
+        {
+          "id": "debug-ci-failure",
+          "description": "Diagnose a failing job from logs; request debug logs if needed"
+        },
+        {
+          "id": "python-ci-pipeline",
+          "description": "Python jobs: uv/poetry/pdm, ruff/mypy/ty, pytest, OIDC PyPI trusted publishing"
+        },
+        {
+          "id": "javascript-ci-pipeline",
+          "description": "JS/TS jobs: pnpm/npm/yarn, eslint/tsc/vitest, OIDC npm provenance publishing"
+        },
+        {
+          "id": "release-orchestration",
+          "description": "Release patterns: auto-tag → publish → docs, reusable workflows, parent-child pipelines"
+        }
       ]
     },
     {
@@ -40,12 +61,30 @@
         "email": "floriansalort@gmail.com"
       },
       "capabilities": [
-        "section-separators",
-        "import-ordering",
-        "class-member-grouping",
-        "comment-cleanup",
-        "docstring-normalization",
-        "multi-language-routing"
+        {
+          "id": "section-separators",
+          "description": "Add or replace main # /// and sub # --- section markers"
+        },
+        {
+          "id": "import-ordering",
+          "description": "stdlib → third-party → local, alphabetical within groups"
+        },
+        {
+          "id": "class-member-grouping",
+          "description": "Reorder class members: constructor → public → private"
+        },
+        {
+          "id": "comment-cleanup",
+          "description": "Remove redundant inline comments, preserve rationale"
+        },
+        {
+          "id": "docstring-normalization",
+          "description": "Google (Python) / JSDoc (JS/TS) canonical docstring style"
+        },
+        {
+          "id": "multi-language-routing",
+          "description": "Auto-detect language from extension, route to style file"
+        }
       ]
     },
     {
@@ -57,7 +96,24 @@
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        {
+          "id": "docs-audit",
+          "description": "Full site audit: structure gaps vs Diátaxis quadrants, coherence findings"
+        },
+        {
+          "id": "docs-upgrade-plan",
+          "description": "Prioritized fix plan with severity levels and human gate"
+        },
+        {
+          "id": "docs-apply",
+          "description": "Apply plan via ezai-docs-writer with bounded validation loop"
+        }
+      ],
+      "composes": [
+        "ezai-docs-writer"
+      ]
     },
     {
       "name": "ezai-docs-writer",
@@ -111,14 +167,38 @@
         "email": "floriansalort@gmail.com"
       },
       "capabilities": [
-        "feature-based-module-structure",
-        "public-api-surface",
-        "repository-pattern",
-        "hexagonal-architecture",
-        "value-objects",
-        "architecture-decision-watchguard",
-        "type-system-contracts",
-        "design-patterns-factory-composition"
+        {
+          "id": "feature-based-module-structure",
+          "description": "Organize or refactor a project into feature-based modules"
+        },
+        {
+          "id": "public-api-surface",
+          "description": "Define what is public vs internal in a module"
+        },
+        {
+          "id": "repository-pattern",
+          "description": "Abstract all data access behind a repository interface"
+        },
+        {
+          "id": "hexagonal-architecture",
+          "description": "Apply Ports & Adapters for projects with multiple external boundaries"
+        },
+        {
+          "id": "value-objects",
+          "description": "Encapsulate primitives with strong domain semantics"
+        },
+        {
+          "id": "architecture-decision-watchguard",
+          "description": "Evaluate Hexagonal vs Simple Layered before choosing an architecture"
+        },
+        {
+          "id": "type-system-contracts",
+          "description": "Protocols (Python), interfaces (TS), branded types"
+        },
+        {
+          "id": "design-patterns-factory-composition",
+          "description": "Apply Factory and Composition patterns with full code output"
+        }
       ]
     },
     {
@@ -132,15 +212,42 @@
         "email": "floriansalort@gmail.com"
       },
       "capabilities": [
-        "pyproject-toml-structure",
-        "package-json-structure",
-        "linting-formatting-typecheck",
-        "docker-multistage",
-        "lockfile-reproducibility",
-        "env-vars-secrets",
-        "observability-opentelemetry",
-        "monorepo-tooling",
-        "pre-commit-setup"
+        {
+          "id": "pyproject-toml-structure",
+          "description": "Initialize or audit a Python project's pyproject.toml"
+        },
+        {
+          "id": "package-json-structure",
+          "description": "Initialize or audit a JS/TS project's package.json"
+        },
+        {
+          "id": "linting-formatting-typecheck",
+          "description": "Configure ruff, ty (Python) or ESLint, tsc (JS/TS)"
+        },
+        {
+          "id": "docker-multistage",
+          "description": "Write a production-ready multi-stage Dockerfile for Python or Node.js"
+        },
+        {
+          "id": "lockfile-reproducibility",
+          "description": "Set up uv.lock, pnpm-lock.yaml, and deterministic CI installs"
+        },
+        {
+          "id": "env-vars-secrets",
+          "description": "Configure .env, vault patterns, and secure secret handling"
+        },
+        {
+          "id": "observability-opentelemetry",
+          "description": "Add OpenTelemetry structured logs and traces"
+        },
+        {
+          "id": "monorepo-tooling",
+          "description": "Set up uv (Python) or pnpm workspaces (JS/TS)"
+        },
+        {
+          "id": "pre-commit-setup",
+          "description": "Configure pre-commit hooks with lint-staged or husky"
+        }
       ]
     },
     {
@@ -154,13 +261,34 @@
         "email": "floriansalort@gmail.com"
       },
       "capabilities": [
-        "concurrency-model-selection",
-        "async-profiling-guidance",
-        "streaming-large-datasets",
-        "async-cancellation",
-        "build-performance-js",
-        "python-optimization-patterns",
-        "semaphore-concurrency-limiting"
+        {
+          "id": "concurrency-model-selection",
+          "description": "Choose between async/await, threading, and multiprocessing for I/O vs CPU-bound work"
+        },
+        {
+          "id": "async-profiling-guidance",
+          "description": "Profile before optimizing — identify bottlenecks first"
+        },
+        {
+          "id": "streaming-large-datasets",
+          "description": "Handle multi-GB files with generators or async iterables to prevent OOM"
+        },
+        {
+          "id": "async-cancellation",
+          "description": "Implement timeouts, cancellable requests, and proper async cleanup"
+        },
+        {
+          "id": "build-performance-js",
+          "description": "Tree-shaking, lazy loading, and bundler optimization for JS/TS"
+        },
+        {
+          "id": "python-optimization-patterns",
+          "description": "__slots__, lru_cache, NumPy, uvloop for Python performance"
+        },
+        {
+          "id": "semaphore-concurrency-limiting",
+          "description": "Limit concurrent operations with semaphores to prevent resource exhaustion"
+        }
       ]
     },
     {
@@ -209,7 +337,36 @@
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
-      }
+      },
+      "capabilities": [
+        {
+          "id": "feature-implementation",
+          "description": "Implement a new feature end-to-end with production-ready code"
+        },
+        {
+          "id": "code-review",
+          "description": "Review a module for quality, correctness, and architecture compliance"
+        },
+        {
+          "id": "refactoring",
+          "description": "Refactor existing code to reduce technical debt and improve structure"
+        },
+        {
+          "id": "architecture-decision",
+          "description": "Evaluate and recommend an architecture or design pattern"
+        },
+        {
+          "id": "debugging",
+          "description": "Diagnose and fix bugs with root-cause analysis"
+        }
+      ],
+      "composes": [
+        "ezai-project-architect",
+        "ezai-project-config",
+        "ezai-project-performance",
+        "ezai-project-quality",
+        "ezai-cicd-expert"
+      ]
     }
   ]
 }

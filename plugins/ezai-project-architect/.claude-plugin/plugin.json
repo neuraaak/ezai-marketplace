@@ -8,13 +8,37 @@
   },
   "category": "development",
   "capabilities": [
-    "feature-based-module-structure",
-    "public-api-surface",
-    "repository-pattern",
-    "hexagonal-architecture",
-    "value-objects",
-    "architecture-decision-watchguard",
-    "type-system-contracts",
-    "design-patterns-factory-composition"
+    {
+      "id": "feature-based-module-structure",
+      "description": "Organize or refactor a project into feature-based modules"
+    },
+    {
+      "id": "public-api-surface",
+      "description": "Define what is public vs internal in a module"
+    },
+    {
+      "id": "repository-pattern",
+      "description": "Abstract all data access behind a repository interface"
+    },
+    {
+      "id": "hexagonal-architecture",
+      "description": "Apply Ports & Adapters for projects with multiple external boundaries"
+    },
+    {
+      "id": "value-objects",
+      "description": "Encapsulate primitives with strong domain semantics"
+    },
+    {
+      "id": "architecture-decision-watchguard",
+      "description": "Evaluate Hexagonal vs Simple Layered before choosing an architecture"
+    },
+    {
+      "id": "type-system-contracts",
+      "description": "Protocols (Python), interfaces (TS), branded types"
+    },
+    {
+      "id": "design-patterns-factory-composition",
+      "description": "Apply Factory and Composition patterns with full code output"
+    }
   ]
 }

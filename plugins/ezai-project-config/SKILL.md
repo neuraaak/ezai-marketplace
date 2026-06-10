@@ -16,17 +16,19 @@ description: >
 
 Toolchain, configuration et infrastructure projet. Suit le workflow en 3 étapes : identifier la langue et le type de tâche, charger le fichier langue adapté, puis appliquer les standards avec config complète.
 
-## Capacités
+## Capabilities
 
-| Capacité                                    | Quand l'utiliser                             |
-| :------------------------------------------ | :------------------------------------------- |
-| Structure `pyproject.toml` / `package.json` | Initialisation ou audit d'un projet          |
-| Linting / formatting / type checking        | ruff, ty (Python) — ESLint, tsc (JS/TS)      |
-| Docker multi-stage                          | Conteneurisation Python ou Node.js           |
-| Lockfiles & reproductibilité                | `uv.lock`, `pnpm-lock.yaml`, CI déterministe |
-| Gestion des env vars & secrets              | `.env`, vault, patterns sécurisés            |
-| Observabilité                               | OpenTelemetry, structured logs               |
-| Monorepo tooling                            | Workspaces `uv` / `pnpm`                     |
+| Key                            | Description                                                           |
+| :----------------------------- | :-------------------------------------------------------------------- |
+| `pyproject-toml-structure`     | Initialize or audit a Python project's pyproject.toml                 |
+| `package-json-structure`       | Initialize or audit a JS/TS project's package.json                    |
+| `linting-formatting-typecheck` | Configure ruff, ty (Python) or ESLint, tsc (JS/TS)                    |
+| `docker-multistage`            | Write a production-ready multi-stage Dockerfile for Python or Node.js |
+| `lockfile-reproducibility`     | Set up uv.lock, pnpm-lock.yaml, and deterministic CI installs         |
+| `env-vars-secrets`             | Configure .env, vault patterns, and secure secret handling            |
+| `observability-opentelemetry`  | Add OpenTelemetry structured logs and traces                          |
+| `monorepo-tooling`             | Set up uv (Python) or pnpm workspaces (JS/TS)                         |
+| `pre-commit-setup`             | Configure pre-commit hooks with lint-staged or husky                  |
 
 ## Workflow
 

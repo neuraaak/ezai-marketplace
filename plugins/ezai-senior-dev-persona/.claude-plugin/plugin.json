@@ -6,5 +6,34 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "feature-implementation",
+      "description": "Implement a new feature end-to-end with production-ready code"
+    },
+    {
+      "id": "code-review",
+      "description": "Review a module for quality, correctness, and architecture compliance"
+    },
+    {
+      "id": "refactoring",
+      "description": "Refactor existing code to reduce technical debt and improve structure"
+    },
+    {
+      "id": "architecture-decision",
+      "description": "Evaluate and recommend an architecture or design pattern"
+    },
+    {
+      "id": "debugging",
+      "description": "Diagnose and fix bugs with root-cause analysis"
+    }
+  ],
+  "composes": [
+    "ezai-project-architect",
+    "ezai-project-config",
+    "ezai-project-performance",
+    "ezai-project-quality",
+    "ezai-cicd-expert"
+  ]
 }

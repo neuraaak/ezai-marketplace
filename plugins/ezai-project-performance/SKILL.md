@@ -15,16 +15,17 @@ description: >
 
 Concurrence et optimisation des performances. Suit le workflow en 3 étapes : identifier le type de charge, charger le fichier langue adapté, puis appliquer le modèle avec code complet.
 
-## Capacités
+## Capabilities
 
-| Capacité                     | Quand l'utiliser                              |
-| :--------------------------- | :-------------------------------------------- |
-| Sélection modèle concurrence | I/O-bound vs CPU-bound, Python vs JS          |
-| Profiling guidé              | Avant toute optimisation — jamais à l'aveugle |
-| Streaming grands datasets    | Fichiers multi-Go, prévenir les OOM           |
-| Annulation async             | Timeout, requêtes annulables, cleanup propre  |
-| Build performance (JS)       | Tree-shaking, lazy loading, bundler           |
-| Optimisations Python         | `__slots__`, `lru_cache`, NumPy, uvloop       |
+| Key                              | Description                                                                          |
+| :------------------------------- | :----------------------------------------------------------------------------------- |
+| `concurrency-model-selection`    | Choose between async/await, threading, and multiprocessing for I/O vs CPU-bound work |
+| `async-profiling-guidance`       | Profile before optimizing — identify bottlenecks first                               |
+| `streaming-large-datasets`       | Handle multi-GB files with generators or async iterables to prevent OOM              |
+| `async-cancellation`             | Implement timeouts, cancellable requests, and proper async cleanup                   |
+| `build-performance-js`           | Tree-shaking, lazy loading, and bundler optimization for JS/TS                       |
+| `python-optimization-patterns`   | `__slots__`, `lru_cache`, NumPy, uvloop for Python performance                       |
+| `semaphore-concurrency-limiting` | Limit concurrent operations with semaphores to prevent resource exhaustion           |
 
 ## Workflow
 

@@ -16,17 +16,18 @@ description: >
 
 Architecture et design standards. Suit le workflow en 3 étapes : identifier la langue et la complexité du projet, charger le fichier langue adapté, puis appliquer les patterns avec code complet.
 
-## Capacités
+## Capabilities
 
-| Capacité                             | Quand l'utiliser                                   |
-| :----------------------------------- | :------------------------------------------------- |
-| Structure modulaire feature-based    | Organisation d'un nouveau projet ou refacto        |
-| Surface d'API publique               | Définir ce qui est public vs interne               |
-| Repository pattern                   | Abstraire tout accès aux données                   |
-| Architecture hexagonale              | Projets avec frontières externes multiples         |
-| Value Objects                        | Encapsuler des primitives à sémantique forte       |
-| Décision Hexagonal vs Simple Layered | Avant de choisir une architecture                  |
-| Contrats du système de types         | Protocols (Python), interfaces (TS), branded types |
+| Key                                   | Description                                                           |
+| :------------------------------------ | :-------------------------------------------------------------------- |
+| `feature-based-module-structure`      | Organize or refactor a project into feature-based modules             |
+| `public-api-surface`                  | Define what is public vs internal in a module                         |
+| `repository-pattern`                  | Abstract all data access behind a repository interface                |
+| `hexagonal-architecture`              | Apply Ports & Adapters for projects with multiple external boundaries |
+| `value-objects`                       | Encapsulate primitives with strong domain semantics                   |
+| `architecture-decision-watchguard`    | Evaluate Hexagonal vs Simple Layered before choosing an architecture  |
+| `type-system-contracts`               | Protocols (Python), interfaces (TS), branded types                    |
+| `design-patterns-factory-composition` | Apply Factory and Composition patterns with full code output          |
 
 ## Workflow
 

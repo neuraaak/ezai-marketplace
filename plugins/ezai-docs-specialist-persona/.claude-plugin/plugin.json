@@ -6,5 +6,22 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "docs-audit",
+      "description": "Full site audit: structure gaps vs Diátaxis quadrants, coherence findings"
+    },
+    {
+      "id": "docs-upgrade-plan",
+      "description": "Prioritized fix plan with severity levels and human gate"
+    },
+    {
+      "id": "docs-apply",
+      "description": "Apply plan via ezai-docs-writer with bounded validation loop"
+    }
+  ],
+  "composes": [
+    "ezai-docs-writer"
+  ]
 }

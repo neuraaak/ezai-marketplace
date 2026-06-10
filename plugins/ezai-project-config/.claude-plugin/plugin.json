@@ -8,14 +8,41 @@
   },
   "category": "development",
   "capabilities": [
-    "pyproject-toml-structure",
-    "package-json-structure",
-    "linting-formatting-typecheck",
-    "docker-multistage",
-    "lockfile-reproducibility",
-    "env-vars-secrets",
-    "observability-opentelemetry",
-    "monorepo-tooling",
-    "pre-commit-setup"
+    {
+      "id": "pyproject-toml-structure",
+      "description": "Initialize or audit a Python project's pyproject.toml"
+    },
+    {
+      "id": "package-json-structure",
+      "description": "Initialize or audit a JS/TS project's package.json"
+    },
+    {
+      "id": "linting-formatting-typecheck",
+      "description": "Configure ruff, ty (Python) or ESLint, tsc (JS/TS)"
+    },
+    {
+      "id": "docker-multistage",
+      "description": "Write a production-ready multi-stage Dockerfile for Python or Node.js"
+    },
+    {
+      "id": "lockfile-reproducibility",
+      "description": "Set up uv.lock, pnpm-lock.yaml, and deterministic CI installs"
+    },
+    {
+      "id": "env-vars-secrets",
+      "description": "Configure .env, vault patterns, and secure secret handling"
+    },
+    {
+      "id": "observability-opentelemetry",
+      "description": "Add OpenTelemetry structured logs and traces"
+    },
+    {
+      "id": "monorepo-tooling",
+      "description": "Set up uv (Python) or pnpm workspaces (JS/TS)"
+    },
+    {
+      "id": "pre-commit-setup",
+      "description": "Configure pre-commit hooks with lint-staged or husky"
+    }
   ]
 }

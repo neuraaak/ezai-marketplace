@@ -8,11 +8,29 @@
   },
   "category": "development",
   "capabilities": [
-    "section-separators",
-    "import-ordering",
-    "class-member-grouping",
-    "comment-cleanup",
-    "docstring-normalization",
-    "multi-language-routing"
+    {
+      "id": "section-separators",
+      "description": "Add or replace main # /// and sub # --- section markers"
+    },
+    {
+      "id": "import-ordering",
+      "description": "stdlib → third-party → local, alphabetical within groups"
+    },
+    {
+      "id": "class-member-grouping",
+      "description": "Reorder class members: constructor → public → private"
+    },
+    {
+      "id": "comment-cleanup",
+      "description": "Remove redundant inline comments, preserve rationale"
+    },
+    {
+      "id": "docstring-normalization",
+      "description": "Google (Python) / JSDoc (JS/TS) canonical docstring style"
+    },
+    {
+      "id": "multi-language-routing",
+      "description": "Auto-detect language from extension, route to style file"
+    }
   ]
 }
