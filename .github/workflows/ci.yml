@@ -6,7 +6,21 @@ name: CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'bin/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/ci.yml'
   pull_request:
+    paths:
+      - 'src/**'
+      - 'bin/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
 
 permissions: {}
@@ -19,6 +33,7 @@ jobs:
   quality:
     name: Lint & Format
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -38,6 +53,7 @@ jobs:
     name: Tests (Node ${{ matrix.node }})
     needs: [quality]
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     permissions:
       contents: read
     strategy:
@@ -58,3 +74,9 @@ jobs:
       - name: Coverage (threshold check)
         if: matrix.node == '22'
         run: pnpm test:coverage
+      - uses: actions/upload-artifact@v4
+        if: matrix.node == '22' && always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
