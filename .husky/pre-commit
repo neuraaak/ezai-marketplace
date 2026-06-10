@@ -1,3 +1,5 @@
+node scripts/sync-versions.js
+git add "plugins/*/.claude-plugin/plugin.json"
 node scripts/build-index.js
 git add .claude-plugin/marketplace.json
 pnpm exec lint-staged

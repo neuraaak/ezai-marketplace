@@ -1,10 +1,36 @@
 {
   "name": "ezai-code-formatter",
   "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "section-separators",
+      "description": "Add or replace main # /// and sub # --- section markers"
+    },
+    {
+      "id": "import-ordering",
+      "description": "stdlib → third-party → local, alphabetical within groups"
+    },
+    {
+      "id": "class-member-grouping",
+      "description": "Reorder class members: constructor → public → private"
+    },
+    {
+      "id": "comment-cleanup",
+      "description": "Remove redundant inline comments, preserve rationale"
+    },
+    {
+      "id": "docstring-normalization",
+      "description": "Google (Python) / JSDoc (JS/TS) canonical docstring style"
+    },
+    {
+      "id": "multi-language-routing",
+      "description": "Auto-detect language from extension, route to style file"
+    }
+  ]
 }

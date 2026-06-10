@@ -6,11 +6,15 @@ const LOCAL_CATALOGUE = path.resolve(__dirname, '..', '.claude-plugin', 'marketp
 async function fetchCatalogue() {
   const url = process.env.EZAI_CATALOGUE_URL;
   if (url) {
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
     if (!res.ok) {
       throw new Error(`Impossible de récupérer le catalogue (HTTP ${res.status})`);
     }
-    return res.json();
+    const data = await res.json();
+    if (!Array.isArray(data.plugins)) {
+      throw new Error('Catalogue distant invalide : champ "plugins" manquant ou non-tableau');
+    }
+    return data;
   }
   return JSON.parse(fs.readFileSync(LOCAL_CATALOGUE, 'utf8'));
 }

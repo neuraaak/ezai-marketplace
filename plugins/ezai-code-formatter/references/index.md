@@ -1,36 +1,12 @@
-# Code Formatter References Index
+# Code Formatter — References Index
 
-Route to the correct language subdirectory based on the file extension.
+Single routing axis: **language**. See `languages/index.md` for the full routing table.
 
-## Supported languages
+## Languages (`languages/`)
 
-| Language           | Extensions              | Subdirectory      | File |
-| :----------------- | :---------------------- | :---------------- | :--- |
-| Python             | `.py`                   | `python/`         | `style-layout.instructions.md` |
-| JavaScript / TypeScript | `.js` `.ts` `.jsx` `.tsx` `.mjs` | `javascript/` | `style-layout.instructions.md` |
+| Language                | Extensions                       | Sub-index               |
+| :---------------------- | :------------------------------- | :---------------------- |
+| Python                  | `.py`                            | `languages/python/`     |
+| JavaScript / TypeScript | `.js` `.ts` `.jsx` `.tsx` `.mjs` | `languages/javascript/` |
 
-More languages can be added under their own subdirectory following the same pattern.
-
----
-
-## Python (`python/`)
-
-Docstring style: Google. Separator: `# ///...` (main) + `# ---...` (sub).
-
-- `python/style-layout.instructions.md` — section markers, import grouping, class structure, docstring format
-
----
-
-## JavaScript / TypeScript (`javascript/`)
-
-Docstring style: JSDoc. Separator: `// ///...` (main) + `// ---...` (sub).
-
-- `javascript/style-layout.instructions.md` — section markers, import grouping (node:, 3rd-party, local), JSDoc format
-
----
-
-## Adding a new language
-
-1. Create a `<language>/` subdirectory here.
-2. Add a `style-layout.instructions.md` covering: section separators, import grouping, docstring/comment style.
-3. Register the language in the table above.
+Load `languages/index.md` first to confirm the language is supported, then load the matching `style-layout.instructions.md`.

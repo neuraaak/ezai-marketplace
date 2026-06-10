@@ -1,10 +1,48 @@
 {
   "name": "ezai-project-config",
-  "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, CI/CD.",
-  "version": "1.0.0",
+  "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, Docker, lockfiles, env vars, and observability.",
+  "version": "1.2.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "pyproject-toml-structure",
+      "description": "Initialize or audit a Python project's pyproject.toml"
+    },
+    {
+      "id": "package-json-structure",
+      "description": "Initialize or audit a JS/TS project's package.json"
+    },
+    {
+      "id": "linting-formatting-typecheck",
+      "description": "Configure ruff, ty (Python) or ESLint, tsc (JS/TS)"
+    },
+    {
+      "id": "docker-multistage",
+      "description": "Write a production-ready multi-stage Dockerfile for Python or Node.js"
+    },
+    {
+      "id": "lockfile-reproducibility",
+      "description": "Set up uv.lock, pnpm-lock.yaml, and deterministic CI installs"
+    },
+    {
+      "id": "env-vars-secrets",
+      "description": "Configure .env, vault patterns, and secure secret handling"
+    },
+    {
+      "id": "observability-opentelemetry",
+      "description": "Add OpenTelemetry structured logs and traces"
+    },
+    {
+      "id": "monorepo-tooling",
+      "description": "Set up uv (Python) or pnpm workspaces (JS/TS)"
+    },
+    {
+      "id": "pre-commit-setup",
+      "description": "Configure pre-commit hooks with lint-staged or husky"
+    }
+  ]
 }

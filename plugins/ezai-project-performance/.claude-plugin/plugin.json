@@ -1,10 +1,40 @@
 {
   "name": "ezai-project-performance",
-  "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, and caching strategies.",
-  "version": "1.0.0",
+  "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.",
+  "version": "1.2.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "category": "development"
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "concurrency-model-selection",
+      "description": "Choose between async/await, threading, and multiprocessing for I/O vs CPU-bound work"
+    },
+    {
+      "id": "async-profiling-guidance",
+      "description": "Profile before optimizing — identify bottlenecks first"
+    },
+    {
+      "id": "streaming-large-datasets",
+      "description": "Handle multi-GB files with generators or async iterables to prevent OOM"
+    },
+    {
+      "id": "async-cancellation",
+      "description": "Implement timeouts, cancellable requests, and proper async cleanup"
+    },
+    {
+      "id": "build-performance-js",
+      "description": "Tree-shaking, lazy loading, and bundler optimization for JS/TS"
+    },
+    {
+      "id": "python-optimization-patterns",
+      "description": "__slots__, lru_cache, NumPy, uvloop for Python performance"
+    },
+    {
+      "id": "semaphore-concurrency-limiting",
+      "description": "Limit concurrent operations with semaphores to prevent resource exhaustion"
+    }
+  ]
 }

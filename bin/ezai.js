@@ -11,37 +11,25 @@ const { runUninstall } = require('../src/commands/uninstall');
 
 const program = new Command();
 
-program.name('ezai').description('CLI du marketplace de skills IA ezai').version('1.0.0');
+program
+  .name('ezai')
+  .description('CLI du marketplace de skills IA ezai')
+  .version(require('../package.json').version);
 
 program
   .command('list')
   .description('Lister tous les plugins disponibles')
-  .action(() =>
-    runList(catalogue).catch((err) => {
-      console.error(err.message);
-      throw err;
-    })
-  );
+  .action(() => runList(catalogue));
 
 program
   .command('search <terme>')
   .description('Rechercher un plugin par nom ou catégorie')
-  .action((terme) =>
-    runSearch(terme, catalogue).catch((err) => {
-      console.error(err.message);
-      throw err;
-    })
-  );
+  .action((terme) => runSearch(terme, catalogue));
 
 program
   .command('info <plugin>')
   .description("Afficher les détails d'un plugin")
-  .action((plugin) =>
-    runInfo(plugin, catalogue).catch((err) => {
-      console.error(err.message);
-      throw err;
-    })
-  );
+  .action((plugin) => runInfo(plugin, catalogue));
 
 program
   .command('install [plugin]')
@@ -50,12 +38,7 @@ program
   .option('--claude', 'Déployer les symlinks vers ~/.claude/skills/')
   .option('--gemini', 'Déployer les symlinks vers ~/.gemini/skills/')
   .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
-  .action((plugin, options) =>
-    runInstall(plugin, options, catalogue).catch((err) => {
-      console.error(err.message);
-      throw err;
-    })
-  );
+  .action((plugin, options) => runInstall(plugin, options, catalogue));
 
 program
   .command('uninstall [skill]')
@@ -64,11 +47,9 @@ program
   .option('--claude', 'Supprimer uniquement les symlinks ~/.claude/skills/')
   .option('--gemini', 'Supprimer uniquement les symlinks ~/.gemini/skills/')
   .option('--copilot', 'Supprimer uniquement les symlinks ~/.copilot/skills/')
-  .action((skill, options) =>
-    runUninstall(skill, options, catalogue).catch((err) => {
-      console.error(err.message);
-      throw err;
-    })
-  );
+  .action((skill, options) => runUninstall(skill, options, catalogue));
 
-program.parse();
+program.parseAsync().catch((err) => {
+  console.error(err.message);
+  process.exitCode = 1;
+});

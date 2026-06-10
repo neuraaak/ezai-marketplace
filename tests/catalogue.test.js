@@ -27,7 +27,10 @@ describe('fetchCatalogue', () => {
     const result = await fetchCatalogue();
 
     expect(result).toEqual(mockData);
-    expect(globalThis.fetch).toHaveBeenCalledWith('https://example.com/catalogue.json');
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'https://example.com/catalogue.json',
+      expect.objectContaining({ signal: expect.any(Object) })
+    );
   });
 
   it('lève une erreur si EZAI_CATALOGUE_URL retourne une erreur HTTP', async () => {
