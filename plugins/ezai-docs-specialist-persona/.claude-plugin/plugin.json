@@ -1,0 +1,27 @@
+{
+  "name": "ezai-docs-specialist-persona",
+  "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
+  "version": "1.2.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "docs-audit",
+      "description": "Full site audit: structure gaps vs Diátaxis quadrants, coherence findings"
+    },
+    {
+      "id": "docs-upgrade-plan",
+      "description": "Prioritized fix plan with severity levels and human gate"
+    },
+    {
+      "id": "docs-apply",
+      "description": "Apply plan via ezai-docs-writer with bounded validation loop"
+    }
+  ],
+  "composes": [
+    "ezai-docs-writer"
+  ]
+}

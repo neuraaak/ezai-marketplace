@@ -44,8 +44,10 @@ _temp/
 temp/
 tmp/
 tmpclaude-*
+.docs-audit/
 .remember/
 docs/superpowers/
+graphify-out/
 !docs/
 .vscode/settings.json
 docs/.vitepress/dist/
@@ -81,3 +83,4 @@ $RECYCLE.BIN/
 *.rej
 .claude/settings.json
 
+.env

@@ -1,0 +1,20 @@
+{
+  "ignore": [
+    "*_cache",
+    ".venv",
+    ".cursor",
+    ".github",
+    "build",
+    "dist",
+    "docs",
+    "examples",
+    "htmlcov",
+    "tests"
+  ],
+  "rules": {
+    "disable": ["magic-numbers"]
+  },
+  "thresholds": {
+    "maxFileLines": 500
+  }
+}

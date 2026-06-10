@@ -4,7 +4,9 @@ name: Auto Tag
 # (and a vX-latest moving tag), then cascade to publish and docs if the version
 # is new. If the tag already exists at HEAD, nothing happens. If the tag exists
 # but points at a different commit (chore/docs push without a version bump), the
-# tags are moved to HEAD without triggering publish.
+# tags are moved to HEAD without triggering publish — unless the old tag was on a
+# feature branch, in which case publish is triggered (version was never released
+# from main).
 
 on:
   push:
@@ -13,6 +15,10 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: auto-tag-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   auto-tag:
     name: Create and Push Tags
@@ -20,7 +26,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      tag_created: ${{ steps.create_tags.outputs.tag_created }}
+      tag_action: ${{ steps.create_tags.outputs.tag_action }}
       version: ${{ steps.version.outputs.version }}
       tag_name: ${{ steps.create_tags.outputs.tag_name }}
 
@@ -51,43 +57,54 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          TAG_CREATED="false"
-
           if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
             TAG_SHA=$(git rev-parse "$TAG_NAME")
             HEAD_SHA=$(git rev-parse HEAD)
             if [ "$TAG_SHA" = "$HEAD_SHA" ]; then
+              echo "tag_action=none" >> $GITHUB_OUTPUT
+              echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
               echo "Tag $TAG_NAME already points to HEAD — nothing to do"
             else
               git tag -f "$TAG_NAME"
               git tag -f "$LATEST_TAG"
               git push origin --force "$TAG_NAME"
               git push origin --force "$LATEST_TAG"
-              echo "Tags moved to HEAD: $TAG_NAME, $LATEST_TAG (no publish — version unchanged)"
+              # If the old tag was already on main (docs/chore commit on main after a
+              # publish), the version was already released — skip publish.
+              # If the old tag was on a feature branch (tagged before merging), it was
+              # never published from main — trigger publish now.
+              if git merge-base --is-ancestor "$TAG_SHA" "HEAD^1" 2>/dev/null; then
+                echo "tag_action=update" >> $GITHUB_OUTPUT
+                echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+                echo "🔄 Tags moved to HEAD: $TAG_NAME, $LATEST_TAG (no publish — already released from main)"
+              else
+                echo "tag_action=create" >> $GITHUB_OUTPUT
+                echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+                echo "🔄 Tags moved to HEAD: $TAG_NAME, $LATEST_TAG (publish — tag was on feature branch)"
+              fi
             fi
           else
             git tag "$TAG_NAME"
             git tag -f "$LATEST_TAG"
             git push origin "$TAG_NAME"
             git push origin --force "$LATEST_TAG"
-            TAG_CREATED="true"
-            echo "Tags pushed: $TAG_NAME, $LATEST_TAG"
+            echo "tag_action=create" >> $GITHUB_OUTPUT
+            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "✅ Tags pushed: $TAG_NAME, $LATEST_TAG"
           fi
 
-          echo "tag_created=$TAG_CREATED" >> $GITHUB_OUTPUT
-          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
-
       - name: Summary
-        if: steps.create_tags.outputs.tag_created == 'true'
+        if: steps.create_tags.outputs.tag_action != 'none'
         run: |
-          echo "## Auto-Tagging Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## 🏷️ Auto-Tagging Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Action**: ${{ steps.create_tags.outputs.tag_action }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Version**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Tag**: ${{ steps.create_tags.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
 
   trigger-publish:
     name: Trigger Publish
     needs: auto-tag
-    if: needs.auto-tag.outputs.tag_created == 'true'
+    if: needs.auto-tag.outputs.tag_action == 'create'
     permissions:
       contents: read
       id-token: write
@@ -99,7 +116,11 @@ jobs:
   trigger-deploy-docs:
     name: Trigger Deploy Docs
     needs: [auto-tag, trigger-publish]
-    if: needs.auto-tag.outputs.tag_created == 'true'
+    if: |
+      always() &&
+      needs.auto-tag.result == 'success' &&
+      needs.auto-tag.outputs.tag_action != 'none' &&
+      (needs.trigger-publish.result == 'success' || needs.trigger-publish.result == 'skipped')
     permissions:
       contents: read
       pages: write
