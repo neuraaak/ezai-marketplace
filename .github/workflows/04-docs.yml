@@ -27,7 +27,8 @@ on:
         type: string
         default: 'preview'
 
-permissions: {}
+permissions:
+  contents: read # minimum for checkout in 00-install-deps nested job
 
 jobs:
   install-deps:

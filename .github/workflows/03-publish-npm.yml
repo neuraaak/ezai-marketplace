@@ -32,7 +32,8 @@ on:
         required: true
         type: string
 
-permissions: {}
+permissions:
+  contents: read # minimum for checkout in 00-install-deps nested job
 
 concurrency:
   group: publish
