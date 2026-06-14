@@ -1,8 +1,13 @@
 name: Publish to npm
 
-# Called by auto-tag.yml when a new version tag is created, or manually via
-# workflow_dispatch. Publishes to npm using OIDC Trusted Publishing (no stored
-# NPM_TOKEN). Requires an npm Trusted Publisher configured at:
+# Called by 02-tag-sync.yml with tag_action = create | preview.
+# Never called on skip (no publish when version is unchanged).
+#
+#   create  → validate + upload to npm (OIDC, no stored token)
+#   preview → validate + pack only, no upload (pipeline resilience check)
+#
+# Manual workflow_dispatch always behaves like 'create' (full publish).
+# Requires an npm Trusted Publisher configured at:
 # https://www.npmjs.com/settings/<org>/packages → ezai-marketplace → Publishing
 
 on:
@@ -22,8 +27,13 @@ on:
       tag:
         required: true
         type: string
+      tag_action:
+        description: 'create | preview — controls whether the package is actually uploaded'
+        required: true
+        type: string
 
-permissions: {}
+permissions:
+  contents: read # minimum for checkout in 00-install-deps nested job
 
 concurrency:
   group: publish
@@ -33,8 +43,13 @@ env:
   PACKAGE_NAME: ezai-marketplace
 
 jobs:
+  install-deps:
+    name: Install dependencies
+    uses: ./.github/workflows/00-install-deps.yml
+
   validate:
     name: Validate & Pack
+    needs: [install-deps]
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -46,13 +61,15 @@ jobs:
 
       - name: Extract and verify version
         id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
-          if [ -n "${{ inputs.version }}" ] && [ "${{ inputs.version }}" != "$PKG_VERSION" ]; then
-            echo "::error::Version mismatch: input=${{ inputs.version }}, package.json=$PKG_VERSION"
+          if [ -n "$INPUT_VERSION" ] && [ "$INPUT_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Version mismatch: input=$INPUT_VERSION, package.json=$PKG_VERSION"
             exit 1
           fi
-          echo "version=$PKG_VERSION" >> $GITHUB_OUTPUT
+          echo "version=$PKG_VERSION" >> "$GITHUB_OUTPUT"
           echo "Version: $PKG_VERSION"
 
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
@@ -60,7 +77,7 @@ jobs:
           version: '11'
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '22'
+          node-version: '24.16.0'
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -77,6 +94,8 @@ jobs:
   publish:
     name: Publish to npm (OIDC)
     needs: validate
+    # preview = build/pack only; upload only on create or manual dispatch
+    if: inputs.tag_action == 'create' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -90,10 +109,25 @@ jobs:
 
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '22'
+          node-version: '24.16.0'
           registry-url: 'https://registry.npmjs.org'
 
+      # Re-run safe: treat "version already published" as success so a replayed
+      # release doesn't 409. (golden rule #4 — replay-safe delivery)
+      - name: Check if version already published
+        id: published
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          if npm view "${PACKAGE_NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::${PACKAGE_NAME}@${VERSION} already on npm — skipping publish."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish
+        if: steps.published.outputs.exists == 'false'
         run: npm publish --provenance --access public --ignore-scripts
 
       - name: Summary

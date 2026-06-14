@@ -1,17 +1,19 @@
 # Deploy Documentation Workflow
 
-`docs.yml` generates the changelog, builds the VitePress documentation, and
+`04-docs.yml` generates the changelog, builds the VitePress documentation, and
 deploys it to GitHub Pages (`https://neuraaak.github.io/ezai-marketplace/`).
-It is normally called by `auto-tag.yml` after a successful publish, but also
-fires on direct pushes to `docs/**` and can be run manually.
+It is normally called by `02-tag-sync.yml` after a successful publish, but also
+fires on direct pushes to `docs/**` and on PRs (build-only) and can be run
+manually. The build runs on every path (validation); only non-PR events deploy.
 
 ## Triggers
 
-| Event               | How                                                                  |
-| ------------------- | -------------------------------------------------------------------- |
-| `push`              | Changes to `docs/**`, `package.json`, `pnpm-lock.yaml`, `cliff.toml` |
-| `workflow_call`     | Called by `auto-tag.yml` after publish succeeds                      |
-| `workflow_dispatch` | Manual run from the Actions tab                                      |
+| Event               | How                                                                          |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `push`              | `main`; changes to `docs/**`, `package.json`, `pnpm-lock.yaml`, `cliff.toml` |
+| `pull_request`      | same paths — **build only**, the `deploy` job is skipped                     |
+| `workflow_call`     | Called by `02-tag-sync.yml` after publish succeeds                           |
+| `workflow_dispatch` | Manual run from the Actions tab                                              |
 
 ## Jobs
 
@@ -34,8 +36,10 @@ Steps in order:
 
 ### `deploy`
 
-Downloads the artifact produced by `build` and deploys it to GitHub Pages via
-`actions/deploy-pages` (OIDC). The job targets the `github-pages` environment.
+Skipped on `pull_request` (`if: github.event_name != 'pull_request'`) so
+validation builds never deploy. Otherwise downloads the artifact produced by
+`build` and deploys it to GitHub Pages via `actions/deploy-pages` (OIDC). The job
+targets the `github-pages` environment.
 
 ## Concurrency
 
@@ -80,7 +84,7 @@ pnpm docs:preview
 ## Manual trigger
 
 ```bash
-gh workflow run docs.yml
+gh workflow run 04-docs.yml
 ```
 
 ## Troubleshooting

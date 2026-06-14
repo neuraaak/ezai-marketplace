@@ -1,6 +1,6 @@
 {
   "name": "ezai-marketplace",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "CLI to install AI skills from the ezai marketplace into Claude Code, Gemini CLI, and Copilot",
   "author": {
     "name": "Florian Salort",
@@ -60,7 +60,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=22.13.0",
+    "node": ">=24.16.0",
     "pnpm": ">=11"
   },
   "dependencies": {

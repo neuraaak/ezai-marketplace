@@ -178,8 +178,8 @@
     {
       "id": 7,
       "capability": "docs-apply",
-      "prompt": "Mon site Sphinx sur GitLab a des badges qui viennent d'un ancien template corporate. Remplace-les par les bons.",
-      "expected_output": "Pipeline déclenché : DETECTION détecte Sphinx + GitLab. AUDIT flagge les badges corporate comme majeur (projet public-oss inféré) ou bloquant si profil internal confirmé. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
+      "prompt": "Mon site Sphinx sur GitLab a des badges qui viennent d'un ancien template. Remplace-les par les bons.",
+      "expected_output": "Pipeline déclenché : DETECTION détecte Sphinx + GitLab. AUDIT flagge les badges périmés du template comme majeur. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
       "files": [],
       "assertions": [
         {
@@ -190,9 +190,9 @@
         },
         {
           "id": "badge-finding",
-          "description": "Finding sur les badges corporate signalé",
+          "description": "Finding sur les badges du template signalé",
           "type": "regex",
-          "value": "(?i)(badge|corporate|template)"
+          "value": "(?i)(badge|template)"
         },
         {
           "id": "generation-invokes-docs-writer",

@@ -1,15 +1,16 @@
 # Publish to npm Workflow
 
-`publish-npm.yml` validates the package and publishes it to npm. It is normally
-triggered by `auto-tag.yml` after a new version tag is created, but can also
-be run manually.
+`03-publish-npm.yml` validates the package and publishes it to npm. It is normally
+triggered by `02-tag-sync.yml` after a new version tag is created, but can also
+be run manually. Publishing is re-run safe: if the version is already on npm the
+publish step is skipped (a replayed release is a no-op, not a failure).
 
 ## Triggers
 
-| Event               | How                                                    |
-| ------------------- | ------------------------------------------------------ |
-| `workflow_call`     | Called by `auto-tag.yml` with `version` + `tag` inputs |
-| `workflow_dispatch` | Manual run from the Actions tab                        |
+| Event               | How                                                       |
+| ------------------- | --------------------------------------------------------- |
+| `workflow_call`     | Called by `02-tag-sync.yml` with `version` + `tag` inputs |
+| `workflow_dispatch` | Manual run from the Actions tab                           |
 
 Manual runs expose a `skip_tests` option (default `false`, not recommended).
 
@@ -26,7 +27,7 @@ npmjs.com → Account → Packages → ezai-marketplace → Publishing → Trust
   → Add: GitHub Actions
   → Owner: Neuraaak
   → Repository: ezai-marketplace
-  → Workflow: publish-npm.yml
+  → Workflow: 03-publish-npm.yml
   → Environment: npm
 ```
 
@@ -52,7 +53,9 @@ Runs only if `validate` succeeds. Steps:
 
 1. Checkout (needed to read `package.json` for provenance metadata)
 2. `actions/setup-node` with `registry-url: https://registry.npmjs.org`
-3. `npm publish --provenance --access public` — signed attestation via OIDC
+3. Existence check — `npm view <pkg>@<version>`; if already published, the
+   publish step is skipped (re-run safe)
+4. `npm publish --provenance --access public` — signed attestation via OIDC
 
 The job runs in the `npm` environment. Configure required reviewers there
 in Repository → Settings → Environments to add a manual gate before publish.
@@ -72,11 +75,11 @@ simultaneous publish runs. A run in progress is never interrupted.
 
 ## Troubleshooting
 
-**Version mismatch** — the `version` input from `auto-tag` differs from
+**Version mismatch** — the `version` input from `tag-sync` differs from
 `package.json`. Bump the version, commit, and push again.
 
 **OIDC failure** — check that the Trusted Publisher on npmjs.com matches the
-repo name (`ezai-marketplace`), workflow filename (`publish-npm.yml`), and
+repo name (`ezai-marketplace`), workflow filename (`03-publish-npm.yml`), and
 environment name (`npm`) exactly. Any mismatch causes a 401.
 
 **`npm pack --dry-run` lists unexpected files** — review the `files` field in
