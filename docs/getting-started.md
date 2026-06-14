@@ -4,14 +4,53 @@ Install ezai-marketplace and run your first skill installation in under two minu
 
 ## 🔧 Prerequisites
 
-- Node.js >= 18.0.0 ([nodejs.org](https://nodejs.org))
+- Node.js >= 24.16.0 ([nodejs.org](https://nodejs.org))
 - One or more AI platforms installed: Claude Code, Gemini CLI, or Copilot
 
 ## 📝 Step 1 — Install the CLI
 
+Pick the path that fits your environment. They all produce the same `ezai` command — the
+package bundles every plugin, so installation never needs to reach a registry at runtime.
+
+**Quick path — from npm** (if the public registry is reachable):
+
 ```bash
 npm install -g ezai-marketplace
 ```
+
+**From git** (no registry needed):
+
+```bash
+# Pin a tag (recommended)
+npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.2.1"
+
+# Short form
+npm install -g github:Neuraaak/ezai-marketplace
+```
+
+If a restricted environment blocks the `prepare` hook, append `--ignore-scripts`.
+
+**Clone + link** (work from a local checkout):
+
+```bash
+git clone https://github.com/Neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
+```
+
+**Run from a clone** (no install at all):
+
+```bash
+node bin/ezai.js install <plugin>
+```
+
+**Windows without Node** — from a cloned copy:
+
+```bat
+scripts\install.bat <plugin>
+```
+
+> Offline-first: every plugin ships inside the package and the catalogue is local by
+> default, so once you have the package by any means, `ezai install` works without network
+> access.
 
 Verify the installation:
 

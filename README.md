@@ -4,7 +4,7 @@
 [![node versions](https://img.shields.io/node/v/ezai-marketplace?style=flat&logo=nodedotjs&logoColor=white)](https://www.npmjs.com/package/ezai-marketplace)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/Neuraaak/ezai-marketplace/blob/main/LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=readme&logoColor=white)](https://Neuraaak.github.io/ezai-marketplace/)
-[![package manager](https://img.shields.io/badge/package%20manager-npm-CB3837?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/)
+[![package manager](https://img.shields.io/badge/package%20manager-pnpm-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![linter](https://img.shields.io/badge/linter-eslint-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
@@ -13,11 +13,60 @@
 
 ## 📦 Installation
 
+ezai-marketplace works the same whether you pull it from the public npm registry or
+straight from git — the package bundles every plugin, so installation never needs a
+runtime registry fetch (see [Why git/offline install works](#why-gitoffline-install-works)).
+Pick whichever path your environment allows.
+
+### From npm (convenience)
+
 ```bash
 npm install -g ezai-marketplace
 ```
 
-Requires Node.js >= 18.0.0.
+> Use this only if the public npm registry is reachable from your machine.
+
+### From git (no registry needed)
+
+```bash
+# Pin a tag (recommended)
+npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.2.1"
+
+# Short form (latest default branch)
+npm install -g github:Neuraaak/ezai-marketplace
+```
+
+> If a restricted environment blocks the `prepare` hook, append `--ignore-scripts`.
+
+### Clone + link
+
+```bash
+git clone https://github.com/Neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
+```
+
+### Run from a clone (no install)
+
+```bash
+node bin/ezai.js install <plugin>
+```
+
+### Windows without Node
+
+From a cloned copy, use the bundled batch wrapper:
+
+```bat
+scripts\install.bat <plugin>
+```
+
+### Why git/offline install works
+
+The npm package bundles all plugins — `package.json`'s `files` field includes `plugins/`
+and `.claude-plugin/`. The `install` command reads them from the local package, with no
+runtime registry fetch, and the catalogue is local by default (`EZAI_CATALOGUE_URL` only
+overrides the remote _listing_, not installation). So once you have the package by any
+means, `ezai install` works fully offline.
+
+**Requirements:** Node.js >= 24.16.0 (contributors also need pnpm >= 11).
 
 ## 🚀 Quick Start
 
@@ -71,7 +120,7 @@ npm run lint
 git clone https://github.com/Neuraaak/ezai-marketplace.git
 cd ezai-marketplace
 
-# Install dependencies (also sets up git hooks via simple-git-hooks)
+# Install dependencies (also sets up git hooks via husky)
 npm install
 
 # Rebuild the marketplace index
@@ -85,6 +134,7 @@ The `prepare` script configures a `pre-commit` hook that rebuilds `marketplace.j
 - **`src/catalogue.js`** — loads and queries the bundled `marketplace.json` catalogue
 - **`src/commands/install.js`** — copies skill files and creates platform symlinks or junctions
 - **`src/commands/uninstall.js`** — removes marketplace-managed skills and symlinks safely
+- **`src/commands/purge.js`** — drops stale `ezai-` skills no longer in the catalogue
 - **`src/commands/list.js`** — lists all skills available in the catalogue
 - **`src/commands/search.js`** — filters skills by name, category, or description keyword
 - **`src/commands/info.js`** — displays detailed metadata for a single skill
@@ -135,6 +185,19 @@ ezai install ezai-docs-writer --gemini --copilot
 
 When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
 
+### `ezai purge`
+
+Drops **stale** `ezai-` skills installed locally but no longer in the catalogue
+(typically orphans left after a skill is renamed or removed upstream). Skills
+still in the catalogue are untouched, and no reinstall is performed — run it after
+upgrading the package to clean up.
+
+```bash
+# Drop every stale skill, then refresh
+ezai purge
+ezai install
+```
+
 ### `ezai uninstall [skill]`
 
 ```bash
@@ -159,14 +222,14 @@ Skills not present in the marketplace catalogue are never touched, regardless of
 
 ## 📦 Dependencies
 
-| Package            | Role                   | Version   |
-| :----------------- | :--------------------- | :-------- |
-| `commander`        | CLI framework          | `^12.0.0` |
-| `eslint`           | Linter                 | `^10.4.0` |
-| `prettier`         | Formatter              | `^3.8.3`  |
-| `jest`             | Test runner            | `^29.0.0` |
-| `lint-staged`      | Pre-commit lint runner | `^17.0.5` |
-| `simple-git-hooks` | Git hooks manager      | `^2.13.1` |
+| Package       | Role                   | Version   |
+| :------------ | :--------------------- | :-------- |
+| `commander`   | CLI framework          | `^12.0.0` |
+| `eslint`      | Linter                 | `^10.4.0` |
+| `prettier`    | Formatter              | `^3.8.3`  |
+| `jest`        | Test runner            | `^29.0.0` |
+| `lint-staged` | Pre-commit lint runner | `^17.0.5` |
+| `husky`       | Git hooks manager      | `^9.1.7`  |
 
 ## 📝 License
 

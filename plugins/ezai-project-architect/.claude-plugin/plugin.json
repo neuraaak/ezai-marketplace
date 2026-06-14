@@ -1,7 +1,7 @@
 {
   "name": "ezai-project-architect",
   "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, design patterns (Repository, Factory, Composition), Hexagonal architecture, and type system contracts.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"

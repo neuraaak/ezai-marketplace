@@ -39,7 +39,7 @@ deploy-docs:
 
 ## Release flow (tag → build → publish → pages)
 
-The GitLab analogue of the auto-tag cascade. A tag pipeline drives the release; each stage gates the next, and the publish/deploy jobs are gated behind `rules` + a protected environment.
+The GitLab analogue of the tag-sync cascade. A tag pipeline drives the release; each stage gates the next, and the publish/deploy jobs are gated behind `rules` + a protected environment.
 
 ```yaml
 stages: [test, build, publish, pages]
@@ -67,6 +67,15 @@ publish:
 ```
 
 GitLab also has a native **release** object via the `release` keyword (`release-cli`) to attach release notes and assets to a tag — use it instead of hand-rolling release creation.
+
+**Two modes map onto `rules`** (see `common/principles.md` → "Validation vs release"). The same job graph runs in both; `rules` decide whether a job *delivers* or merely *validates*:
+
+- **Validation** (MR / branch pipeline): `build` and the docs job run, but `publish`/`pages` carry `rules: - if: $CI_COMMIT_TAG` so they're absent — nothing mutates the registry or the site.
+- **Release** (semver tag pipeline): the mutating jobs activate. The tag itself is the trigger, so the "version changed?" gate is implicit — a tag exists only when a human cut a release. Keep `vX.Y.Z` **immutable**; if you also publish a moving major alias or a `latest` docs alias, push that to a *separate* ref, never by force-moving the release tag.
+
+**Re-run safe publish.** A re-run of a release pipeline must not fail on an already-published version: `twine upload --skip-existing` (Python) or an existence check before `npm publish` (JS). Pages re-deploys are idempotent by construction (the job overwrites `public/`). Keep the order **publish → pages**: publish is irreversible, the site is not.
+
+**Optional `dev` docs alias.** A docs job rule'd on `$CI_COMMIT_BRANCH == "main"` (not on tags) can publish unreleased content into a `dev/` subfolder of `public/`, decoupled from publish — the GitLab analogue of a `mike deploy dev`.
 
 ## GitLab Pages deploy
 

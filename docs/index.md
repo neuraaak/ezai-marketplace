@@ -45,7 +45,7 @@ ezai install ezai-code-formatter
 
 ## 📋 Requirements
 
-- Node.js >= 18.0.0
+- Node.js >= 24.16.0
 
 ## ⚖️ License
 

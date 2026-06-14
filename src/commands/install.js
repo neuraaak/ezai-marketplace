@@ -3,6 +3,11 @@ const os = require('node:os');
 const path = require('node:path');
 const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
 
+// Entrées (fichier ou dossier) à la racine d'un plugin qui sont copiées chez
+// l'utilisateur. Tout le reste (`.claude-plugin/`, `evals/`, `graphify-out/`, …)
+// est outillage dev/CI et n'a aucune utilité au runtime du skill.
+const RUNTIME_INCLUDE = ['SKILL.md', 'references'];
+
 function assertSafeRelPath(p) {
   if (typeof p !== 'string' || p.length === 0) throw new Error('chemin invalide');
   if (path.isAbsolute(p) || p.split(/[\\/]/).includes('..')) {
@@ -10,17 +15,39 @@ function assertSafeRelPath(p) {
   }
 }
 
-function collectFiles(dir, baseDir, result, excludeDirs = []) {
+function collectFiles(dir, baseDir, result) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (excludeDirs.includes(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      collectFiles(fullPath, baseDir, result, excludeDirs);
+      collectFiles(fullPath, baseDir, result);
     } else {
       const dest = path.relative(baseDir, fullPath).replaceAll('\\', '/');
       result.push({ src: fullPath, dest });
     }
   }
+}
+
+// Construit la liste des fichiers à installer en ne retenant que les entrées
+// présentes dans la whitelist RUNTIME_INCLUDE (fichiers copiés tels quels,
+// dossiers parcourus récursivement).
+function collectRuntimeFiles(pluginDir, include = RUNTIME_INCLUDE) {
+  const files = [];
+  for (const name of include) {
+    const entryPath = path.join(pluginDir, name);
+    let stat;
+    try {
+      stat = fs.statSync(entryPath);
+    } catch (e) {
+      if (e.code === 'ENOENT') continue;
+      throw e;
+    }
+    if (stat.isDirectory()) {
+      collectFiles(entryPath, pluginDir, files);
+    } else {
+      files.push({ src: entryPath, dest: name });
+    }
+  }
+  return files;
 }
 
 function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS) {
@@ -85,7 +112,7 @@ async function runInstall(pluginName, options, catalogue) {
 
   const baseDestRoot = options.dest || os.homedir();
   const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
-  const platformDirs = resolvePlatforms(options);
+  const platformDirs = options._platformDirs || resolvePlatforms(options);
   const installedNames = [];
 
   for (const plugin of targets) {
@@ -97,10 +124,13 @@ async function runInstall(pluginName, options, catalogue) {
     const repoRoot = path.resolve(__dirname, '..', '..');
     const pluginDir = path.join(repoRoot, pluginRelPath);
     const destDir = path.join(agentsSkillsDir, plugin.name);
+    // Purge le dossier du skill avant copie : une nouvelle version ne doit pas
+    // hériter des fichiers d'une install antérieure (ex. evals/ ou graphify-out/
+    // retirés de la whitelist, ou une référence supprimée en amont).
+    fs.rmSync(destDir, { recursive: true, force: true });
     fs.mkdirSync(destDir, { recursive: true });
 
-    const files = [];
-    collectFiles(pluginDir, pluginDir, files, ['.claude-plugin']);
+    const files = collectRuntimeFiles(pluginDir);
 
     for (const { src, dest } of files) {
       const destFile = path.join(destDir, dest);
@@ -123,4 +153,10 @@ async function runInstall(pluginName, options, catalogue) {
   console.info(`${label} installé(s) dans ${agentsSkillsDir}\n`);
 }
 
-module.exports = { assertSafeRelPath, runInstall, linkToPlatforms };
+module.exports = {
+  assertSafeRelPath,
+  runInstall,
+  linkToPlatforms,
+  collectRuntimeFiles,
+  RUNTIME_INCLUDE,
+};

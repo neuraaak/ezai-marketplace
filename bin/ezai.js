@@ -8,6 +8,7 @@ const { runSearch } = require('../src/commands/search');
 const { runInfo } = require('../src/commands/info');
 const { runInstall } = require('../src/commands/install');
 const { runUninstall } = require('../src/commands/uninstall');
+const { runPurge } = require('../src/commands/purge');
 
 const program = new Command();
 
@@ -39,6 +40,15 @@ program
   .option('--gemini', 'Déployer les symlinks vers ~/.gemini/skills/')
   .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
   .action((plugin, options) => runInstall(plugin, options, catalogue));
+
+program
+  .command('purge')
+  .description('Supprimer les skills ezai obsolètes (absents du catalogue actuel)')
+  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire home)')
+  .option('--claude', 'Cibler uniquement ~/.claude/skills/')
+  .option('--gemini', 'Cibler uniquement ~/.gemini/skills/')
+  .option('--copilot', 'Cibler uniquement ~/.copilot/skills/')
+  .action((options) => runPurge(options, catalogue));
 
 program
   .command('uninstall [skill]')

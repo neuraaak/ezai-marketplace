@@ -1,0 +1,156 @@
+name: Tag sync
+
+# Release orchestration — three modes driven by tag_action:
+#
+#   create  — push to main, vX.Y.Z tag doesn't exist yet
+#               → create immutable vX.Y.Z + move vX-latest alias
+#               → publish to npm (03) then deploy versioned docs (04)
+#
+#   skip    — push to main, vX.Y.Z already exists (chore/fix without version bump)
+#               → no tag, no publish
+#               → redeploy docs to the 'dev' alias so main stays visible
+#
+#   preview — workflow_dispatch from a non-main branch
+#               → no tag ever created
+#               → publish: build + pack only (no upload) — tests pipeline resilience
+#               → docs: build only (no deploy, mike without --push)
+#
+# This workflow does NOT bump the version — the human writes it in package.json.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # run manually from any branch to test preview mode
+
+permissions: {}
+
+concurrency:
+  group: tag-sync-${{ github.ref }}
+  cancel-in-progress: false # never interrupt an in-flight release
+
+jobs:
+  # Release gate — never publish a red commit.
+  ci:
+    name: CI gate
+    uses: ./.github/workflows/01-ci.yml
+
+  tag-sync:
+    name: Sync tag to package version
+    needs: ci
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # push tags
+    outputs:
+      tag_action: ${{ steps.gate.outputs.tag_action }} # create | skip | preview
+      version: ${{ steps.version.outputs.version }}
+      tag_name: ${{ steps.gate.outputs.tag_name }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0 # full history: need every tag
+
+      - name: Extract version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ -z "$VERSION" ]; then
+            echo "::error::No version found in package.json"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Version: $VERSION"
+
+      - name: Determine tag action
+        id: gate
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG_NAME="v$VERSION"
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+
+          # Not on main → preview (dry-run, nothing mutates the world)
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "tag_action=preview" >> "$GITHUB_OUTPUT"
+            echo "Not on main — preview mode (no tag, no upload, no deploy)."
+            exit 0
+          fi
+
+          # On main: create if tag is new, skip if it already exists
+          if git rev-parse -q --verify "refs/tags/$TAG_NAME" >/dev/null; then
+            echo "tag_action=skip" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG_NAME already exists — skip publish, redeploy docs to 'dev'."
+          else
+            echo "tag_action=create" >> "$GITHUB_OUTPUT"
+            echo "Version $VERSION is new — will release $TAG_NAME."
+          fi
+
+      - name: Create immutable tag + move floating alias
+        if: steps.gate.outputs.tag_action == 'create'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG_NAME="v$VERSION"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          LATEST_TAG="v${MAJOR}-latest"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git tag "$TAG_NAME"            # NEVER -f: the release tag is immutable
+          git push origin "$TAG_NAME"
+          git tag -f "$LATEST_TAG"       # only the alias ever moves
+          git push origin --force "$LATEST_TAG"
+          echo "✅ Created $TAG_NAME, moved $LATEST_TAG"
+
+      - name: Summary
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG_ACTION="${{ steps.gate.outputs.tag_action }}"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          {
+            echo "## 🏷️ Tag sync"
+            echo "- **Version**: $VERSION"
+            echo "- **Action**: \`$TAG_ACTION\`"
+            if [ "$TAG_ACTION" = "create" ]; then
+              echo "- **Tags**: \`v$VERSION\` (immutable) + \`v${MAJOR}-latest\` (alias moved)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # publish is irreversible → runs before docs on create (golden rule #5).
+  # On preview: runs in dry-run (build + pack, no upload).
+  # On skip: not called (already published in a previous event).
+  trigger-publish:
+    name: Trigger Publish
+    needs: tag-sync
+    if: needs.tag-sync.outputs.tag_action != 'skip'
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/03-publish-npm.yml
+    with:
+      version: ${{ needs.tag-sync.outputs.version }}
+      tag: ${{ needs.tag-sync.outputs.tag_name }}
+      tag_action: ${{ needs.tag-sync.outputs.tag_action }}
+
+  # Docs ordering:
+  #   create  → wait for publish (irreversible first), then deploy vX.Y.Z + latest
+  #   skip    → independent of publish (not called), deploy dev alias
+  #   preview → independent of publish result, build only (no deploy)
+  trigger-deploy-docs:
+    name: Trigger Deploy Docs
+    needs: [tag-sync, trigger-publish]
+    if: |
+      always() &&
+      needs.tag-sync.result == 'success' &&
+      (
+        needs.tag-sync.outputs.tag_action == 'skip' ||
+        needs.tag-sync.outputs.tag_action == 'preview' ||
+        needs.trigger-publish.result == 'success'
+      )
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/04-docs.yml
+    with:
+      version: ${{ needs.tag-sync.outputs.version }}
+      tag_action: ${{ needs.tag-sync.outputs.tag_action }}

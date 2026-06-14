@@ -1,7 +1,12 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { assertSafeRelPath, linkToPlatforms } = require('../../src/commands/install');
+const {
+  assertSafeRelPath,
+  linkToPlatforms,
+  collectRuntimeFiles,
+  RUNTIME_INCLUDE,
+} = require('../../src/commands/install');
 const { resolvePlatforms } = require('../../src/platforms');
 
 // --- assertSafeRelPath ---
@@ -18,6 +23,61 @@ describe('assertSafeRelPath', () => {
   });
   it('rejette une chaîne vide', () => {
     expect(() => assertSafeRelPath('')).toThrow('chemin invalide');
+  });
+});
+
+// --- collectRuntimeFiles ---
+
+describe('collectRuntimeFiles', () => {
+  let tmpDir;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ezai-collect-test-'));
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  function makePluginDir() {
+    const pluginDir = path.join(tmpDir, 'ezai-fake');
+    fs.mkdirSync(path.join(pluginDir, 'references', 'python'), { recursive: true });
+    fs.mkdirSync(path.join(pluginDir, 'evals'), { recursive: true });
+    fs.mkdirSync(path.join(pluginDir, 'graphify-out'), { recursive: true });
+    fs.mkdirSync(path.join(pluginDir, '.claude-plugin'), { recursive: true });
+    fs.writeFileSync(path.join(pluginDir, 'SKILL.md'), '# skill');
+    fs.writeFileSync(path.join(pluginDir, 'references', 'index.md'), 'idx');
+    fs.writeFileSync(path.join(pluginDir, 'references', 'python', 'standards.md'), 'std');
+    fs.writeFileSync(path.join(pluginDir, 'evals', 'eval_set.json'), '{}');
+    fs.writeFileSync(path.join(pluginDir, 'graphify-out', 'graph.json'), '{}');
+    fs.writeFileSync(path.join(pluginDir, '.claude-plugin', 'plugin.json'), '{}');
+    return pluginDir;
+  }
+
+  it('inclut SKILL.md et tout references/ récursivement', () => {
+    const dests = collectRuntimeFiles(makePluginDir()).map((f) => f.dest);
+    expect(dests).toContain('SKILL.md');
+    expect(dests).toContain('references/index.md');
+    expect(dests).toContain('references/python/standards.md');
+  });
+
+  it('exclut evals/, graphify-out/ et .claude-plugin/', () => {
+    const dests = collectRuntimeFiles(makePluginDir()).map((f) => f.dest);
+    expect(dests.some((d) => d.startsWith('evals/'))).toBe(false);
+    expect(dests.some((d) => d.startsWith('graphify-out/'))).toBe(false);
+    expect(dests.some((d) => d.startsWith('.claude-plugin/'))).toBe(false);
+  });
+
+  it('ignore sans erreur une entrée whitelistée absente', () => {
+    const pluginDir = path.join(tmpDir, 'ezai-minimal');
+    fs.mkdirSync(pluginDir, { recursive: true });
+    fs.writeFileSync(path.join(pluginDir, 'SKILL.md'), '# skill');
+    const dests = collectRuntimeFiles(pluginDir).map((f) => f.dest);
+    expect(dests).toEqual(['SKILL.md']);
+  });
+
+  it('expose une whitelist runtime minimale', () => {
+    expect(RUNTIME_INCLUDE).toEqual(['SKILL.md', 'references']);
   });
 });
 

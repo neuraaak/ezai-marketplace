@@ -1,6 +1,6 @@
 # GitHub Actions — Release & Deploy Orchestration
 
-Multi-workflow patterns for release engineering: reusable workflows, the auto-tag → publish → docs cascade, and Pages deployment. For the building blocks (triggers, jobs, matrix, caching), see `github/syntax.md`.
+Multi-workflow patterns for release engineering: reusable workflows, the tag-sync → publish → docs cascade, and Pages deployment. For the building blocks (triggers, jobs, matrix, caching), see `github/syntax.md`.
 
 ## Reusable & composite workflows
 
@@ -35,12 +35,15 @@ on:
 
 Inputs let the caller pass context (version, tag, prerelease flag) without environment variables. Declaring explicit `secrets:` is safer than `secrets: inherit` when the workflow can be called from untrusted code — see the cascade note below.
 
-## Auto-tag → publish → docs cascade
+## Tag-sync → publish → docs cascade
 
-A common orchestration: on every push to `main`, read the version from `pyproject.toml`/`package.json`, create a `vX.Y.Z` tag and a `vX-latest` moving tag, then cascade to publish and docs via `workflow_call`.
+The orchestration syncs a tag **to the version written in the file** — it does not bump the version (the human does that). On every push to `main` it compares the file version against the last tag and runs in one of two modes (see `common/principles.md` → "Validation vs release"):
+
+- **version changed** → create the immutable `vX.Y.Z` tag, move the floating `vX-latest` alias, then cascade to publish and docs.
+- **version unchanged** → skip; no tag, no release.
 
 ```yaml
-# auto-tag.yml (abbreviated)
+# tag-sync.yml (abbreviated)
 on:
   push: { branches: [main] }
   workflow_dispatch:
@@ -49,40 +52,58 @@ permissions:
   contents: write          # needed to push tags
 
 jobs:
-  auto-tag:
+  tag-sync:
     outputs:
       version: ${{ steps.version.outputs.version }}
-      tag_name: ${{ steps.tag.outputs.tag_name }}
+      tag_name: ${{ steps.version.outputs.tag_name }}
+      released: ${{ steps.gate.outputs.released }}   # "true" only on a real version change
       is_prerelease: ${{ steps.meta.outputs.is_prerelease }}
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      # ... extract version from pyproject.toml / package.json ...
-      - name: Create and push tags
+        with: { fetch-depth: 0 }                      # full history: need every tag
+      # ... extract VERSION from pyproject.toml / package.json into steps.version ...
+      - name: Gate on version change
+        id: gate
+        run: |
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "released=false" >> "$GITHUB_OUTPUT"   # tag already exists -> no-op
+          else
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create immutable tag + move floating alias
+        if: steps.gate.outputs.released == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -f "v$VERSION"
-          git tag -f "v$(echo $VERSION | cut -d. -f1)-latest"
-          git push origin --force "v$VERSION" "v$(echo $VERSION | cut -d. -f1)-latest"
+          MAJOR="$(echo "$VERSION" | cut -d. -f1)"
+          git tag "v$VERSION"                          # NEVER -f: the release tag is immutable
+          git push origin "v$VERSION"
+          git tag -f "v${MAJOR}-latest"                # only the alias moves
+          git push origin --force "v${MAJOR}-latest"
 
   trigger-publish:
-    needs: auto-tag
+    needs: tag-sync
+    if: needs.tag-sync.outputs.released == 'true'      # validation runs leave the world untouched
     uses: ./.github/workflows/publish.yml
     secrets: inherit
     with:
-      version: ${{ needs.auto-tag.outputs.version }}
-      tag: ${{ needs.auto-tag.outputs.tag_name }}
+      version: ${{ needs.tag-sync.outputs.version }}
+      tag: ${{ needs.tag-sync.outputs.tag_name }}
 
   trigger-docs:
-    needs: [auto-tag, trigger-publish]
+    needs: [tag-sync, trigger-publish]                 # publish (irreversible) before docs
+    if: needs.tag-sync.outputs.released == 'true'
     uses: ./.github/workflows/docs.yml
     secrets: inherit
     with:
-      version: ${{ needs.auto-tag.outputs.version }}
+      version: ${{ needs.tag-sync.outputs.version }}
 ```
 
-**The `vX-latest` moving tag** lets users pin to a major version that always points at the newest release within that major. Force-push (`-f` / `--force`) is intentional here — moving tags are meant to move.
+**Immutability.** `vX.Y.Z` is created **once, never force-pushed** — re-running the workflow on the same version is a no-op (the gate finds the tag and skips). Only `vX-latest` is force-pushed: the floating alias lets users pin to a major that always points at its newest release, and moving aliases are *meant* to move. Force-pushing the release tag itself would break the "release tag is immutable" rule.
+
+**Validation on PRs — build, don't deliver.** On a PR or feature branch there is no real tag. Build the package and the docs anyway (so a broken build fails the PR), but skip every mutating step — the `released == 'true'` gates above keep publish/deploy off non-release runs. Pass a `tag_preview` flag downstream if you want the same job graph to run end-to-end in dry-run.
+
+**Re-run safe publish.** The called publish job must treat "already published" as success so a replayed release doesn't fail: `twine upload --skip-existing` (Python) or an existence check before `npm publish` (JS). See `common/principles.md` → "Idempotence & replay".
 
 **`secrets: inherit`** is convenient on private repos but passes **all** repo secrets to called workflows. On repos where untrusted PRs can trigger workflows, scope with explicit `secrets:` declarations instead.
 
