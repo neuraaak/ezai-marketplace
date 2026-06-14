@@ -46,7 +46,7 @@
         },
         {
           "id": "release-orchestration",
-          "description": "Release patterns: auto-tag → publish → docs, reusable workflows, parent-child pipelines"
+          "description": "Release patterns: tag-sync → publish → docs, validation/release modes, reusable workflows"
         }
       ]
     },
