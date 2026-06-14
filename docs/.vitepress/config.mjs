@@ -30,7 +30,7 @@ export default defineVersionedConfig(
 
     // Version-switcher dropdown — the VitePress analogue of mike. latestVersion must equal package.json version.
     versioning: {
-      latestVersion: '1.2.1',
+      latestVersion: '1.2.2',
     },
 
     themeConfig: {
@@ -93,7 +93,7 @@ export default defineVersionedConfig(
 
       // "Edit this page on GitHub" link under every page.
       editLink: {
-        pattern: 'https://github.com/Neuraaak/ezai-marketplace/edit/main/docs/:path',
+        pattern: 'https://github.com/neuraaak/ezai-marketplace/edit/main/docs/:path',
         text: 'Edit this page on GitHub',
       },
 
@@ -110,7 +110,7 @@ export default defineVersionedConfig(
       socialLinks: [
         {
           icon: 'github',
-          link: 'https://github.com/Neuraaak/ezai-marketplace',
+          link: 'https://github.com/neuraaak/ezai-marketplace',
         },
       ],
 

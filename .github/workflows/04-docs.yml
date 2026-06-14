@@ -3,9 +3,13 @@ name: Deploy docs
 # Called by 02-tag-sync.yml with tag_action = create | skip | preview.
 # Also triggered on pull_request for validation builds (never deploys on PR).
 #
-#   create  → build + mike deploy vX.Y.Z --update-aliases latest  (versioned release)
-#   skip    → build + mike deploy dev                              (main between releases)
-#   preview → build only, mike deploy without --push               (pipeline check, no gh-pages push)
+# Versioning is handled at BUILD time by vitepress-versioning-plugin (every
+# version is compiled into one static artifact). Deploy is a single GitHub
+# Pages publish of that artifact — no mike, no gh-pages branch.
+#
+#   create  → build + deploy (release; latestVersion in config = package.json)
+#   skip    → build + deploy (main between releases)
+#   preview → build only, no deploy (pipeline check)
 #   PR      → build only, no deploy
 
 on:
@@ -70,14 +74,14 @@ jobs:
 
   deploy:
     needs: build
-    # PRs only validate the build — never deploy.
-    # On workflow_call the tag_action input drives the deploy mode.
-    if: github.event_name != 'pull_request'
+    # Versioning is build-time (vitepress-versioning-plugin builds every version
+    # into one static artifact) — deploy is a single GitHub Pages publish of that
+    # artifact. PRs and preview only validate the build; create/skip deploy.
+    if: github.event_name != 'pull_request' && (inputs.tag_action == 'create' || inputs.tag_action == 'skip')
     runs-on: ubuntu-24.04
     permissions:
-      contents: write # mike pushes to gh-pages
-      pages: write
-      id-token: write
+      pages: write # deploy the Pages artifact
+      id-token: write # OIDC for actions/deploy-pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -85,38 +89,5 @@ jobs:
       group: pages
       cancel-in-progress: false # never interrupt a live Pages deploy
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          fetch-depth: 0
-
-      - name: Setup git for mike
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin gh-pages --depth=1 || true
-
-      - name: Setup Python + mike
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - run: 'pip install mike==2.1.3 --only-binary :all:'
-
-      - name: Deploy docs (create — versioned release)
-        if: inputs.tag_action == 'create'
-        env:
-          VERSION: ${{ inputs.version }}
-        run: |
-          mike deploy --push --update-aliases "$VERSION" latest
-          mike set-default --push latest
-
-      - name: Deploy docs (skip — dev alias for main between releases)
-        if: inputs.tag_action == 'skip'
-        run: mike deploy --push dev
-
-      - name: Deploy docs (preview — local build check, no push)
-        if: inputs.tag_action == 'preview' || inputs.tag_action == ''
-        run: mike deploy dev # no --push: validates mike config without touching gh-pages
-
       - id: deployment
-        if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
