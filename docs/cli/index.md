@@ -23,6 +23,7 @@ ezai [OPTIONS] COMMAND [ARGS]...
 | `search`    | Filter skills by name, category, or description       |
 | `info`      | Show detailed metadata for a single skill             |
 | `install`   | Copy skills and deploy platform symlinks              |
+| `purge`     | Delete stale ezai skills absent from the catalogue    |
 | `uninstall` | Remove marketplace skills and their platform symlinks |
 
 ---
@@ -110,6 +111,42 @@ ezai install ezai-docs-writer --gemini --copilot
 
 # Use a custom base directory
 ezai install --dest /opt/ai-tools
+```
+
+---
+
+## `ezai purge`
+
+Deletes **stale** `ezai-` skills: those installed in `~/.agents/skills/` (or
+linked in a platform directory) whose name is **no longer in the current
+catalogue** — typically left behind when a skill is renamed or removed upstream.
+Skills still in the catalogue are left untouched, and no reinstall is performed.
+
+Run it after upgrading the `ezai-marketplace` package to drop orphaned skills.
+For example, if `ezai-persona-senior-dev` was renamed to `ezai-senior-dev-persona`,
+`purge` removes the old one while `install` provides the new one.
+
+```bash
+ezai purge [OPTIONS]
+```
+
+### ⚙️ Options
+
+| Option          | Description                                           |
+| :-------------- | :---------------------------------------------------- |
+| `--dest <path>` | Override the base directory (default: home directory) |
+| `--claude`      | Target `~/.claude/skills/` only                       |
+| `--gemini`      | Target `~/.gemini/skills/` only                       |
+| `--copilot`     | Target `~/.copilot/skills/` only                      |
+
+### 🧪 Examples
+
+```bash
+# Drop every stale skill
+ezai purge
+
+# Then refresh the catalogue
+ezai install
 ```
 
 ---
