@@ -4,7 +4,7 @@ name: Publish to npm
 # Never called on skip (no publish when version is unchanged).
 #
 #   create  → validate + upload to npm (OIDC, no stored token)
-#   preview → validate + pack only, no upload (pipeline resilience check)
+#   preview → validate + publish --dry-run, no upload (pipeline resilience check)
 #
 # Manual workflow_dispatch always behaves like 'create' (full publish).
 # Requires an npm Trusted Publisher configured at:
@@ -88,8 +88,12 @@ jobs:
         if: github.event.inputs.skip_tests != 'true'
         run: pnpm test
 
-      - name: Dry-run pack (verify publishable files)
-        run: npm pack --dry-run
+      # Replays the full publish path (manifest, files, registry validation)
+      # without uploading. No OIDC/auth needed → preview stays out of the
+      # protected 'npm' environment. Mirrors the real publish step minus
+      # --provenance (which requires an id-token) and the upload itself.
+      - name: Dry-run publish (validate the full publish manifest)
+        run: npm publish --dry-run --access public --ignore-scripts
 
   publish:
     name: Publish to npm (OIDC)
