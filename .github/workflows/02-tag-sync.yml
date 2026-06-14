@@ -22,7 +22,8 @@ on:
     branches: [main]
   workflow_dispatch: # run manually from any branch to test preview mode
 
-permissions: {}
+permissions:
+  contents: read # minimum for 01-ci nested workflow_call (checkout + install-deps)
 
 concurrency:
   group: tag-sync-${{ github.ref }}
