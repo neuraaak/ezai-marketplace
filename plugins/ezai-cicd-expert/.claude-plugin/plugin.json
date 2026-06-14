@@ -1,7 +1,7 @@
 {
   "name": "ezai-cicd-expert",
   "description": "CI/CD expert for GitHub Actions and GitLab CI: write, audit, and debug pipelines; caching, matrix builds, OIDC publishing, reusable workflows, and deployment gates for Python and JS/TS projects.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
