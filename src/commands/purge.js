@@ -25,7 +25,7 @@ function collectManagedSkills(agentsSkillsDir, platformDirs) {
     scan(path.join(platform.dir, 'skills'));
   }
 
-  return [...managed].sort();
+  return [...managed].sort((a, b) => a.localeCompare(b));
 }
 
 async function runPurge(options, catalogue) {
