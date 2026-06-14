@@ -1,20 +1,26 @@
 # CI Workflow
 
-`ci.yml` runs on pushes to `main` (and PRs) that touch `src/`, `bin/`, `tests/`,
-`package.json`, `pnpm-lock.yaml`, or the workflow file itself. It is the primary
-quality gate — release workflows never run if this one is red.
+`01-ci.yml` runs on PRs that touch `src/`, `bin/`, `tests/`, `package.json`,
+`pnpm-lock.yaml`, or the workflow file itself. It is the primary quality gate —
+release workflows never run if this one is red. It is also a reusable workflow
+(`workflow_call`): on `main`, `02-tag-sync.yml` calls it as the release gate before
+tagging, so the same checks run on PRs and on the release path.
 
 ## Triggers
 
 | Event               | Branches | Path filter                                          |
 | ------------------- | -------- | ---------------------------------------------------- |
-| `push`              | **all**  | `src/**`, `bin/**`, `tests/**`, `package.json`, etc. |
-| `pull_request`      | all      | same                                                 |
+| `pull_request`      | all      | `src/**`, `bin/**`, `tests/**`, `package.json`, etc. |
+| `workflow_call`     | — (gate) | called by `02-tag-sync.yml` on every push to `main`  |
 | `workflow_dispatch` | manual   | —                                                    |
 
-Concurrent runs on the same ref are cancelled automatically (new push supersedes
-the old run). Deploy/publish workflows are never triggered by CI — they live in
-`auto-tag.yml` and are gated to `main` only.
+There is no bare `push` trigger: a feature branch with an open PR runs CI once
+(the PR), and `main` is covered by `02-tag-sync.yml` calling CI as the release gate
+— exactly one CI run per change, no double-runs. Concurrent PR runs on the same
+ref are cancelled automatically (new push supersedes the old run); runs on `main`
+are never cancelled — they may be releasing. Deploy/publish workflows are never
+triggered by CI directly — they live in `02-tag-sync.yml` and are gated to `main` +
+a real version change.
 
 ## Jobs
 

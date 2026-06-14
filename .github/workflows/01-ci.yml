@@ -3,15 +3,10 @@ name: CI
 # Quality gate on every push and every pull request.
 # Release workflows never run if this one is red.
 
+# No bare push trigger: PRs cover feature branches, and on main CI runs as the
+# release gate via workflow_call from 02-tag-sync.yml (which fires on every push to
+# main). This keeps exactly one CI run per change — no double-runs.
 on:
-  push:
-    paths:
-      - 'src/**'
-      - 'bin/**'
-      - 'tests/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/ci.yml'
   pull_request:
     paths:
       - 'src/**'
@@ -19,18 +14,25 @@ on:
       - 'tests/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/01-ci.yml'
+  workflow_call: # called by 02-tag-sync.yml as the release gate
   workflow_dispatch:
 
 permissions: {}
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel superseded PR runs; never cancel a run on main (it may be releasing).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  install-deps:
+    name: Install dependencies
+    uses: ./.github/workflows/00-install-deps.yml
+
   quality:
     name: Lint & Format
+    needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -43,14 +45,14 @@ jobs:
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: '24.16.0'
-          cache: pnpm
+          cache: pnpm # cache hit from install job — no network download
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm exec prettier --check .
 
   test:
     name: Tests (Node ${{ matrix.node }})
-    needs: [quality]
+    needs: [install-deps] # parallel with quality — no gate between them
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     permissions:
@@ -67,7 +69,7 @@ jobs:
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: '${{ matrix.node }}'
-          cache: pnpm
+          cache: pnpm # cache hit from install job — no network download
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - name: Coverage (threshold check)
