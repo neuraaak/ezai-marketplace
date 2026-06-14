@@ -1,7 +1,7 @@
 {
   "name": "ezai-docs-writer",
   "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"

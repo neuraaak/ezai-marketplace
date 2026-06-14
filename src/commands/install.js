@@ -112,7 +112,7 @@ async function runInstall(pluginName, options, catalogue) {
 
   const baseDestRoot = options.dest || os.homedir();
   const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
-  const platformDirs = resolvePlatforms(options);
+  const platformDirs = options._platformDirs || resolvePlatforms(options);
   const installedNames = [];
 
   for (const plugin of targets) {
@@ -124,6 +124,10 @@ async function runInstall(pluginName, options, catalogue) {
     const repoRoot = path.resolve(__dirname, '..', '..');
     const pluginDir = path.join(repoRoot, pluginRelPath);
     const destDir = path.join(agentsSkillsDir, plugin.name);
+    // Purge le dossier du skill avant copie : une nouvelle version ne doit pas
+    // hériter des fichiers d'une install antérieure (ex. evals/ ou graphify-out/
+    // retirés de la whitelist, ou une référence supprimée en amont).
+    fs.rmSync(destDir, { recursive: true, force: true });
     fs.mkdirSync(destDir, { recursive: true });
 
     const files = collectRuntimeFiles(pluginDir);
