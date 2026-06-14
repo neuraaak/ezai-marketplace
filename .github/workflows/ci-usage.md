@@ -19,7 +19,7 @@ the old run). Deploy/publish workflows are never triggered by CI — they live i
 ## Jobs
 
 ```text
-quality ──► test (Node 22 / 24, parallel)
+quality ──► test (Node 24.16.0 / 24, parallel)
 ```
 
 ### `quality` — Lint & Format
@@ -32,15 +32,15 @@ Timeout: 15 min. Runs first and gates the test matrix. Steps:
 
 ### `test` — Jest matrix
 
-Needs: `[quality]`. Timeout: 25 min. Node **22 and 24** in parallel
-(`fail-fast: false` so both cells report even if one fails).
+Needs: `[quality]`. Timeout: 25 min. Node **24.16.0 (floor) and 24 (latest)** in
+parallel (`fail-fast: false` so both cells report even if one fails).
 
 Steps:
 
 1. `pnpm install --frozen-lockfile`
 2. `pnpm test` — Jest, reads config from `package.json`
-3. `pnpm test:coverage` — threshold check (Node 22 only)
-4. Upload `coverage/` as artifact — **always** (even on failure), retained 7 days (Node 22 only)
+3. `pnpm test:coverage` — threshold check (Node 24.16.0 only)
+4. Upload `coverage/` as artifact — **always** (even on failure), retained 7 days (Node 24.16.0 only)
 
 ## Local equivalent
 
@@ -61,4 +61,4 @@ pnpm test:coverage
 - The install is always frozen (`pnpm install --frozen-lockfile`). Never mutates `pnpm-lock.yaml`.
 - `pnpm lint` and `prettier --check` are read-only — they never auto-fix in CI.
 - No type-check step: the project has no `tsconfig.json`.
-- Node 22 is the current LTS; 24 is the next major. Node 18/20 are no longer in the matrix.
+- Node 24.16.0 is the minimum supported LTS (`engines.node >= 24.16.0`); the matrix tests that exact floor plus the latest 24.x. Node 18/20/22 are no longer supported.

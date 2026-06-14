@@ -60,7 +60,7 @@ jobs:
           version: '11'
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '22'
+          node-version: '24.16.0'
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -90,7 +90,7 @@ jobs:
 
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '22'
+          node-version: '24.16.0'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish

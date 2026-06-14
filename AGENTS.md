@@ -9,7 +9,7 @@ Instructions for AI coding agents (Codex, Claude Code, Gemini CLI, Copilot, etc.
 `ezai-marketplace` is a curated CLI for installing AI skills (Markdown files) into Claude Code, Gemini CLI, and GitHub Copilot. Skills are copied to `~/.agents/skills/<name>/` and symlinked into each platform's skills directory.
 
 - **Package name:** `ezai-marketplace` — published on npm, used as `npx ezai-marketplace` or `ezai`
-- **Node.js ≥ 22.13, pnpm ≥ 11** (see `engines` in `package.json`)
+- **Node.js ≥ 24.16.0, pnpm ≥ 11** (see `engines` in `package.json`)
 - **License:** MIT
 
 ---
