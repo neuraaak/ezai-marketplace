@@ -7,7 +7,7 @@
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "updatedAt": "2026-06-10",
+  "updatedAt": "2026-06-14",
   "plugins": [
     {
       "name": "ezai-cicd-expert",
