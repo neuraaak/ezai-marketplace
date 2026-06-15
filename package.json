@@ -31,7 +31,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build-index": "node scripts/build-index.js",
-    "prepare": "node -e \"if(!process.env.CI)require('child_process').execSync('husky',{stdio:'inherit'})\"",
+    "prepare": "node -e \"try{if(!process.env.CI)require('child_process').execSync('husky',{stdio:'inherit'})}catch(e){}\"",
     "release": "pnpm publish --access public --no-git-checks",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
