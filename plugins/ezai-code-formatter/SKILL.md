@@ -8,7 +8,7 @@ description: |
   or any request where a file "doesn't look like the rest of the codebase". Triggers on
   phrases like "missing section separators", "imports aren't grouped", "doesn't match our
   standards", "apply visual standards", "normalize docstrings", "class methods in wrong
-  order". Works for Python, JS/TS, any language with a style file. Supports French and
+  order". Works for Python, JS/TS, PHP, any language with a style file. Supports French and
   English requests. Skip for: running linters (eslint, ruff, prettier), bug fixes, or logic
   changes.
 ---
@@ -25,14 +25,14 @@ only the general default; context-specific overrides live in the user's rules.
 
 ## Capabilities
 
-| Key                       | Description                                               |
-| :------------------------ | :-------------------------------------------------------- |
-| `section-separators`      | Add or replace main `# ///` and sub `# ---` markers       |
-| `import-ordering`         | stdlib → third-party → local, alphabetical within groups  |
-| `class-member-grouping`   | Reorder class members: constructor → public → private     |
-| `comment-cleanup`         | Remove redundant inline comments, preserve rationale      |
-| `docstring-normalization` | Google (Python) / JSDoc (JS/TS) canonical docstring style |
-| `multi-language-routing`  | Auto-detect language from extension, route to style file  |
+| Key                       | Description                                                              |
+| :------------------------ | :----------------------------------------------------------------------- |
+| `section-separators`      | Add or replace main `# ///` and sub `# ---` markers                      |
+| `import-ordering`         | stdlib → third-party → local, alphabetical within groups                 |
+| `class-member-grouping`   | Reorder class members: constructor → public → private                    |
+| `comment-cleanup`         | Remove redundant inline comments, preserve rationale                     |
+| `docstring-normalization` | Google (Python) / JSDoc (JS/TS) / PHPDoc (PHP) canonical docstring style |
+| `multi-language-routing`  | Auto-detect language from extension, route to style file                 |
 
 ## Workflow
 

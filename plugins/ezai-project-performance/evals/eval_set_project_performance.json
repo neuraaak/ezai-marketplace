@@ -168,6 +168,38 @@
           "value": "tracemalloc|memray|mémoire"
         }
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Notre script PHP traite un fichier CSV de 2 Go ligne par ligne. Il consomme 1,5 Go de RAM. Comment corriger ça ? Montre le bon pattern et configure OPcache + JIT pour la production.",
+      "expected_output": "Generator avec fgets() pour le streaming O(1) mémoire, config opcache.ini avec validate_timestamps=0 + opcache.jit=tracing + jit_buffer_size, explication du problème (file()/array chargent tout en RAM), success criteria vérifiables.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "generator-yield",
+          "description": "Utilise un generator avec yield pour le streaming",
+          "type": "contains",
+          "value": "yield"
+        },
+        {
+          "id": "fgets-streaming",
+          "description": "Utilise fgets() pour lire ligne par ligne",
+          "type": "contains",
+          "value": "fgets"
+        },
+        {
+          "id": "opcache-validate-timestamps",
+          "description": "opcache.validate_timestamps=0 en production",
+          "type": "contains",
+          "value": "opcache.validate_timestamps=0"
+        },
+        {
+          "id": "opcache-jit",
+          "description": "OPcache JIT activé (tracing ou function)",
+          "type": "contains",
+          "value": "opcache.jit"
+        }
+      ]
     }
   ]
 }

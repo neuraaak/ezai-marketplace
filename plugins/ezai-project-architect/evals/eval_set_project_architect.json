@@ -3,13 +3,13 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Conçois une classe `PaymentGateway` pour un projet Python qui doit supporter Stripe et PayPal. Utilise l'architecture hexagonale. Génère le Port, les deux Adapters, et l'entité domain.",
-      "expected_output": "Port défini comme Protocol dans application/, deux Adapters dans infrastructure/, entité domain pure, __all__ défini, typage strict sans Any, Value Objects si pertinent.",
+      "prompt": "ConÃ§ois une classe `PaymentGateway` pour un projet Python qui doit supporter Stripe et PayPal. Utilise l'architecture hexagonale. GÃ©nÃ¨re le Port, les deux Adapters, et l'entitÃ© domain.",
+      "expected_output": "Port dÃ©fini comme Protocol dans application/, deux Adapters dans infrastructure/, entitÃ© domain pure, __all__ dÃ©fini, typage strict sans Any, Value Objects si pertinent.",
       "files": [],
       "assertions": [
         {
           "id": "port-uses-protocol",
-          "description": "Le Port est défini avec Protocol (pas abc.ABC)",
+          "description": "Le Port est dÃ©fini avec Protocol (pas abc.ABC)",
           "type": "contains",
           "value": "Protocol"
         },
@@ -21,13 +21,13 @@
         },
         {
           "id": "dunder-all-defined",
-          "description": "__all__ est défini dans le module qui exporte le Port",
+          "description": "__all__ est dÃ©fini dans le module qui exporte le Port",
           "type": "contains",
           "value": "__all__"
         },
         {
           "id": "no-any-type",
-          "description": "Zéro Any dans les annotations de types",
+          "description": "ZÃ©ro Any dans les annotations de types",
           "type": "not_contains",
           "value": ": Any"
         }
@@ -35,19 +35,19 @@
     },
     {
       "id": 2,
-      "prompt": "Refactorise ce module TypeScript — il a une classe `UserManager` avec 15 méthodes mélangées (CRUD, auth, email). Propose une architecture feature-based propre.",
-      "expected_output": "Décomposition en modules feature-based (user/, auth/, notification/), Repository pattern fonctionnel ou avec interface, private class fields, branded types pour les IDs, zero any.",
+      "prompt": "Refactorise ce module TypeScript â€” il a une classe `UserManager` avec 15 mÃ©thodes mÃ©langÃ©es (CRUD, auth, email). Propose une architecture feature-based propre.",
+      "expected_output": "DÃ©composition en modules feature-based (user/, auth/, notification/), Repository pattern fonctionnel ou avec interface, private class fields, branded types pour les IDs, zero any.",
       "files": [],
       "assertions": [
         {
           "id": "feature-based-org",
-          "description": "La réponse propose une organisation feature-based",
+          "description": "La rÃ©ponse propose une organisation feature-based",
           "type": "regex",
           "value": "(?i)feature"
         },
         {
           "id": "repository-pattern",
-          "description": "Le Repository pattern est utilisé pour l'accès aux données",
+          "description": "Le Repository pattern est utilisÃ© pour l'accÃ¨s aux donnÃ©es",
           "type": "regex",
           "value": "(?i)repository"
         },
@@ -59,7 +59,7 @@
         },
         {
           "id": "no-any",
-          "description": "Zéro any dans le code TypeScript",
+          "description": "ZÃ©ro any dans le code TypeScript",
           "type": "not_contains",
           "value": ": any"
         }
@@ -67,31 +67,31 @@
     },
     {
       "id": 3,
-      "prompt": "Notre petit script Python de 300 lignes qui lit un CSV et écrit en DB SQLite doit-il utiliser l'architecture hexagonale ? Justifie.",
-      "expected_output": "Application du Watchguard : 1 système externe (SQLite) → score faible → Simple Layered recommandé. Structure models/services/repositories à plat justifiée. Hexagonal déconseillé pour ce scope.",
+      "prompt": "Notre petit script Python de 300 lignes qui lit un CSV et Ã©crit en DB SQLite doit-il utiliser l'architecture hexagonale ? Justifie.",
+      "expected_output": "Application du Watchguard : 1 systÃ¨me externe (SQLite) â†’ score faible â†’ Simple Layered recommandÃ©. Structure models/services/repositories Ã  plat justifiÃ©e. Hexagonal dÃ©conseillÃ© pour ce scope.",
       "files": [],
       "assertions": [
         {
           "id": "decision-criterion-applied",
-          "description": "Un critère de décision (Watchguard ou équivalent) est appliqué",
+          "description": "Un critÃ¨re de dÃ©cision (Watchguard ou Ã©quivalent) est appliquÃ©",
           "type": "regex",
-          "value": "(?i)watchguard|score|critère|décision"
+          "value": "(?i)watchguard|score|critÃ¨re|dÃ©cision"
         },
         {
           "id": "simple-layered-recommended",
-          "description": "Simple Layered est recommandé pour ce cas",
+          "description": "Simple Layered est recommandÃ© pour ce cas",
           "type": "regex",
           "value": "(?i)simple layered|layered|couches"
         },
         {
           "id": "hexagonal-discouraged",
-          "description": "Hexagonal est déconseillé (over-engineering)",
+          "description": "Hexagonal est dÃ©conseillÃ© (over-engineering)",
           "type": "regex",
-          "value": "(?i)over.?engineer|pas.*hexagonal|hexagonal.*non|éviter"
+          "value": "(?i)over.?engineer|pas.*hexagonal|hexagonal.*non|Ã©viter"
         },
         {
           "id": "concrete-structure-proposed",
-          "description": "Une structure concrète (models/, services/, repositories/) est proposée",
+          "description": "Une structure concrÃ¨te (models/, services/, repositories/) est proposÃ©e",
           "type": "regex",
           "value": "models/|services/|repositories/"
         }
@@ -99,13 +99,13 @@
     },
     {
       "id": 4,
-      "prompt": "Crée un Value Object `Money` en Python pour représenter un montant en centimes avec une devise. Il doit être immuable et se valider à la construction.",
+      "prompt": "CrÃ©e un Value Object `Money` en Python pour reprÃ©senter un montant en centimes avec une devise. Il doit Ãªtre immuable et se valider Ã  la construction.",
       "expected_output": "@dataclass(frozen=True) avec amount (int, centimes), currency (str), __post_init__ pour validation, pas de float, comparable par valeur.",
       "files": [],
       "assertions": [
         {
           "id": "frozen-dataclass",
-          "description": "@dataclass(frozen=True) utilisé",
+          "description": "@dataclass(frozen=True) utilisÃ©",
           "type": "contains",
           "value": "@dataclass(frozen=True)"
         },
@@ -125,33 +125,263 @@
     },
     {
       "id": 5,
-      "prompt": "En TypeScript, j'ai des fonctions qui prennent un `userId: number` et un `orderId: number`. Comment éviter de les mélanger accidentellement ?",
-      "expected_output": "Branded types (UserId = number & { __brand: 'UserId' }), fonctions helper asUserId/asOrderId, exemple de comment le compilateur bloque le mélange.",
+      "prompt": "En TypeScript, j'ai des fonctions qui prennent un `userId: number` et un `orderId: number`. Comment Ã©viter de les mÃ©langer accidentellement ?",
+      "expected_output": "Branded types (UserId = number & { __brand: 'UserId' }), fonctions helper asUserId/asOrderId, exemple de comment le compilateur bloque le mÃ©lange.",
       "files": [],
       "assertions": [
         {
           "id": "branded-types-used",
-          "description": "Branded types ou opaque types utilisés",
+          "description": "Branded types ou opaque types utilisÃ©s",
           "type": "regex",
           "value": "__brand|opaque|Branded"
         },
         {
           "id": "compiler-detects-mixing",
-          "description": "Montre comment le compilateur détecte le mélange",
+          "description": "Montre comment le compilateur dÃ©tecte le mÃ©lange",
           "type": "regex",
           "value": "(?i)compilateur|type.?error|TypeScript.*error|error.*type"
         },
         {
           "id": "helper-functions",
-          "description": "Fonctions helper pour créer les types brandés",
+          "description": "Fonctions helper pour crÃ©er les types brandÃ©s",
           "type": "regex",
           "value": "as\\w+Id|asUserId|asOrderId|function as"
         },
         {
           "id": "no-any",
-          "description": "Zéro any dans l'implémentation",
+          "description": "ZÃ©ro any dans l'implÃ©mentation",
           "type": "not_contains",
           "value": ": any"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Dans mon app React + TypeScript, mes composants font des appels fetch directement dans des useEffect et le code de rÃ©cupÃ©ration est dupliquÃ© partout. Comment structurer Ã§a proprement ?",
+      "expected_output": "Extraire la logique/data access dans des custom hooks, composants prÃ©sentationnels, dÃ©pendance sur un port (interface OrderRepository) injectÃ© via Context (composition root), fake swappÃ© en test, structure feature-based.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "custom-hook",
+          "description": "Logique extraite dans un custom hook",
+          "type": "regex",
+          "value": "use[A-Z]\\w+|custom hook"
+        },
+        {
+          "id": "port-interface",
+          "description": "Port/interface de repository dÃ©fini",
+          "type": "regex",
+          "value": "interface \\w+Repository|Repository"
+        },
+        {
+          "id": "context-injection",
+          "description": "Injection des dÃ©pendances via Context",
+          "type": "regex",
+          "value": "createContext|useContext|Context"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Comment architecturer une app FastAPI proprement ? Mes routers contiennent toute la logique mÃ©tier et accÃ¨dent directement Ã  la base via SQLAlchemy. Je veux pouvoir tester sans DB.",
+      "expected_output": "FastAPI = adaptateur entrant (couche api/infrastructure), handlers minces qui appellent des use cases, ports Protocol injectÃ©s via Depends, dependency_overrides + fake en bois pour les tests, DTO Pydantic sÃ©parÃ©s du domaine.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "depends-injection",
+          "description": "Injection via Depends",
+          "type": "contains",
+          "value": "Depends"
+        },
+        {
+          "id": "protocol-port",
+          "description": "Port dÃ©fini comme Protocol/interface",
+          "type": "regex",
+          "value": "Protocol|Repository"
+        },
+        {
+          "id": "thin-handler",
+          "description": "Logique mÃ©tier hors du handler (use case / couche application)",
+          "type": "regex",
+          "value": "(?i)use case|use_case|application|domain"
+        },
+        {
+          "id": "dependency-override",
+          "description": "Tests via dependency_overrides",
+          "type": "contains",
+          "value": "dependency_overrides"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Dans mon app Vue 3 + TypeScript, mes composants font des appels fetch directement dans des watchEffect et le code est dupliquÃ© partout. Comment structurer Ã§a proprement ?",
+      "expected_output": "Extraire la logique/data access dans des composables, composants prÃ©sentationnels, dÃ©pendance sur un port (interface Repository) injectÃ© via provide/inject avec InjectionKey typÃ© (composition root), fake swappÃ© en test, structure feature-based.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "composable-logic",
+          "description": "Logique extraite dans un composable (use*)",
+          "type": "regex",
+          "value": "use[A-Z]\\w+|composable"
+        },
+        {
+          "id": "port-interface",
+          "description": "Port/interface de repository dÃ©fini",
+          "type": "regex",
+          "value": "interface \\w+Repository|Repository"
+        },
+        {
+          "id": "provide-inject",
+          "description": "Injection des dÃ©pendances via provide/inject",
+          "type": "regex",
+          "value": "provide|inject"
+        },
+        {
+          "id": "injection-key",
+          "description": "InjectionKey typÃ© pour la sÃ©curitÃ© TS",
+          "type": "regex",
+          "value": "InjectionKey|Symbol\\("
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Dans mon app Django, mes vues contiennent toute la logique métier et mes models.py font 800 lignes. Comment structurer proprement en hexagonal ?",
+      "expected_output": "Séparer Domain (entités plain dataclass, sans import Django), Application (use cases + ports Protocol), Infrastructure (Django Model mappé par un Repository impl, Views thin adapters), apps = bounded contexts, signaux réservés à l'infra, composition root dans urls.py.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "domain-no-django",
+          "description": "Domain sans import Django",
+          "type": "regex",
+          "value": "domain|Domain|entit[ée]"
+        },
+        {
+          "id": "repository-port",
+          "description": "Port Repository Protocol défini",
+          "type": "regex",
+          "value": "Protocol|Repository|port"
+        },
+        {
+          "id": "thin-view",
+          "description": "Vue thin adapter (pas de logique métier)",
+          "type": "regex",
+          "value": "thin|adapter|use.?case|use_case"
+        },
+        {
+          "id": "no-signal-business",
+          "description": "Signaux déconseillés pour la logique métier",
+          "type": "regex",
+          "value": "signal|post_save"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Conçois une architecture hexagonale PHP 8.3 pour un module de commande (Order). Montre la structure src/ avec Domain/Application/Infrastructure, un OrderRepositoryInterface en Application/Port, son adaptateur DoctrineOrderRepository en Infrastructure, un Value Object Money en readonly class, et un Enum Status.",
+      "expected_output": "Arbre src/ avec 3 couches Domain/Application/Infrastructure, interface OrderRepositoryInterface dans Application/Port, readonly class Money avec validation constructeur, enum Status backed string, DoctrineOrderRepository implements interface, declare(strict_types=1) dans chaque fichier, dépendances toujours vers l'intérieur.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "hexagonal-layers",
+          "description": "Structure src/ avec Domain, Application, Infrastructure",
+          "type": "contains",
+          "value": "Infrastructure"
+        },
+        {
+          "id": "port-interface",
+          "description": "OrderRepositoryInterface dans Application/Port",
+          "type": "contains",
+          "value": "OrderRepositoryInterface"
+        },
+        {
+          "id": "readonly-value-object",
+          "description": "readonly class pour le Value Object Money",
+          "type": "contains",
+          "value": "readonly class"
+        },
+        {
+          "id": "backed-enum",
+          "description": "Enum Status backed par string",
+          "type": "contains",
+          "value": "enum Status: string"
+        },
+        {
+          "id": "strict-types",
+          "description": "declare(strict_types=1) présent",
+          "type": "contains",
+          "value": "declare(strict_types=1)"
+        },
+        {
+          "id": "implements-interface",
+          "description": "Adaptateur Doctrine implements l'interface du Port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Dans un projet Symfony 7 hexagonal, comment séparer l entité Doctrine (ORM) de l entité domaine Order ? Montre la structure de fichiers et le repository adapter qui fait le mapping.",
+      "expected_output": "OrderRecord (ORM entity, Infrastructure) séparé de Order (domain entity, Domain/) ; DoctrineOrderRepository implements OrderRepositoryInterface avec mapping explicite dans find/save ; services.yaml ou #[Autowire] comme composition root ; mention que Domain/ n importe aucune classe Symfony/Doctrine.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "separate-orm-domain",
+          "description": "Entité ORM et entité domaine sont des classes séparées",
+          "type": "contains",
+          "value": "OrderRecord"
+        },
+        {
+          "id": "implements-interface",
+          "description": "Repository implements l interface port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        },
+        {
+          "id": "no-doctrine-in-domain",
+          "description": "Domain sans import Doctrine mentionné",
+          "type": "contains",
+          "value": "Domain"
+        },
+        {
+          "id": "composition-root",
+          "description": "services.yaml ou Autowire mentionné comme composition root",
+          "type": "contains",
+          "value": "services.yaml"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Dans un projet Laravel 12 hexagonal, comment séparer le Model Eloquent (ORM) de l entité domaine Order ? Montre la structure app/, le repository adapter, et comment les facades (Mail, Queue) doivent être encapsulées derrière des ports.",
+      "expected_output": "OrderModel (Eloquent, Infrastructure/Persistence/Eloquent/) séparé de Order (domain entity, Domain/) ; EloquentOrderRepository implements OrderRepositoryInterface avec mapping explicite ; facades (Mail::, Queue::) uniquement dans Infrastructure derrière un port (ex: OrderMailerInterface) ; AppServiceProvider comme composition root avec bind() ; Domain/ sans import Laravel.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eloquent-infra",
+          "description": "OrderModel en Infrastructure, séparé de l entité domaine",
+          "type": "contains",
+          "value": "OrderModel"
+        },
+        {
+          "id": "implements-interface",
+          "description": "EloquentOrderRepository implements le port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        },
+        {
+          "id": "facades-in-infra-only",
+          "description": "Facades encapsulées derrière un port en Infrastructure",
+          "type": "contains",
+          "value": "Infrastructure"
+        },
+        {
+          "id": "service-provider-root",
+          "description": "AppServiceProvider mentionné comme composition root",
+          "type": "contains",
+          "value": "AppServiceProvider"
         }
       ]
     }

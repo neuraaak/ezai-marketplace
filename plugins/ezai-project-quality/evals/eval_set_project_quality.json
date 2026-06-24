@@ -3,19 +3,19 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Écris des tests pytest pour la fonction `calculate_discount(price: float, user_tier: str) -> float` qui applique 10% pour 'silver', 20% pour 'gold', 0% sinon. Inclus un test property-based sur l'invariant que la remise ne dépasse jamais le prix.",
-      "expected_output": "Tests parametrize pour les 3 tiers + edge cases (prix nul, négatif), test hypothesis sur l'invariant discount <= price, conftest si fixtures partagées, pas d'Any.",
+      "prompt": "Ã‰cris des tests pytest pour la fonction `calculate_discount(price: float, user_tier: str) -> float` qui applique 10% pour 'silver', 20% pour 'gold', 0% sinon. Inclus un test property-based sur l'invariant que la remise ne dÃ©passe jamais le prix.",
+      "expected_output": "Tests parametrize pour les 3 tiers + edge cases (prix nul, nÃ©gatif), test hypothesis sur l'invariant discount <= price, conftest si fixtures partagÃ©es, pas d'Any.",
       "files": [],
       "assertions": [
         {
           "id": "parametrize-used",
-          "description": "@pytest.mark.parametrize utilisé",
+          "description": "@pytest.mark.parametrize utilisÃ©",
           "type": "contains",
           "value": "pytest.mark.parametrize"
         },
         {
           "id": "hypothesis-used",
-          "description": "Test property-based hypothesis présent",
+          "description": "Test property-based hypothesis prÃ©sent",
           "type": "contains",
           "value": "hypothesis"
         },
@@ -29,25 +29,25 @@
     },
     {
       "id": 2,
-      "prompt": "Ce endpoint Express reçoit des données utilisateur depuis un form et les insère en base sans validation. Sécurise-le avec Zod et les bonnes pratiques 2026.",
-      "expected_output": "Schema Zod avec validation email/string, validation au boundary avant tout traitement, gestion des erreurs structurée, pas de sql injection possible, structured logging avec correlation ID.",
+      "prompt": "Ce endpoint Express reÃ§oit des donnÃ©es utilisateur depuis un form et les insÃ¨re en base sans validation. SÃ©curise-le avec Zod et les bonnes pratiques 2026.",
+      "expected_output": "Schema Zod avec validation email/string, validation au boundary avant tout traitement, gestion des erreurs structurÃ©e, pas de sql injection possible, structured logging avec correlation ID.",
       "files": [],
       "assertions": [
         {
           "id": "zod-schema",
-          "description": "Schema Zod défini",
+          "description": "Schema Zod dÃ©fini",
           "type": "regex",
           "value": "(?i)z\\.object"
         },
         {
           "id": "validation-at-boundary",
-          "description": "Validation Zod appelée avant le traitement (parse ou safeParse)",
+          "description": "Validation Zod appelÃ©e avant le traitement (parse ou safeParse)",
           "type": "regex",
           "value": "\\.parse\\(|\\.safeParse\\("
         },
         {
           "id": "no-raw-sql-concat",
-          "description": "Pas de concaténation de chaîne SQL directe",
+          "description": "Pas de concatÃ©nation de chaÃ®ne SQL directe",
           "type": "not_contains",
           "value": "' + req.body"
         }
@@ -55,27 +55,257 @@
     },
     {
       "id": 3,
-      "prompt": "Où stocker la clé API Stripe dans notre app Python (dev + prod) ? On a Docker en prod et des devs qui travaillent en local.",
-      "expected_output": "python-dotenv + .env pour dev (git-ignoré), système de vault ou env vars plateforme pour prod, jamais dans le code, audit scan recommandé, exemple de code os.getenv().",
+      "prompt": "OÃ¹ stocker la clÃ© API Stripe dans notre app Python (dev + prod) ? On a Docker en prod et des devs qui travaillent en local.",
+      "expected_output": "python-dotenv + .env pour dev (git-ignorÃ©), systÃ¨me de vault ou env vars plateforme pour prod, jamais dans le code, audit scan recommandÃ©, exemple de code os.getenv().",
       "files": [],
       "assertions": [
         {
           "id": "dotenv-dev",
-          "description": ".env ou python-dotenv mentionné pour le dev local",
+          "description": ".env ou python-dotenv mentionnÃ© pour le dev local",
           "type": "regex",
           "value": "\\.env|python-dotenv"
         },
         {
           "id": "os-getenv",
-          "description": "os.getenv() ou os.environ mentionné",
+          "description": "os.getenv() ou os.environ mentionnÃ©",
           "type": "regex",
           "value": "os\\.getenv|os\\.environ"
         },
         {
           "id": "no-hardcoded-key",
-          "description": "Clé Stripe jamais hardcodée dans le code",
+          "description": "ClÃ© Stripe jamais hardcodÃ©e dans le code",
           "type": "not_contains",
           "value": "sk_live_"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Ã‰cris des tests pour ce composant React `<Counter />` qui affiche un bouton 'Increment' et un texte 'Count: N'. Utilise les bonnes pratiques de test React 2026.",
+      "expected_output": "Vitest + React Testing Library, environment jsdom, query par rÃ´le accessible (getByRole), interaction via userEvent, assertion sur le texte rendu via toBeInTheDocument, pas de query par testid/classe.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "testing-library",
+          "description": "React Testing Library utilisÃ©",
+          "type": "contains",
+          "value": "@testing-library/react"
+        },
+        {
+          "id": "user-event",
+          "description": "Interactions pilotÃ©es par userEvent",
+          "type": "contains",
+          "value": "userEvent"
+        },
+        {
+          "id": "query-by-role",
+          "description": "Query par rÃ´le accessible (getByRole)",
+          "type": "regex",
+          "value": "getByRole|getByText|findBy"
+        },
+        {
+          "id": "no-test-id-query",
+          "description": "Pas de query par data-testid (couplage Ã  l'implÃ©mentation)",
+          "type": "not_contains",
+          "value": "getByTestId"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Ã‰cris des tests pour un endpoint FastAPI `POST /users` qui crÃ©e un utilisateur depuis un modÃ¨le Pydantic. Teste le cas nominal, le cas d'entrÃ©e invalide, et montre comment injecter un faux repository.",
+      "expected_output": "TestClient (httpx) via fixture client, assertion status 201 + body, cas invalide attendu en 422 automatique Pydantic, injection d'un fake via app.dependency_overrides puis clear, fakes prÃ©fÃ©rÃ©s aux mocks.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "test-client",
+          "description": "TestClient FastAPI utilisÃ©",
+          "type": "contains",
+          "value": "TestClient"
+        },
+        {
+          "id": "validation-422",
+          "description": "EntrÃ©e invalide attendue en 422 (validation Pydantic automatique)",
+          "type": "contains",
+          "value": "422"
+        },
+        {
+          "id": "dependency-override",
+          "description": "Injection via app.dependency_overrides",
+          "type": "contains",
+          "value": "dependency_overrides"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Ã‰cris des tests pour un composant Vue 3 `<Counter />` avec un bouton d'incrÃ©mentation. Montre aussi comment tester un composable `useCounter` en isolation.",
+      "expected_output": "Vitest + Vue Test Utils, mount(Counter.vue), trigger('click'), assertion via wrapper.text(), composable testÃ© avec withSetup helper fournissant le contexte rÃ©actif Vue, pas de query par test-id.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vue-test-utils",
+          "description": "@vue/test-utils (mount) utilisÃ©",
+          "type": "contains",
+          "value": "@vue/test-utils"
+        },
+        {
+          "id": "trigger-click",
+          "description": "Interaction via trigger('click')",
+          "type": "contains",
+          "value": "trigger"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        },
+        {
+          "id": "composable-isolation",
+          "description": "Composable testÃ© en isolation (withSetup ou Ã©quivalent)",
+          "type": "regex",
+          "value": "withSetup|createApp|setup\\(\\)"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Écris des tests pytest pour un endpoint Django/DRF POST /orders/ qui crée une commande. Montre comment utiliser pytest-django, factory-boy, et l'APIClient DRF.",
+      "expected_output": "pytest-django avec @pytest.mark.django_db, factory-boy DjangoModelFactory pour créer les objets ORM, APIClient DRF pour les appels HTTP, assertion status 201 et shape du body, test 401 avec client non authentifié, ORM non mocké.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "django-db-mark",
+          "description": "@pytest.mark.django_db présent",
+          "type": "contains",
+          "value": "django_db"
+        },
+        {
+          "id": "factory-boy",
+          "description": "factory-boy DjangoModelFactory utilisé",
+          "type": "regex",
+          "value": "DjangoModelFactory|factory\\.django"
+        },
+        {
+          "id": "api-client",
+          "description": "APIClient DRF utilisé",
+          "type": "contains",
+          "value": "APIClient"
+        },
+        {
+          "id": "unauthenticated-401",
+          "description": "Test 401 avec client non authentifié",
+          "type": "contains",
+          "value": "401"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Écris les tests PHPUnit 11 pour une classe Money (readonly, PHP 8.3) qui rejette les montants négatifs et les codes devise invalides. Utilise #[Test] et #[DataProvider]. Ajoute un Fake InMemoryOrderRepository qui implémente OrderRepositoryInterface.",
+      "expected_output": "Classe de test final avec #[Test] et #[DataProvider], test montant négatif avec expectException, DataProvider pour devises valides/invalides, InMemoryOrderRepository fake avec array store implémentant l'interface, assertions avec self::.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "phpunit-test-attribute",
+          "description": "Utilise l'attribut #[Test] (PHPUnit 10+)",
+          "type": "contains",
+          "value": "#[Test]"
+        },
+        {
+          "id": "data-provider-attribute",
+          "description": "Utilise #[DataProvider] pour les cas paramétrés",
+          "type": "contains",
+          "value": "#[DataProvider]"
+        },
+        {
+          "id": "expect-exception",
+          "description": "Test du rejet des montants négatifs via expectException",
+          "type": "contains",
+          "value": "expectException"
+        },
+        {
+          "id": "self-assertions",
+          "description": "Assertions via self:: (pas $this->)",
+          "type": "contains",
+          "value": "self::assert"
+        },
+        {
+          "id": "in-memory-fake",
+          "description": "Fake InMemoryOrderRepository implémentant l'interface",
+          "type": "contains",
+          "value": "InMemoryOrderRepository"
+        },
+        {
+          "id": "final-test-class",
+          "description": "Classes de test déclarées final",
+          "type": "contains",
+          "value": "final class"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Mon projet Symfony 7 a un OrderController et un PlaceOrderHandler. Écris les tests pour : 1) le handler en unit test (fake repo), 2) le controller en WebTestCase (POST /api/orders retourne 201, sans auth retourne 401).",
+      "expected_output": "Un test unitaire PlaceOrderHandlerTest extends TestCase avec InMemoryRepository fake et #[Test] ; un test fonctionnel OrderControllerTest extends WebTestCase avec assertResponseStatusCodeSame(201) et assertResponseStatusCodeSame(401) ; DAMA bundle mentionné pour isolation DB.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "unit-extends-testcase",
+          "description": "Test unitaire extends TestCase (pas KernelTestCase)",
+          "type": "contains",
+          "value": "TestCase"
+        },
+        {
+          "id": "webtestcase-used",
+          "description": "WebTestCase utilisé pour le controller",
+          "type": "contains",
+          "value": "WebTestCase"
+        },
+        {
+          "id": "assert-201",
+          "description": "assertResponseStatusCodeSame(201) présent",
+          "type": "contains",
+          "value": "201"
+        },
+        {
+          "id": "assert-401",
+          "description": "assertResponseStatusCodeSame(401) présent",
+          "type": "contains",
+          "value": "401"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Mon projet Laravel 12 a un OrderController et un PlaceOrderHandler. Écris les tests pour : 1) le handler en unit test (fake repo, pas de boot Laravel), 2) le controller en Feature test (POST /api/orders retourne 201 avec auth, 401 sans). Inclus la règle mass-assignment et argon2id.",
+      "expected_output": "Test unitaire PlaceOrderHandlerTest extends TestCase (PHPUnit pur, pas Illuminate) avec InMemoryRepository et #[Test] ; Feature test OrderControllerTest extends TestCase Laravel avec RefreshDatabase + actingAs + assertCreated() + assertUnauthorized() ; mention que  est obligatoire sur Eloquent models ; config/hashing.php avec driver argon2id.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "unit-no-laravel",
+          "description": "Test unitaire extends PHPUnit TestCase (pas Illuminate)",
+          "type": "contains",
+          "value": "PHPUnit\\Framework\\TestCase"
+        },
+        {
+          "id": "refresh-database",
+          "description": "RefreshDatabase utilisé dans le Feature test",
+          "type": "contains",
+          "value": "RefreshDatabase"
+        },
+        {
+          "id": "assert-created",
+          "description": "assertCreated() ou 201 testé",
+          "type": "contains",
+          "value": "201"
+        },
+        {
+          "id": "assert-unauthorized",
+          "description": "assertUnauthorized() ou 401 testé",
+          "type": "contains",
+          "value": "401"
         }
       ]
     }
