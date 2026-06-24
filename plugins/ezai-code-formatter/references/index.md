@@ -8,5 +8,6 @@ Single routing axis: **language**. See `languages/index.md` for the full routing
 | :---------------------- | :------------------------------- | :---------------------- |
 | Python                  | `.py`                            | `languages/python/`     |
 | JavaScript / TypeScript | `.js` `.ts` `.jsx` `.tsx` `.mjs` | `languages/javascript/` |
+| PHP                     | `.php`                           | `languages/php/`        |
 
 Load `languages/index.md` first to confirm the language is supported, then load the matching `style-layout.instructions.md`.

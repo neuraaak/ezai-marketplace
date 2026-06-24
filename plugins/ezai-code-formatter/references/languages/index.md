@@ -8,11 +8,13 @@ Route to the correct language subdirectory based on the file extension.
 | :---------------------- | :------------------------------- | :-------------------------------------------------- |
 | Python                  | `.py`                            | `languages/python/style-layout.instructions.md`     |
 | JavaScript / TypeScript | `.js` `.ts` `.jsx` `.tsx` `.mjs` | `languages/javascript/style-layout.instructions.md` |
+| PHP                     | `.php`                           | `languages/php/style-layout.instructions.md`        |
 
 ## What each file owns
 
 - **`python/style-layout.instructions.md`** — section markers (`# ///...` main, `# ---...` sub), import grouping, class structure, Google-style docstrings.
 - **`javascript/style-layout.instructions.md`** — section markers (`// ///...` main, `// ---...` sub), import grouping (node:, 3rd-party, local), JSDoc format.
+- **`php/style-layout.instructions.md`** — section markers (`// ///...` main, `// ---...` sub), use statement grouping (SPL, vendor, local), PHPDoc format, `declare(strict_types=1)` placement.
 
 ## Adding a new language
 
