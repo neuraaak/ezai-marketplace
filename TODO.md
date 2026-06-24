@@ -1,11 +1,10 @@
 # Idées de fond (backlog, non priorisé)
 
-## Graphify scopé par skill (partiellement amorcé)
+## Graphify — scope root uniquement (décidé)
 
-Un graph par plugin dans `plugins/<name>/graphify-out/` plutôt qu'un seul graph racine.
-Déjà fait pour `ezai-docs-writer` (42 nœuds, 55 edges). Gain : le routing de `index.md` devient une
-requête sémantique (`graphify query "badge registry pour python"`) et `docs-specialist-persona` peut
-résoudre dynamiquement les fichiers à charger au lieu des chemins en dur de `pipeline.md` — résistant
-aux futures réorgs. Limite : les graphs per-plugin ne se voient pas entre eux ; le graph racine reste
-utile pour les relations cross-skills. À généraliser aux autres plugins une fois les phases précédentes
-stabilisées.
+Le graph et la DB graphify sont générés au **scope root** du projet
+(`graphify-out/` à la racine). Les graphs per-plugin
+(`plugins/<name>/graphify-out/`) ont été abandonnés : un seul graph racine
+voit les relations cross-skills, et les requêtes (`graphify query "..."`,
+`graphify explain`, `graphify path`) permettent toujours de cibler les
+interactions au scope d'un skill.
