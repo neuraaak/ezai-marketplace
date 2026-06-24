@@ -3,25 +3,25 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Génère un `pyproject.toml` complet pour une librairie Python 3.12 open-source appelée `dataflow`. Elle utilise ruff, ty, pytest, et mkdocs. Le build backend doit être hatchling.",
-      "expected_output": "pyproject.toml avec [build-system] hatchling, [project] complet, [tool.ruff.lint] avec règles commentées, [tool.ruff.format], [tool.ty], [tool.pytest.ini_options], emojis de section.",
+      "prompt": "GÃ©nÃ¨re un `pyproject.toml` complet pour une librairie Python 3.12 open-source appelÃ©e `dataflow`. Elle utilise ruff, ty, pytest, et mkdocs. Le build backend doit Ãªtre hatchling.",
+      "expected_output": "pyproject.toml avec [build-system] hatchling, [project] complet, [tool.ruff.lint] avec rÃ¨gles commentÃ©es, [tool.ruff.format], [tool.ty], [tool.pytest.ini_options], emojis de section.",
       "files": [],
       "assertions": [
         {
           "id": "hatchling-backend",
-          "description": "[build-system] avec hatchling présent",
+          "description": "[build-system] avec hatchling prÃ©sent",
           "type": "contains",
           "value": "hatchling"
         },
         {
           "id": "ruff-lint-section",
-          "description": "[tool.ruff.lint] présent",
+          "description": "[tool.ruff.lint] prÃ©sent",
           "type": "contains",
           "value": "[tool.ruff.lint]"
         },
         {
           "id": "ruff-format-section",
-          "description": "[tool.ruff.format] présent",
+          "description": "[tool.ruff.format] prÃ©sent",
           "type": "contains",
           "value": "[tool.ruff.format]"
         },
@@ -33,7 +33,7 @@
         },
         {
           "id": "pytest-ini-options",
-          "description": "[tool.pytest.ini_options] présent",
+          "description": "[tool.pytest.ini_options] prÃ©sent",
           "type": "contains",
           "value": "[tool.pytest.ini_options]"
         },
@@ -47,19 +47,19 @@
     },
     {
       "id": 2,
-      "prompt": "Écris un Dockerfile multi-stage pour notre app Node.js 24 TypeScript. Elle doit être minimale en prod, non-root, et utiliser pnpm.",
+      "prompt": "Ã‰cris un Dockerfile multi-stage pour notre app Node.js 24 TypeScript. Elle doit Ãªtre minimale en prod, non-root, et utiliser pnpm.",
       "expected_output": "Stage builder (pnpm install --frozen-lockfile + tsc), stage runtime (node:24-alpine, user non-root, COPY dist + node_modules), HEALTHCHECK, tag exact pas latest.",
       "files": [],
       "assertions": [
         {
           "id": "multi-stage",
-          "description": "Deux stages présents (AS builder + stage runtime)",
+          "description": "Deux stages prÃ©sents (AS builder + stage runtime)",
           "type": "regex",
           "value": "AS builder|FROM .* AS"
         },
         {
           "id": "pnpm-frozen",
-          "description": "pnpm install --frozen-lockfile utilisé",
+          "description": "pnpm install --frozen-lockfile utilisÃ©",
           "type": "contains",
           "value": "pnpm install --frozen-lockfile"
         },
@@ -71,13 +71,13 @@
         },
         {
           "id": "healthcheck",
-          "description": "HEALTHCHECK présent",
+          "description": "HEALTHCHECK prÃ©sent",
           "type": "contains",
           "value": "HEALTHCHECK"
         },
         {
           "id": "no-latest-tag",
-          "description": "Pas de tag :latest — tag exact épinglé",
+          "description": "Pas de tag :latest â€” tag exact Ã©pinglÃ©",
           "type": "not_contains",
           "value": ":latest"
         }
@@ -85,8 +85,8 @@
     },
     {
       "id": 3,
-      "prompt": "Crée un tsconfig.json pour un projet Node.js 24 ESM TypeScript strict. On veut les meilleures perf de compilation possible.",
-      "expected_output": "target ES2026, module NodeNext, moduleResolution NodeNext, strict: true, noUncheckedIndexedAccess, exactOptionalPropertyTypes, types: [] pour perf, outDir/rootDir configurés.",
+      "prompt": "CrÃ©e un tsconfig.json pour un projet Node.js 24 ESM TypeScript strict. On veut les meilleures perf de compilation possible.",
+      "expected_output": "target ES2026, module NodeNext, moduleResolution NodeNext, strict: true, noUncheckedIndexedAccess, exactOptionalPropertyTypes, types: [] pour perf, outDir/rootDir configurÃ©s.",
       "files": [],
       "assertions": [
         {
@@ -103,13 +103,13 @@
         },
         {
           "id": "module-resolution",
-          "description": "moduleResolution présent",
+          "description": "moduleResolution prÃ©sent",
           "type": "contains",
           "value": "moduleResolution"
         },
         {
           "id": "no-unchecked-indexed",
-          "description": "noUncheckedIndexedAccess présent",
+          "description": "noUncheckedIndexedAccess prÃ©sent",
           "type": "contains",
           "value": "noUncheckedIndexedAccess"
         },
@@ -129,25 +129,25 @@
       "assertions": [
         {
           "id": "pre-commit-config-file",
-          "description": ".pre-commit-config.yaml présent",
+          "description": ".pre-commit-config.yaml prÃ©sent",
           "type": "contains",
           "value": ".pre-commit-config.yaml"
         },
         {
           "id": "ruff-hook",
-          "description": "Hook ruff présent",
+          "description": "Hook ruff prÃ©sent",
           "type": "contains",
           "value": "ruff"
         },
         {
           "id": "ruff-format-hook",
-          "description": "Hook ruff-format présent",
+          "description": "Hook ruff-format prÃ©sent",
           "type": "contains",
           "value": "ruff-format"
         },
         {
           "id": "install-command",
-          "description": "Commande pre-commit install donnée",
+          "description": "Commande pre-commit install donnÃ©e",
           "type": "contains",
           "value": "pre-commit install"
         }
@@ -155,19 +155,19 @@
     },
     {
       "id": 5,
-      "prompt": "Comment gérer les variables d'environnement dans un projet Node.js TypeScript ? On a DATABASE_URL et API_KEY qui sont obligatoires.",
-      "expected_output": "Fonction getEnv avec validation au démarrage + RuntimeError si absent, .env dans .gitignore, injecter via secrets CI, mention de @t3-oss/env-nextjs pour Next.js.",
+      "prompt": "Comment gÃ©rer les variables d'environnement dans un projet Node.js TypeScript ? On a DATABASE_URL et API_KEY qui sont obligatoires.",
+      "expected_output": "Fonction getEnv avec validation au dÃ©marrage + RuntimeError si absent, .env dans .gitignore, injecter via secrets CI, mention de @t3-oss/env-nextjs pour Next.js.",
       "files": [],
       "assertions": [
         {
           "id": "fail-fast-validation",
-          "description": "Validation au démarrage (fail fast) proposée",
+          "description": "Validation au dÃ©marrage (fail fast) proposÃ©e",
           "type": "regex",
-          "value": "(?i)throw|Error|startup|start|démarr|fail.?fast"
+          "value": "(?i)throw|Error|startup|start|dÃ©marr|fail.?fast"
         },
         {
           "id": "gitignore-env",
-          "description": ".env dans .gitignore mentionné",
+          "description": ".env dans .gitignore mentionnÃ©",
           "type": "contains",
           "value": ".gitignore"
         },
@@ -179,7 +179,7 @@
         },
         {
           "id": "ci-secrets-injection",
-          "description": "Injection via secrets CI mentionnée",
+          "description": "Injection via secrets CI mentionnÃ©e",
           "type": "regex",
           "value": "(?i)CI|secret|GitHub|GitLab|inject"
         }
@@ -188,24 +188,24 @@
     {
       "id": 6,
       "prompt": "Configure ESLint pour un projet TypeScript avec flat config (ESLint 9+). On veut typescript-eslint en mode strict.",
-      "expected_output": "eslint.config.js avec import flat config, typescript-eslint strict, règles no-unused-vars et explicit-function-return-type, ESM syntax.",
+      "expected_output": "eslint.config.js avec import flat config, typescript-eslint strict, rÃ¨gles no-unused-vars et explicit-function-return-type, ESM syntax.",
       "files": [],
       "assertions": [
         {
           "id": "flat-config-file",
-          "description": "eslint.config.js utilisé (pas .eslintrc)",
+          "description": "eslint.config.js utilisÃ© (pas .eslintrc)",
           "type": "contains",
           "value": "eslint.config.js"
         },
         {
           "id": "typescript-eslint",
-          "description": "typescript-eslint importé",
+          "description": "typescript-eslint importÃ©",
           "type": "contains",
           "value": "typescript-eslint"
         },
         {
           "id": "strict-mode",
-          "description": "Mode strict activé",
+          "description": "Mode strict activÃ©",
           "type": "regex",
           "value": "strict"
         },
@@ -214,6 +214,266 @@
           "description": "Syntaxe ESM (import/export)",
           "type": "contains",
           "value": "import "
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Configure un projet React 19 en TypeScript avec Vite. Donne le vite.config, les scripts package.json, et la config ESLint adaptÃ©e Ã  React.",
+      "expected_output": "vite.config.ts avec @vitejs/plugin-react, scripts dev/build/preview avec vite + tsc -b, test via vitest, ESLint Ã©tendu avec eslint-plugin-react-hooks, env via import.meta.env / VITE_, jamais de secret en VITE_.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vite-react-plugin",
+          "description": "@vitejs/plugin-react prÃ©sent dans vite.config",
+          "type": "contains",
+          "value": "@vitejs/plugin-react"
+        },
+        {
+          "id": "vite-build-script",
+          "description": "Build pilotÃ© par vite (vite build)",
+          "type": "contains",
+          "value": "vite build"
+        },
+        {
+          "id": "react-hooks-eslint",
+          "description": "ESLint Ã©tendu avec react-hooks",
+          "type": "contains",
+          "value": "react-hooks"
+        },
+        {
+          "id": "vite-env-import-meta",
+          "description": "Env client via import.meta.env (pas process.env)",
+          "type": "contains",
+          "value": "import.meta.env"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Setup un projet FastAPI en Python 3.12. Donne les dÃ©pendances pyproject.toml, la gestion des variables d'environnement, et le Dockerfile de prod.",
+      "expected_output": "dependencies fastapi + uvicorn[standard] + pydantic-settings, httpx en dev, env via BaseSettings (pydantic-settings) qui fail-fast, Dockerfile multi-stage lanÃ§ant uvicorn app.main:app avec route /health.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "fastapi-uvicorn-deps",
+          "description": "fastapi et uvicorn dans les dÃ©pendances",
+          "type": "regex",
+          "value": "uvicorn\\[standard\\]|\"uvicorn"
+        },
+        {
+          "id": "pydantic-settings",
+          "description": "pydantic-settings utilisÃ© pour l'env",
+          "type": "contains",
+          "value": "pydantic-settings"
+        },
+        {
+          "id": "base-settings",
+          "description": "ModÃ¨le BaseSettings typÃ© pour l'env",
+          "type": "contains",
+          "value": "BaseSettings"
+        },
+        {
+          "id": "uvicorn-cmd",
+          "description": "Dockerfile lance uvicorn app.main:app",
+          "type": "contains",
+          "value": "app.main:app"
+        },
+        {
+          "id": "health-route",
+          "description": "Route /health prÃ©sente pour le healthcheck",
+          "type": "contains",
+          "value": "/health"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Configure un projet Vue 3 en TypeScript avec Vite. Donne le vite.config, les scripts package.json, la config ESLint adaptÃ©e Ã  Vue, et la gestion des variables d'environnement.",
+      "expected_output": "vite.config.ts avec @vitejs/plugin-vue, scripts dev/build/preview avec vite + vue-tsc -b, test via vitest, ESLint Ã©tendu avec eslint-plugin-vue flat/recommended, env via import.meta.env / VITE_, jamais de secret en VITE_.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vite-vue-plugin",
+          "description": "@vitejs/plugin-vue prÃ©sent dans vite.config",
+          "type": "contains",
+          "value": "@vitejs/plugin-vue"
+        },
+        {
+          "id": "vue-tsc-build",
+          "description": "Type-check via vue-tsc (pas tsc seul)",
+          "type": "contains",
+          "value": "vue-tsc"
+        },
+        {
+          "id": "vue-eslint",
+          "description": "ESLint Ã©tendu avec eslint-plugin-vue",
+          "type": "contains",
+          "value": "eslint-plugin-vue"
+        },
+        {
+          "id": "vite-env-import-meta",
+          "description": "Env client via import.meta.env (pas process.env)",
+          "type": "contains",
+          "value": "import.meta.env"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Setup un projet Django 5 en Python 3.12. Donne les dépendances pyproject.toml, la gestion des variables d'environnement avec django-environ, et le Dockerfile de prod.",
+      "expected_output": "django + gunicorn + django-environ + psycopg dans les dépendances, pytest-django en dev, settings splitté base/local/production, env via django-environ avec DATABASE_URL, Dockerfile multi-stage lançant gunicorn config.wsgi:application avec collectstatic au build, route /health/ présente.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "django-environ-dep",
+          "description": "django-environ dans les dépendances",
+          "type": "contains",
+          "value": "django-environ"
+        },
+        {
+          "id": "pytest-django",
+          "description": "pytest-django en dev deps",
+          "type": "contains",
+          "value": "pytest-django"
+        },
+        {
+          "id": "database-url",
+          "description": "DATABASE_URL utilisé pour la config DB",
+          "type": "contains",
+          "value": "DATABASE_URL"
+        },
+        {
+          "id": "gunicorn-cmd",
+          "description": "Dockerfile lance gunicorn config.wsgi:application",
+          "type": "contains",
+          "value": "config.wsgi:application"
+        },
+        {
+          "id": "collectstatic",
+          "description": "collectstatic exécuté au build (pas au démarrage)",
+          "type": "contains",
+          "value": "collectstatic"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Configure un projet PHP 8.3 avec Composer 2. Génère le composer.json complet, le phpstan.neon (level 8), le .php-cs-fixer.php avec les règles @PER-CS et @PHP83Migration, et un Dockerfile multi-stage.",
+      "expected_output": "composer.json avec require php>=8.3, scripts lint/analyse/test, phpstan.neon level 8, .php-cs-fixer.php avec @PER-CS + declare_strict_types, Dockerfile multi-stage composer:2 builder + php:8.3-fpm-alpine runtime non-root.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "php-version-constraint",
+          "description": "composer.json contient require php>=8.3",
+          "type": "contains",
+          "value": ">=8.3"
+        },
+        {
+          "id": "phpstan-level",
+          "description": "phpstan.neon avec level 8 minimum",
+          "type": "contains",
+          "value": "level: 8"
+        },
+        {
+          "id": "php-cs-fixer-per-cs",
+          "description": ".php-cs-fixer.php avec règle @PER-CS",
+          "type": "contains",
+          "value": "@PER-CS"
+        },
+        {
+          "id": "declare-strict-types-rule",
+          "description": ".php-cs-fixer.php enforce declare_strict_types",
+          "type": "contains",
+          "value": "declare_strict_types"
+        },
+        {
+          "id": "docker-fpm-alpine",
+          "description": "Dockerfile utilise php:8.3-fpm-alpine",
+          "type": "contains",
+          "value": "php:8.3-fpm-alpine"
+        },
+        {
+          "id": "docker-non-root",
+          "description": "Dockerfile utilise un utilisateur non-root",
+          "type": "contains",
+          "value": "USER"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Je configure un projet PHP 8.3 avec Symfony 7. Génère le composer.json (deps + require-dev), le phpstan.neon avec l extension symfony, et explique comment gérer les variables d environnement en prod (dump-env).",
+      "expected_output": "composer.json avec symfony/framework-bundle ^7.2 + phpstan/phpstan-symfony en require-dev ; phpstan.neon avec includes extension.neon + container_xml_path ; commande composer dump-env prod documentée ; mention que .env.local est gitignore.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "symfony-bundle-dep",
+          "description": "symfony/framework-bundle present dans require",
+          "type": "contains",
+          "value": "symfony/framework-bundle"
+        },
+        {
+          "id": "phpstan-symfony-ext",
+          "description": "phpstan/phpstan-symfony present dans require-dev",
+          "type": "contains",
+          "value": "phpstan/phpstan-symfony"
+        },
+        {
+          "id": "phpstan-extension-neon",
+          "description": "includes extension.neon dans phpstan.neon",
+          "type": "contains",
+          "value": "extension.neon"
+        },
+        {
+          "id": "dump-env-prod",
+          "description": "composer dump-env prod mentionne",
+          "type": "contains",
+          "value": "dump-env"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Je configure un projet Laravel 12 avec PHP 8.3. Génère le composer.json (deps + require-dev avec larastan et pint), le fichier pint.json, le phpstan.neon, et explique la règle config() vs env().",
+      "expected_output": "composer.json avec laravel/framework ^12.0, larastan/larastan et laravel/pint en require-dev ; pint.json avec preset laravel ; phpstan.neon avec larastan extension.neon inclus ; explication que env() cesse de fonctionner après config:cache et qu il faut utiliser config() dans le code applicatif.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "laravel-framework-dep",
+          "description": "laravel/framework present dans require",
+          "type": "contains",
+          "value": "laravel/framework"
+        },
+        {
+          "id": "larastan-dep",
+          "description": "larastan/larastan present dans require-dev",
+          "type": "contains",
+          "value": "larastan/larastan"
+        },
+        {
+          "id": "pint-dep",
+          "description": "laravel/pint present dans require-dev",
+          "type": "contains",
+          "value": "laravel/pint"
+        },
+        {
+          "id": "config-vs-env-rule",
+          "description": "Règle config() vs env() après config:cache expliquée",
+          "type": "contains",
+          "value": "config:cache"
         }
       ]
     }
