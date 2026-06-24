@@ -57,11 +57,12 @@ For polyglot repos, load both files. If the language is not listed, load `refere
 Framework files are **deltas**: load them *in addition to* the language file,
 never instead of it. Cascade is `common → language → framework`.
 
-| Framework | Detection signal                                | File                                                    |
-| :-------- | :---------------------------------------------- | :------------------------------------------------------ |
-| React     | `react` dep, or `vite` + `@vitejs/plugin-react` | `references/languages/javascript/frameworks/react.md`   |
-| Vue       | `vue` dep, or `vite` + `@vitejs/plugin-vue`     | `references/languages/javascript/frameworks/vue.md`     |
-| FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint     | `references/languages/python/frameworks/fastapi.md`     |
+| Framework | Detection signal                                        | File                                                  |
+| :-------- | :------------------------------------------------------ | :---------------------------------------------------- |
+| React     | `react` dep, or `vite` + `@vitejs/plugin-react`         | `references/languages/javascript/frameworks/react.md` |
+| Vue       | `vue` dep, or `vite` + `@vitejs/plugin-vue`             | `references/languages/javascript/frameworks/vue.md`   |
+| FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint             | `references/languages/python/frameworks/fastapi.md`   |
+| Django    | `django` dep, or `manage.py` / `DJANGO_SETTINGS_MODULE` | `references/languages/python/frameworks/django.md`    |
 
 If no framework is detected, or the detected one has no delta file, stop at the
 language file — do not invent framework-specific structure.

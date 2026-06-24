@@ -3,19 +3,19 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Écris des tests pytest pour la fonction `calculate_discount(price: float, user_tier: str) -> float` qui applique 10% pour 'silver', 20% pour 'gold', 0% sinon. Inclus un test property-based sur l'invariant que la remise ne dépasse jamais le prix.",
-      "expected_output": "Tests parametrize pour les 3 tiers + edge cases (prix nul, négatif), test hypothesis sur l'invariant discount <= price, conftest si fixtures partagées, pas d'Any.",
+      "prompt": "Ã‰cris des tests pytest pour la fonction `calculate_discount(price: float, user_tier: str) -> float` qui applique 10% pour 'silver', 20% pour 'gold', 0% sinon. Inclus un test property-based sur l'invariant que la remise ne dÃ©passe jamais le prix.",
+      "expected_output": "Tests parametrize pour les 3 tiers + edge cases (prix nul, nÃ©gatif), test hypothesis sur l'invariant discount <= price, conftest si fixtures partagÃ©es, pas d'Any.",
       "files": [],
       "assertions": [
         {
           "id": "parametrize-used",
-          "description": "@pytest.mark.parametrize utilisé",
+          "description": "@pytest.mark.parametrize utilisÃ©",
           "type": "contains",
           "value": "pytest.mark.parametrize"
         },
         {
           "id": "hypothesis-used",
-          "description": "Test property-based hypothesis présent",
+          "description": "Test property-based hypothesis prÃ©sent",
           "type": "contains",
           "value": "hypothesis"
         },
@@ -29,25 +29,25 @@
     },
     {
       "id": 2,
-      "prompt": "Ce endpoint Express reçoit des données utilisateur depuis un form et les insère en base sans validation. Sécurise-le avec Zod et les bonnes pratiques 2026.",
-      "expected_output": "Schema Zod avec validation email/string, validation au boundary avant tout traitement, gestion des erreurs structurée, pas de sql injection possible, structured logging avec correlation ID.",
+      "prompt": "Ce endpoint Express reÃ§oit des donnÃ©es utilisateur depuis un form et les insÃ¨re en base sans validation. SÃ©curise-le avec Zod et les bonnes pratiques 2026.",
+      "expected_output": "Schema Zod avec validation email/string, validation au boundary avant tout traitement, gestion des erreurs structurÃ©e, pas de sql injection possible, structured logging avec correlation ID.",
       "files": [],
       "assertions": [
         {
           "id": "zod-schema",
-          "description": "Schema Zod défini",
+          "description": "Schema Zod dÃ©fini",
           "type": "regex",
           "value": "(?i)z\\.object"
         },
         {
           "id": "validation-at-boundary",
-          "description": "Validation Zod appelée avant le traitement (parse ou safeParse)",
+          "description": "Validation Zod appelÃ©e avant le traitement (parse ou safeParse)",
           "type": "regex",
           "value": "\\.parse\\(|\\.safeParse\\("
         },
         {
           "id": "no-raw-sql-concat",
-          "description": "Pas de concaténation de chaîne SQL directe",
+          "description": "Pas de concatÃ©nation de chaÃ®ne SQL directe",
           "type": "not_contains",
           "value": "' + req.body"
         }
@@ -55,25 +55,25 @@
     },
     {
       "id": 3,
-      "prompt": "Où stocker la clé API Stripe dans notre app Python (dev + prod) ? On a Docker en prod et des devs qui travaillent en local.",
-      "expected_output": "python-dotenv + .env pour dev (git-ignoré), système de vault ou env vars plateforme pour prod, jamais dans le code, audit scan recommandé, exemple de code os.getenv().",
+      "prompt": "OÃ¹ stocker la clÃ© API Stripe dans notre app Python (dev + prod) ? On a Docker en prod et des devs qui travaillent en local.",
+      "expected_output": "python-dotenv + .env pour dev (git-ignorÃ©), systÃ¨me de vault ou env vars plateforme pour prod, jamais dans le code, audit scan recommandÃ©, exemple de code os.getenv().",
       "files": [],
       "assertions": [
         {
           "id": "dotenv-dev",
-          "description": ".env ou python-dotenv mentionné pour le dev local",
+          "description": ".env ou python-dotenv mentionnÃ© pour le dev local",
           "type": "regex",
           "value": "\\.env|python-dotenv"
         },
         {
           "id": "os-getenv",
-          "description": "os.getenv() ou os.environ mentionné",
+          "description": "os.getenv() ou os.environ mentionnÃ©",
           "type": "regex",
           "value": "os\\.getenv|os\\.environ"
         },
         {
           "id": "no-hardcoded-key",
-          "description": "Clé Stripe jamais hardcodée dans le code",
+          "description": "ClÃ© Stripe jamais hardcodÃ©e dans le code",
           "type": "not_contains",
           "value": "sk_live_"
         }
@@ -81,31 +81,31 @@
     },
     {
       "id": 4,
-      "prompt": "Écris des tests pour ce composant React `<Counter />` qui affiche un bouton 'Increment' et un texte 'Count: N'. Utilise les bonnes pratiques de test React 2026.",
-      "expected_output": "Vitest + React Testing Library, environment jsdom, query par rôle accessible (getByRole), interaction via userEvent, assertion sur le texte rendu via toBeInTheDocument, pas de query par testid/classe.",
+      "prompt": "Ã‰cris des tests pour ce composant React `<Counter />` qui affiche un bouton 'Increment' et un texte 'Count: N'. Utilise les bonnes pratiques de test React 2026.",
+      "expected_output": "Vitest + React Testing Library, environment jsdom, query par rÃ´le accessible (getByRole), interaction via userEvent, assertion sur le texte rendu via toBeInTheDocument, pas de query par testid/classe.",
       "files": [],
       "assertions": [
         {
           "id": "testing-library",
-          "description": "React Testing Library utilisé",
+          "description": "React Testing Library utilisÃ©",
           "type": "contains",
           "value": "@testing-library/react"
         },
         {
           "id": "user-event",
-          "description": "Interactions pilotées par userEvent",
+          "description": "Interactions pilotÃ©es par userEvent",
           "type": "contains",
           "value": "userEvent"
         },
         {
           "id": "query-by-role",
-          "description": "Query par rôle accessible (getByRole)",
+          "description": "Query par rÃ´le accessible (getByRole)",
           "type": "regex",
           "value": "getByRole|getByText|findBy"
         },
         {
           "id": "no-test-id-query",
-          "description": "Pas de query par data-testid (couplage à l'implémentation)",
+          "description": "Pas de query par data-testid (couplage Ã  l'implÃ©mentation)",
           "type": "not_contains",
           "value": "getByTestId"
         }
@@ -113,19 +113,19 @@
     },
     {
       "id": 5,
-      "prompt": "Écris des tests pour un endpoint FastAPI `POST /users` qui crée un utilisateur depuis un modèle Pydantic. Teste le cas nominal, le cas d'entrée invalide, et montre comment injecter un faux repository.",
-      "expected_output": "TestClient (httpx) via fixture client, assertion status 201 + body, cas invalide attendu en 422 automatique Pydantic, injection d'un fake via app.dependency_overrides puis clear, fakes préférés aux mocks.",
+      "prompt": "Ã‰cris des tests pour un endpoint FastAPI `POST /users` qui crÃ©e un utilisateur depuis un modÃ¨le Pydantic. Teste le cas nominal, le cas d'entrÃ©e invalide, et montre comment injecter un faux repository.",
+      "expected_output": "TestClient (httpx) via fixture client, assertion status 201 + body, cas invalide attendu en 422 automatique Pydantic, injection d'un fake via app.dependency_overrides puis clear, fakes prÃ©fÃ©rÃ©s aux mocks.",
       "files": [],
       "assertions": [
         {
           "id": "test-client",
-          "description": "TestClient FastAPI utilisé",
+          "description": "TestClient FastAPI utilisÃ©",
           "type": "contains",
           "value": "TestClient"
         },
         {
           "id": "validation-422",
-          "description": "Entrée invalide attendue en 422 (validation Pydantic automatique)",
+          "description": "EntrÃ©e invalide attendue en 422 (validation Pydantic automatique)",
           "type": "contains",
           "value": "422"
         },
@@ -139,13 +139,13 @@
     },
     {
       "id": 6,
-      "prompt": "Écris des tests pour un composant Vue 3 `<Counter />` avec un bouton d'incrémentation. Montre aussi comment tester un composable `useCounter` en isolation.",
-      "expected_output": "Vitest + Vue Test Utils, mount(Counter.vue), trigger('click'), assertion via wrapper.text(), composable testé avec withSetup helper fournissant le contexte réactif Vue, pas de query par test-id.",
+      "prompt": "Ã‰cris des tests pour un composant Vue 3 `<Counter />` avec un bouton d'incrÃ©mentation. Montre aussi comment tester un composable `useCounter` en isolation.",
+      "expected_output": "Vitest + Vue Test Utils, mount(Counter.vue), trigger('click'), assertion via wrapper.text(), composable testÃ© avec withSetup helper fournissant le contexte rÃ©actif Vue, pas de query par test-id.",
       "files": [],
       "assertions": [
         {
           "id": "vue-test-utils",
-          "description": "@vue/test-utils (mount) utilisé",
+          "description": "@vue/test-utils (mount) utilisÃ©",
           "type": "contains",
           "value": "@vue/test-utils"
         },
@@ -163,9 +163,41 @@
         },
         {
           "id": "composable-isolation",
-          "description": "Composable testé en isolation (withSetup ou équivalent)",
+          "description": "Composable testÃ© en isolation (withSetup ou Ã©quivalent)",
           "type": "regex",
           "value": "withSetup|createApp|setup\\(\\)"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Écris des tests pytest pour un endpoint Django/DRF POST /orders/ qui crée une commande. Montre comment utiliser pytest-django, factory-boy, et l'APIClient DRF.",
+      "expected_output": "pytest-django avec @pytest.mark.django_db, factory-boy DjangoModelFactory pour créer les objets ORM, APIClient DRF pour les appels HTTP, assertion status 201 et shape du body, test 401 avec client non authentifié, ORM non mocké.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "django-db-mark",
+          "description": "@pytest.mark.django_db présent",
+          "type": "contains",
+          "value": "django_db"
+        },
+        {
+          "id": "factory-boy",
+          "description": "factory-boy DjangoModelFactory utilisé",
+          "type": "regex",
+          "value": "DjangoModelFactory|factory\\.django"
+        },
+        {
+          "id": "api-client",
+          "description": "APIClient DRF utilisé",
+          "type": "contains",
+          "value": "APIClient"
+        },
+        {
+          "id": "unauthenticated-401",
+          "description": "Test 401 avec client non authentifié",
+          "type": "contains",
+          "value": "401"
         }
       ]
     }
