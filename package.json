@@ -37,10 +37,9 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "changelog": "git-cliff -o docs/changelog.md",
+    "graphify:init": "node .scripts/run_graphify_init.js",
     "graphify:update": "node .scripts/run_graphify_update.js",
     "graphify:refresh": "node .scripts/run_graphify_refresh.js",
-    "graphify:plugin": "node .scripts/graphify-plugin.js",
-    "graphify:cluster-plugins": "node .scripts/graphify-cluster-plugins.js",
     "test:coverage": "jest --coverage"
   },
   "lint-staged": {
