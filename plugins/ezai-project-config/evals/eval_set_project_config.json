@@ -216,6 +216,82 @@
           "value": "import "
         }
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "Configure un projet React 19 en TypeScript avec Vite. Donne le vite.config, les scripts package.json, et la config ESLint adaptée à React.",
+      "expected_output": "vite.config.ts avec @vitejs/plugin-react, scripts dev/build/preview avec vite + tsc -b, test via vitest, ESLint étendu avec eslint-plugin-react-hooks, env via import.meta.env / VITE_, jamais de secret en VITE_.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vite-react-plugin",
+          "description": "@vitejs/plugin-react présent dans vite.config",
+          "type": "contains",
+          "value": "@vitejs/plugin-react"
+        },
+        {
+          "id": "vite-build-script",
+          "description": "Build piloté par vite (vite build)",
+          "type": "contains",
+          "value": "vite build"
+        },
+        {
+          "id": "react-hooks-eslint",
+          "description": "ESLint étendu avec react-hooks",
+          "type": "contains",
+          "value": "react-hooks"
+        },
+        {
+          "id": "vite-env-import-meta",
+          "description": "Env client via import.meta.env (pas process.env)",
+          "type": "contains",
+          "value": "import.meta.env"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Setup un projet FastAPI en Python 3.12. Donne les dépendances pyproject.toml, la gestion des variables d'environnement, et le Dockerfile de prod.",
+      "expected_output": "dependencies fastapi + uvicorn[standard] + pydantic-settings, httpx en dev, env via BaseSettings (pydantic-settings) qui fail-fast, Dockerfile multi-stage lançant uvicorn app.main:app avec route /health.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "fastapi-uvicorn-deps",
+          "description": "fastapi et uvicorn dans les dépendances",
+          "type": "regex",
+          "value": "uvicorn\\[standard\\]|\"uvicorn"
+        },
+        {
+          "id": "pydantic-settings",
+          "description": "pydantic-settings utilisé pour l'env",
+          "type": "contains",
+          "value": "pydantic-settings"
+        },
+        {
+          "id": "base-settings",
+          "description": "Modèle BaseSettings typé pour l'env",
+          "type": "contains",
+          "value": "BaseSettings"
+        },
+        {
+          "id": "uvicorn-cmd",
+          "description": "Dockerfile lance uvicorn app.main:app",
+          "type": "contains",
+          "value": "app.main:app"
+        },
+        {
+          "id": "health-route",
+          "description": "Route /health présente pour le healthcheck",
+          "type": "contains",
+          "value": "/health"
+        }
+      ]
     }
   ]
 }

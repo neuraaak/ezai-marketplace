@@ -40,8 +40,8 @@ rules.
 
 ## Workflow
 
-1. **Identify** — detected language(s) (`pyproject.toml` → Python, `package.json` → JS/TS) + task type (init / audit / Docker / CI)
-2. **Load** — the language file below + `references/common/config.md` (cross-cutting principles)
+1. **Identify** — detected language(s) (`pyproject.toml` → Python, `package.json` → JS/TS), optional framework (see Framework routing), and task type (init / audit / Docker / CI)
+2. **Load** — `references/common/config.md` (cross-cutting principles) + the language file below + the framework delta file if one is detected
 3. **Apply** — complete config with verifiable success criteria
 
 ## Language routing
@@ -52,6 +52,17 @@ rules.
 | JavaScript / TypeScript | `references/languages/javascript/config.md` |
 
 For monorepos spanning both languages, load both files and apply each to its respective subdirectory. If a file is inaccessible, notify the user and fall back to `references/common/config.md`.
+
+## Framework routing
+
+Framework files are **deltas**: load them *in addition to* the language file, never instead of it. Cascade is `common → language → framework`.
+
+| Framework | Detection signal                              | File                                                   |
+| :-------- | :-------------------------------------------- | :----------------------------------------------------- |
+| React     | `react` dep, or `vite` + `@vitejs/plugin-react` | `references/languages/javascript/frameworks/react.md`  |
+| FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint   | `references/languages/python/frameworks/fastapi.md`    |
+
+If no framework is detected, or the detected one has no delta file, stop at the language file — do not invent framework-specific config.
 
 ## Output format
 
