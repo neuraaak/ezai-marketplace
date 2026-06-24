@@ -212,6 +212,38 @@
           "value": "dependency_overrides"
         }
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "Dans mon app Vue 3 + TypeScript, mes composants font des appels fetch directement dans des watchEffect et le code est dupliqué partout. Comment structurer ça proprement ?",
+      "expected_output": "Extraire la logique/data access dans des composables, composants présentationnels, dépendance sur un port (interface Repository) injecté via provide/inject avec InjectionKey typé (composition root), fake swappé en test, structure feature-based.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "composable-logic",
+          "description": "Logique extraite dans un composable (use*)",
+          "type": "regex",
+          "value": "use[A-Z]\\w+|composable"
+        },
+        {
+          "id": "port-interface",
+          "description": "Port/interface de repository défini",
+          "type": "regex",
+          "value": "interface \\w+Repository|Repository"
+        },
+        {
+          "id": "provide-inject",
+          "description": "Injection des dépendances via provide/inject",
+          "type": "regex",
+          "value": "provide|inject"
+        },
+        {
+          "id": "injection-key",
+          "description": "InjectionKey typé pour la sécurité TS",
+          "type": "regex",
+          "value": "InjectionKey|Symbol\\("
+        }
+      ]
     }
   ]
 }

@@ -60,6 +60,7 @@ never instead of it. Cascade is `common → language → framework`.
 | Framework | Detection signal                                | File                                                    |
 | :-------- | :---------------------------------------------- | :------------------------------------------------------ |
 | React     | `react` dep, or `vite` + `@vitejs/plugin-react` | `references/languages/javascript/frameworks/react.md`   |
+| Vue       | `vue` dep, or `vite` + `@vitejs/plugin-vue`     | `references/languages/javascript/frameworks/vue.md`     |
 | FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint     | `references/languages/python/frameworks/fastapi.md`     |
 
 If no framework is detected, or the detected one has no delta file, stop at the

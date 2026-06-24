@@ -292,6 +292,44 @@
           "value": "/health"
         }
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "Configure un projet Vue 3 en TypeScript avec Vite. Donne le vite.config, les scripts package.json, la config ESLint adaptée à Vue, et la gestion des variables d'environnement.",
+      "expected_output": "vite.config.ts avec @vitejs/plugin-vue, scripts dev/build/preview avec vite + vue-tsc -b, test via vitest, ESLint étendu avec eslint-plugin-vue flat/recommended, env via import.meta.env / VITE_, jamais de secret en VITE_.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vite-vue-plugin",
+          "description": "@vitejs/plugin-vue présent dans vite.config",
+          "type": "contains",
+          "value": "@vitejs/plugin-vue"
+        },
+        {
+          "id": "vue-tsc-build",
+          "description": "Type-check via vue-tsc (pas tsc seul)",
+          "type": "contains",
+          "value": "vue-tsc"
+        },
+        {
+          "id": "vue-eslint",
+          "description": "ESLint étendu avec eslint-plugin-vue",
+          "type": "contains",
+          "value": "eslint-plugin-vue"
+        },
+        {
+          "id": "vite-env-import-meta",
+          "description": "Env client via import.meta.env (pas process.env)",
+          "type": "contains",
+          "value": "import.meta.env"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        }
+      ]
     }
   ]
 }

@@ -136,6 +136,38 @@
           "value": "dependency_overrides"
         }
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "Écris des tests pour un composant Vue 3 `<Counter />` avec un bouton d'incrémentation. Montre aussi comment tester un composable `useCounter` en isolation.",
+      "expected_output": "Vitest + Vue Test Utils, mount(Counter.vue), trigger('click'), assertion via wrapper.text(), composable testé avec withSetup helper fournissant le contexte réactif Vue, pas de query par test-id.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "vue-test-utils",
+          "description": "@vue/test-utils (mount) utilisé",
+          "type": "contains",
+          "value": "@vue/test-utils"
+        },
+        {
+          "id": "trigger-click",
+          "description": "Interaction via trigger('click')",
+          "type": "contains",
+          "value": "trigger"
+        },
+        {
+          "id": "vitest-runner",
+          "description": "Test runner Vitest",
+          "type": "contains",
+          "value": "vitest"
+        },
+        {
+          "id": "composable-isolation",
+          "description": "Composable testé en isolation (withSetup ou équivalent)",
+          "type": "regex",
+          "value": "withSetup|createApp|setup\\(\\)"
+        }
+      ]
     }
   ]
 }
