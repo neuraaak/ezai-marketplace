@@ -8,11 +8,13 @@ Route to the correct language subdirectory. For mixed repos, load both language 
 | :-------------------- | :--------------- | :-------------------------------- |
 | Python                | `pyproject.toml` | `languages/python/quality.md`     |
 | JavaScript/TypeScript | `package.json`   | `languages/javascript/quality.md` |
+| PHP                   | `composer.json`  | `languages/php/quality.md`        |
 
 ## What each file owns
 
 - **`python/quality.md`** — pytest, hypothesis, Pydantic validation, secret management, python-dotenv, bcrypt, structured logging.
 - **`javascript/quality.md`** — node:test / Vitest, Zod validation, fast-check, secret management, Node.js permission model.
+- **`php/quality.md`** — PHPUnit 11+ (#[Test] / #[DataProvider]), fakes over mocks, symfony/validator, argon2id, PDO prepared statements, Monolog JsonFormatter.
 
 ## Frameworks (delta-only)
 

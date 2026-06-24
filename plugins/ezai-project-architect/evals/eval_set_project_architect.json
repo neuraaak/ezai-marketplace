@@ -276,6 +276,50 @@
           "value": "signal|post_save"
         }
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "Conçois une architecture hexagonale PHP 8.3 pour un module de commande (Order). Montre la structure src/ avec Domain/Application/Infrastructure, un OrderRepositoryInterface en Application/Port, son adaptateur DoctrineOrderRepository en Infrastructure, un Value Object Money en readonly class, et un Enum Status.",
+      "expected_output": "Arbre src/ avec 3 couches Domain/Application/Infrastructure, interface OrderRepositoryInterface dans Application/Port, readonly class Money avec validation constructeur, enum Status backed string, DoctrineOrderRepository implements interface, declare(strict_types=1) dans chaque fichier, dépendances toujours vers l'intérieur.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "hexagonal-layers",
+          "description": "Structure src/ avec Domain, Application, Infrastructure",
+          "type": "contains",
+          "value": "Infrastructure"
+        },
+        {
+          "id": "port-interface",
+          "description": "OrderRepositoryInterface dans Application/Port",
+          "type": "contains",
+          "value": "OrderRepositoryInterface"
+        },
+        {
+          "id": "readonly-value-object",
+          "description": "readonly class pour le Value Object Money",
+          "type": "contains",
+          "value": "readonly class"
+        },
+        {
+          "id": "backed-enum",
+          "description": "Enum Status backed par string",
+          "type": "contains",
+          "value": "enum Status: string"
+        },
+        {
+          "id": "strict-types",
+          "description": "declare(strict_types=1) présent",
+          "type": "contains",
+          "value": "declare(strict_types=1)"
+        },
+        {
+          "id": "implements-interface",
+          "description": "Adaptateur Doctrine implements l'interface du Port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        }
+      ]
     }
   ]
 }

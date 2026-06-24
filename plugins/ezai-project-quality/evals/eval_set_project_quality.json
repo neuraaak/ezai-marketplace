@@ -200,6 +200,50 @@
           "value": "401"
         }
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "Écris les tests PHPUnit 11 pour une classe Money (readonly, PHP 8.3) qui rejette les montants négatifs et les codes devise invalides. Utilise #[Test] et #[DataProvider]. Ajoute un Fake InMemoryOrderRepository qui implémente OrderRepositoryInterface.",
+      "expected_output": "Classe de test final avec #[Test] et #[DataProvider], test montant négatif avec expectException, DataProvider pour devises valides/invalides, InMemoryOrderRepository fake avec array store implémentant l'interface, assertions avec self::.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "phpunit-test-attribute",
+          "description": "Utilise l'attribut #[Test] (PHPUnit 10+)",
+          "type": "contains",
+          "value": "#[Test]"
+        },
+        {
+          "id": "data-provider-attribute",
+          "description": "Utilise #[DataProvider] pour les cas paramétrés",
+          "type": "contains",
+          "value": "#[DataProvider]"
+        },
+        {
+          "id": "expect-exception",
+          "description": "Test du rejet des montants négatifs via expectException",
+          "type": "contains",
+          "value": "expectException"
+        },
+        {
+          "id": "self-assertions",
+          "description": "Assertions via self:: (pas $this->)",
+          "type": "contains",
+          "value": "self::assert"
+        },
+        {
+          "id": "in-memory-fake",
+          "description": "Fake InMemoryOrderRepository implémentant l'interface",
+          "type": "contains",
+          "value": "InMemoryOrderRepository"
+        },
+        {
+          "id": "final-test-class",
+          "description": "Classes de test déclarées final",
+          "type": "contains",
+          "value": "final class"
+        }
+      ]
     }
   ]
 }

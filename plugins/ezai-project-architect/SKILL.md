@@ -49,6 +49,7 @@ rules.
 | :---------------------- | :------------------------------------------------ |
 | Python                  | `references/languages/python/architecture.md`     |
 | JavaScript / TypeScript | `references/languages/javascript/architecture.md` |
+| PHP                     | `references/languages/php/architecture.md`        |
 
 For polyglot repos, load both files. If the language is not listed, load `references/common/architecture.md` only and tell the user.
 

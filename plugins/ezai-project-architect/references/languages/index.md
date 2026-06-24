@@ -8,11 +8,13 @@ Route to the correct language subdirectory. For polyglot repos, load both langua
 | :-------------------- | :--------------- | :------------------------------------- |
 | Python                | `pyproject.toml` | `languages/python/architecture.md`     |
 | JavaScript/TypeScript | `package.json`   | `languages/javascript/architecture.md` |
+| PHP                   | `composer.json`  | `languages/php/architecture.md`        |
 
 ## What each file owns
 
 - **`python/architecture.md`** — Python 3.11+: visibility rules, `__all__`, Protocol-based interfaces, TypedDict, Hexagonal structure, Ports & Adapters.
 - **`javascript/architecture.md`** — ES2026/TypeScript 6.0+: module organization, `#private` fields, Repository pattern, TS type system, Hexagonal equivalent.
+- **`php/architecture.md`** — PHP 8.3+: visibility rules, `interface` contracts, `readonly class` Value Objects, `enum` for state, Hexagonal layers, Fakes over mocks.
 
 ## Frameworks (delta-only)
 

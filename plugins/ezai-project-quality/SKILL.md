@@ -44,7 +44,7 @@ only the general default; context-specific overrides live in the user's rules.
 ### 1. Orient
 
 - Detect the project language (`pyproject.toml` → Python, `package.json` →
-  JS/TS). For mixed repos, both languages apply.
+  JS/TS, `composer.json` → PHP). For mixed repos, both languages apply.
 - Identify the task type from the table above. If ambiguous, ask before
   generating.
 
@@ -55,6 +55,7 @@ Read `references/index.md` — it is the root router. Quick cheat sheet:
 - **Any task** → `references/common/quality.md` (cross-language principles)
 - **Python task** → `references/languages/python/quality.md`
 - **JS/TS task** → `references/languages/javascript/quality.md`
+- **PHP task** → `references/languages/php/quality.md`
 - **Framework detected** → the matching delta file (see Framework routing), **in addition to** the language file
 - **Mixed repo** → load both language files
 

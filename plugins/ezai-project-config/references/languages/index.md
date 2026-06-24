@@ -8,11 +8,13 @@ Route to the correct language subdirectory. For monorepos using both languages, 
 | :-------------------- | :--------------- | :------------------------------- |
 | Python                | `pyproject.toml` | `languages/python/config.md`     |
 | JavaScript/TypeScript | `package.json`   | `languages/javascript/config.md` |
+| PHP                   | `composer.json`  | `languages/php/config.md`        |
 
 ## What each file owns
 
 - **`python/config.md`** — uv, ruff, ty, hatchling, pyproject.toml structure, 3.11+ syntax rules, Docker multi-stage pattern.
 - **`javascript/config.md`** — pnpm, TypeScript 6.0+, ESM, Node.js 24+, package.json, tsconfig.json, ES2026 features, Docker multi-stage pattern.
+- **`php/config.md`** — Composer 2, PHP-CS-Fixer (@PER-CS), PHPStan (level 8+), composer.json structure, PHP 8.3+ syntax rules, Docker multi-stage pattern.
 
 ## Adding a new language
 

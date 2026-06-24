@@ -40,7 +40,7 @@ rules.
 
 ## Workflow
 
-1. **Identify** — detected language(s) (`pyproject.toml` → Python, `package.json` → JS/TS), optional framework (see Framework routing), and task type (init / audit / Docker / CI)
+1. **Identify** — detected language(s) (`pyproject.toml` → Python, `package.json` → JS/TS, `composer.json` → PHP), optional framework (see Framework routing), and task type (init / audit / Docker / CI)
 2. **Load** — `references/common/config.md` (cross-cutting principles) + the language file below + the framework delta file if one is detected
 3. **Apply** — complete config with verifiable success criteria
 
@@ -50,6 +50,7 @@ rules.
 | :---------------------- | :------------------------------------------ |
 | Python                  | `references/languages/python/config.md`     |
 | JavaScript / TypeScript | `references/languages/javascript/config.md` |
+| PHP                     | `references/languages/php/config.md`        |
 
 For monorepos spanning both languages, load both files and apply each to its respective subdirectory. If a file is inaccessible, notify the user and fall back to `references/common/config.md`.
 
