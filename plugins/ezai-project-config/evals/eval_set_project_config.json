@@ -412,6 +412,38 @@
           "value": "USER"
         }
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "Je configure un projet PHP 8.3 avec Symfony 7. Génère le composer.json (deps + require-dev), le phpstan.neon avec l extension symfony, et explique comment gérer les variables d environnement en prod (dump-env).",
+      "expected_output": "composer.json avec symfony/framework-bundle ^7.2 + phpstan/phpstan-symfony en require-dev ; phpstan.neon avec includes extension.neon + container_xml_path ; commande composer dump-env prod documentée ; mention que .env.local est gitignore.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "symfony-bundle-dep",
+          "description": "symfony/framework-bundle present dans require",
+          "type": "contains",
+          "value": "symfony/framework-bundle"
+        },
+        {
+          "id": "phpstan-symfony-ext",
+          "description": "phpstan/phpstan-symfony present dans require-dev",
+          "type": "contains",
+          "value": "phpstan/phpstan-symfony"
+        },
+        {
+          "id": "phpstan-extension-neon",
+          "description": "includes extension.neon dans phpstan.neon",
+          "type": "contains",
+          "value": "extension.neon"
+        },
+        {
+          "id": "dump-env-prod",
+          "description": "composer dump-env prod mentionne",
+          "type": "contains",
+          "value": "dump-env"
+        }
+      ]
     }
   ]
 }

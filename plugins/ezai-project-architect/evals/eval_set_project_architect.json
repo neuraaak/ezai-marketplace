@@ -320,6 +320,38 @@
           "value": "implements OrderRepositoryInterface"
         }
       ]
+    },
+    {
+      "id": 11,
+      "prompt": "Dans un projet Symfony 7 hexagonal, comment séparer l entité Doctrine (ORM) de l entité domaine Order ? Montre la structure de fichiers et le repository adapter qui fait le mapping.",
+      "expected_output": "OrderRecord (ORM entity, Infrastructure) séparé de Order (domain entity, Domain/) ; DoctrineOrderRepository implements OrderRepositoryInterface avec mapping explicite dans find/save ; services.yaml ou #[Autowire] comme composition root ; mention que Domain/ n importe aucune classe Symfony/Doctrine.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "separate-orm-domain",
+          "description": "Entité ORM et entité domaine sont des classes séparées",
+          "type": "contains",
+          "value": "OrderRecord"
+        },
+        {
+          "id": "implements-interface",
+          "description": "Repository implements l interface port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        },
+        {
+          "id": "no-doctrine-in-domain",
+          "description": "Domain sans import Doctrine mentionné",
+          "type": "contains",
+          "value": "Domain"
+        },
+        {
+          "id": "composition-root",
+          "description": "services.yaml ou Autowire mentionné comme composition root",
+          "type": "contains",
+          "value": "services.yaml"
+        }
+      ]
     }
   ]
 }

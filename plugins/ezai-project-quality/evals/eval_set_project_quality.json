@@ -244,6 +244,38 @@
           "value": "final class"
         }
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "Mon projet Symfony 7 a un OrderController et un PlaceOrderHandler. Écris les tests pour : 1) le handler en unit test (fake repo), 2) le controller en WebTestCase (POST /api/orders retourne 201, sans auth retourne 401).",
+      "expected_output": "Un test unitaire PlaceOrderHandlerTest extends TestCase avec InMemoryRepository fake et #[Test] ; un test fonctionnel OrderControllerTest extends WebTestCase avec assertResponseStatusCodeSame(201) et assertResponseStatusCodeSame(401) ; DAMA bundle mentionné pour isolation DB.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "unit-extends-testcase",
+          "description": "Test unitaire extends TestCase (pas KernelTestCase)",
+          "type": "contains",
+          "value": "TestCase"
+        },
+        {
+          "id": "webtestcase-used",
+          "description": "WebTestCase utilisé pour le controller",
+          "type": "contains",
+          "value": "WebTestCase"
+        },
+        {
+          "id": "assert-201",
+          "description": "assertResponseStatusCodeSame(201) présent",
+          "type": "contains",
+          "value": "201"
+        },
+        {
+          "id": "assert-401",
+          "description": "assertResponseStatusCodeSame(401) présent",
+          "type": "contains",
+          "value": "401"
+        }
+      ]
     }
   ]
 }

@@ -16,6 +16,21 @@ Route to the correct language subdirectory. For monorepos using both languages, 
 - **`javascript/config.md`** — pnpm, TypeScript 6.0+, ESM, Node.js 24+, package.json, tsconfig.json, ES2026 features, Docker multi-stage pattern.
 - **`php/config.md`** — Composer 2, PHP-CS-Fixer (@PER-CS), PHPStan (level 8+), composer.json structure, PHP 8.3+ syntax rules, Docker multi-stage pattern.
 
+## Frameworks (delta-only)
+
+A framework only exists on top of a language, so its file is nested under the
+language: `<lang>/frameworks/<framework>.md`. It is a **delta** — load it *in
+addition to* the language file (cascade `common → language → framework`), and it
+repeats nothing from the base.
+
+| Framework | Detect via                                                              | File                             |
+| :-------- | :---------------------------------------------------------------------- | :------------------------------- |
+| React     | `react` dep, or `vite` + `@vitejs/plugin-react`                         | `javascript/frameworks/react.md` |
+| Vue       | `vue` dep, or `vite` + `@vitejs/plugin-vue`                             | `javascript/frameworks/vue.md`   |
+| FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint                             | `python/frameworks/fastapi.md`   |
+| Django    | `django` dep, or `manage.py` / `DJANGO_SETTINGS_MODULE`                 | `python/frameworks/django.md`    |
+| Symfony   | `symfony/framework-bundle` dep, or `bin/console` + `config/bundles.php` | `php/frameworks/symfony.md`      |
+
 ## Adding a new language
 
 1. Create `<language>/` here with `config.md`.
