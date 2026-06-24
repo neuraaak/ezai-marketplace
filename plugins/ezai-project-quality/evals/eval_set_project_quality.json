@@ -78,6 +78,64 @@
           "value": "sk_live_"
         }
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Écris des tests pour ce composant React `<Counter />` qui affiche un bouton 'Increment' et un texte 'Count: N'. Utilise les bonnes pratiques de test React 2026.",
+      "expected_output": "Vitest + React Testing Library, environment jsdom, query par rôle accessible (getByRole), interaction via userEvent, assertion sur le texte rendu via toBeInTheDocument, pas de query par testid/classe.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "testing-library",
+          "description": "React Testing Library utilisé",
+          "type": "contains",
+          "value": "@testing-library/react"
+        },
+        {
+          "id": "user-event",
+          "description": "Interactions pilotées par userEvent",
+          "type": "contains",
+          "value": "userEvent"
+        },
+        {
+          "id": "query-by-role",
+          "description": "Query par rôle accessible (getByRole)",
+          "type": "regex",
+          "value": "getByRole|getByText|findBy"
+        },
+        {
+          "id": "no-test-id-query",
+          "description": "Pas de query par data-testid (couplage à l'implémentation)",
+          "type": "not_contains",
+          "value": "getByTestId"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Écris des tests pour un endpoint FastAPI `POST /users` qui crée un utilisateur depuis un modèle Pydantic. Teste le cas nominal, le cas d'entrée invalide, et montre comment injecter un faux repository.",
+      "expected_output": "TestClient (httpx) via fixture client, assertion status 201 + body, cas invalide attendu en 422 automatique Pydantic, injection d'un fake via app.dependency_overrides puis clear, fakes préférés aux mocks.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "test-client",
+          "description": "TestClient FastAPI utilisé",
+          "type": "contains",
+          "value": "TestClient"
+        },
+        {
+          "id": "validation-422",
+          "description": "Entrée invalide attendue en 422 (validation Pydantic automatique)",
+          "type": "contains",
+          "value": "422"
+        },
+        {
+          "id": "dependency-override",
+          "description": "Injection via app.dependency_overrides",
+          "type": "contains",
+          "value": "dependency_overrides"
+        }
+      ]
     }
   ]
 }

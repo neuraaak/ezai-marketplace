@@ -55,10 +55,24 @@ Read `references/index.md` — it is the root router. Quick cheat sheet:
 - **Any task** → `references/common/quality.md` (cross-language principles)
 - **Python task** → `references/languages/python/quality.md`
 - **JS/TS task** → `references/languages/javascript/quality.md`
+- **Framework detected** → the matching delta file (see Framework routing), **in addition to** the language file
 - **Mixed repo** → load both language files
 
 If a reference file cannot be read, notify the user and apply the principles
 from `references/common/quality.md` only.
+
+#### Framework routing
+
+Framework files are **deltas**: load them *in addition to* the language file,
+never instead of it. Cascade is `common → language → framework`.
+
+| Framework | Detection signal                                | File                                                    |
+| :-------- | :---------------------------------------------- | :------------------------------------------------------ |
+| React     | `react` dep, or `vite` + `@vitejs/plugin-react` | `references/languages/javascript/frameworks/react.md`   |
+| FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint     | `references/languages/python/frameworks/fastapi.md`     |
+
+If no framework is detected, or the detected one has no delta file, stop at the
+language file — do not invent framework-specific tests or config.
 
 ### 3. Apply
 
