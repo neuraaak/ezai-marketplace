@@ -444,6 +444,38 @@
           "value": "dump-env"
         }
       ]
+    },
+    {
+      "id": 13,
+      "prompt": "Je configure un projet Laravel 12 avec PHP 8.3. Génère le composer.json (deps + require-dev avec larastan et pint), le fichier pint.json, le phpstan.neon, et explique la règle config() vs env().",
+      "expected_output": "composer.json avec laravel/framework ^12.0, larastan/larastan et laravel/pint en require-dev ; pint.json avec preset laravel ; phpstan.neon avec larastan extension.neon inclus ; explication que env() cesse de fonctionner après config:cache et qu il faut utiliser config() dans le code applicatif.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "laravel-framework-dep",
+          "description": "laravel/framework present dans require",
+          "type": "contains",
+          "value": "laravel/framework"
+        },
+        {
+          "id": "larastan-dep",
+          "description": "larastan/larastan present dans require-dev",
+          "type": "contains",
+          "value": "larastan/larastan"
+        },
+        {
+          "id": "pint-dep",
+          "description": "laravel/pint present dans require-dev",
+          "type": "contains",
+          "value": "laravel/pint"
+        },
+        {
+          "id": "config-vs-env-rule",
+          "description": "Règle config() vs env() après config:cache expliquée",
+          "type": "contains",
+          "value": "config:cache"
+        }
+      ]
     }
   ]
 }

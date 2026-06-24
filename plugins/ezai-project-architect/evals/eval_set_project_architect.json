@@ -352,6 +352,38 @@
           "value": "services.yaml"
         }
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "Dans un projet Laravel 12 hexagonal, comment séparer le Model Eloquent (ORM) de l entité domaine Order ? Montre la structure app/, le repository adapter, et comment les facades (Mail, Queue) doivent être encapsulées derrière des ports.",
+      "expected_output": "OrderModel (Eloquent, Infrastructure/Persistence/Eloquent/) séparé de Order (domain entity, Domain/) ; EloquentOrderRepository implements OrderRepositoryInterface avec mapping explicite ; facades (Mail::, Queue::) uniquement dans Infrastructure derrière un port (ex: OrderMailerInterface) ; AppServiceProvider comme composition root avec bind() ; Domain/ sans import Laravel.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eloquent-infra",
+          "description": "OrderModel en Infrastructure, séparé de l entité domaine",
+          "type": "contains",
+          "value": "OrderModel"
+        },
+        {
+          "id": "implements-interface",
+          "description": "EloquentOrderRepository implements le port",
+          "type": "contains",
+          "value": "implements OrderRepositoryInterface"
+        },
+        {
+          "id": "facades-in-infra-only",
+          "description": "Facades encapsulées derrière un port en Infrastructure",
+          "type": "contains",
+          "value": "Infrastructure"
+        },
+        {
+          "id": "service-provider-root",
+          "description": "AppServiceProvider mentionné comme composition root",
+          "type": "contains",
+          "value": "AppServiceProvider"
+        }
+      ]
     }
   ]
 }

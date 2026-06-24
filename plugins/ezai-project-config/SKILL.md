@@ -65,6 +65,7 @@ Framework files are **deltas**: load them *in addition to* the language file, ne
 | FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint                             | `references/languages/python/frameworks/fastapi.md`   |
 | Django    | `django` dep, or `manage.py` / `DJANGO_SETTINGS_MODULE`                 | `references/languages/python/frameworks/django.md`    |
 | Symfony   | `symfony/framework-bundle` dep, or `bin/console` + `config/bundles.php` | `references/languages/php/frameworks/symfony.md`      |
+| Laravel   | `laravel/framework` dep, or `artisan` + `bootstrap/app.php`             | `references/languages/php/frameworks/laravel.md`      |
 
 If no framework is detected, or the detected one has no delta file, stop at the language file — do not invent framework-specific config.
 

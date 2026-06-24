@@ -29,6 +29,7 @@ repeats nothing from the base.
 | FastAPI   | `fastapi` dep, or a uvicorn/ASGI entrypoint                             | `python/frameworks/fastapi.md`   |
 | Django    | `django` dep, or `manage.py` / `DJANGO_SETTINGS_MODULE`                 | `python/frameworks/django.md`    |
 | Symfony   | `symfony/framework-bundle` dep, or `bin/console` + `config/bundles.php` | `php/frameworks/symfony.md`      |
+| Laravel   | `laravel/framework` dep, or `artisan` + `bootstrap/app.php`             | `php/frameworks/laravel.md`      |
 
 ## Adding a new language
 

@@ -276,6 +276,38 @@
           "value": "401"
         }
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "Mon projet Laravel 12 a un OrderController et un PlaceOrderHandler. Écris les tests pour : 1) le handler en unit test (fake repo, pas de boot Laravel), 2) le controller en Feature test (POST /api/orders retourne 201 avec auth, 401 sans). Inclus la règle mass-assignment et argon2id.",
+      "expected_output": "Test unitaire PlaceOrderHandlerTest extends TestCase (PHPUnit pur, pas Illuminate) avec InMemoryRepository et #[Test] ; Feature test OrderControllerTest extends TestCase Laravel avec RefreshDatabase + actingAs + assertCreated() + assertUnauthorized() ; mention que  est obligatoire sur Eloquent models ; config/hashing.php avec driver argon2id.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "unit-no-laravel",
+          "description": "Test unitaire extends PHPUnit TestCase (pas Illuminate)",
+          "type": "contains",
+          "value": "PHPUnit\\Framework\\TestCase"
+        },
+        {
+          "id": "refresh-database",
+          "description": "RefreshDatabase utilisé dans le Feature test",
+          "type": "contains",
+          "value": "RefreshDatabase"
+        },
+        {
+          "id": "assert-created",
+          "description": "assertCreated() ou 201 testé",
+          "type": "contains",
+          "value": "201"
+        },
+        {
+          "id": "assert-unauthorized",
+          "description": "assertUnauthorized() ou 401 testé",
+          "type": "contains",
+          "value": "401"
+        }
+      ]
     }
   ]
 }
