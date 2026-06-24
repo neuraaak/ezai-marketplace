@@ -154,6 +154,64 @@
           "value": ": any"
         }
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "Dans mon app React + TypeScript, mes composants font des appels fetch directement dans des useEffect et le code de récupération est dupliqué partout. Comment structurer ça proprement ?",
+      "expected_output": "Extraire la logique/data access dans des custom hooks, composants présentationnels, dépendance sur un port (interface OrderRepository) injecté via Context (composition root), fake swappé en test, structure feature-based.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "custom-hook",
+          "description": "Logique extraite dans un custom hook",
+          "type": "regex",
+          "value": "use[A-Z]\\w+|custom hook"
+        },
+        {
+          "id": "port-interface",
+          "description": "Port/interface de repository défini",
+          "type": "regex",
+          "value": "interface \\w+Repository|Repository"
+        },
+        {
+          "id": "context-injection",
+          "description": "Injection des dépendances via Context",
+          "type": "regex",
+          "value": "createContext|useContext|Context"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Comment architecturer une app FastAPI proprement ? Mes routers contiennent toute la logique métier et accèdent directement à la base via SQLAlchemy. Je veux pouvoir tester sans DB.",
+      "expected_output": "FastAPI = adaptateur entrant (couche api/infrastructure), handlers minces qui appellent des use cases, ports Protocol injectés via Depends, dependency_overrides + fake en bois pour les tests, DTO Pydantic séparés du domaine.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "depends-injection",
+          "description": "Injection via Depends",
+          "type": "contains",
+          "value": "Depends"
+        },
+        {
+          "id": "protocol-port",
+          "description": "Port défini comme Protocol/interface",
+          "type": "regex",
+          "value": "Protocol|Repository"
+        },
+        {
+          "id": "thin-handler",
+          "description": "Logique métier hors du handler (use case / couche application)",
+          "type": "regex",
+          "value": "(?i)use case|use_case|application|domain"
+        },
+        {
+          "id": "dependency-override",
+          "description": "Tests via dependency_overrides",
+          "type": "contains",
+          "value": "dependency_overrides"
+        }
+      ]
     }
   ]
 }
