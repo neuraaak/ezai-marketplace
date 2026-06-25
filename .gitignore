@@ -46,7 +46,7 @@ tmp/
 tmpclaude-*
 .docs-audit/
 .remember/
-docs/superpowers/
+.superpowers/
 graphify-out/
 !docs/
 .vscode/settings.json
