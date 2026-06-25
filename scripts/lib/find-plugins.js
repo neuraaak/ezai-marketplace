@@ -19,7 +19,7 @@ function findPluginDirs(pluginsDir) {
       found.push(...findPluginDirs(dir));
     }
   }
-  return found.sort();
+  return found.sort((a, b) => a.localeCompare(b));
 }
 
 module.exports = { findPluginDirs };
