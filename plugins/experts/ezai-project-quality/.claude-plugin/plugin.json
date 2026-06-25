@@ -1,7 +1,7 @@
 {
   "name": "ezai-project-quality",
   "description": "Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"

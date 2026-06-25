@@ -3,6 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { findPluginDirs } = require('./lib/find-plugins');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
@@ -29,20 +30,15 @@ function buildIndex() {
     };
   }
 
-  const entries = fs
-    .readdirSync(PLUGINS_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => {
-      const pluginJsonPath = path.join(PLUGINS_DIR, d.name, '.claude-plugin', 'plugin.json');
-      if (!fs.existsSync(pluginJsonPath)) {
-        console.warn(`  [warn] ${d.name} : plugin.json manquant, ignoré.`);
-        return null;
-      }
+  const entries = findPluginDirs(PLUGINS_DIR)
+    .map((pluginDir) => {
+      const pluginJsonPath = path.join(pluginDir, '.claude-plugin', 'plugin.json');
       const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+      const relSource = path.relative(ROOT, pluginDir).replaceAll('\\', '/');
       const entry = {
         name: meta.name,
         description: meta.description || '',
-        source: `./plugins/${d.name}`,
+        source: `./${relSource}`,
         category: meta.category || 'development',
       };
       if (meta.version) entry.version = meta.version;
@@ -76,9 +72,9 @@ function validateEvals(pluginsDir) {
   if (!fs.existsSync(pluginsDir)) return;
   let warnings = 0;
 
-  for (const dir of fs.readdirSync(pluginsDir, { withFileTypes: true })) {
-    if (!dir.isDirectory()) continue;
-    const evalsDir = path.join(pluginsDir, dir.name, 'evals');
+  for (const pluginDir of findPluginDirs(pluginsDir)) {
+    const dirName = path.basename(pluginDir);
+    const evalsDir = path.join(pluginDir, 'evals');
     if (!fs.existsSync(evalsDir)) continue;
 
     for (const file of fs.readdirSync(evalsDir)) {
@@ -88,12 +84,12 @@ function validateEvals(pluginsDir) {
       try {
         data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
       } catch {
-        console.warn(`  [eval] ${dir.name}/${file} : JSON invalide`);
+        console.warn(`  [eval] ${dirName}/${file} : JSON invalide`);
         warnings++;
         continue;
       }
 
-      const prefix = `  [eval] ${dir.name}/${file}`;
+      const prefix = `  [eval] ${dirName}/${file}`;
       if (typeof data.skill_name !== 'string') {
         console.warn(`${prefix} : champ skill_name manquant ou non-string`);
         warnings++;
