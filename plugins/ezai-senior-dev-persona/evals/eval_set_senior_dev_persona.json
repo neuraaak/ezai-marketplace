@@ -38,32 +38,32 @@
       "id": 2,
       "capability": "code-review",
       "prompt": "Code review de ce module auth.py — vérifie tout : architecture, typing, sécurité, testabilité. Le projet est en Python 3.12.",
-      "expected_output": "Review structurée par domaine (architecture/typing/sécurité/tests), problèmes identifiés avec justification, suggestions concrètes. Tous les sous-skills chargés pour une review complète.",
+      "expected_output": "Pipeline orchestré déclenché : DETECTION produit 00-context.md (language python, scope auth.py, domaines sélectionnés dynamiquement), REVIEW dispatche un subagent par domaine retenu en série produisant 01-review.md avec findings ID 01-<DOMAIN>-NNN, PLANNING consolide en 02-plan.md et attend l'approbation humaine avant tout patch.",
       "files": [],
       "assertions": [
         {
-          "id": "thinking-block",
-          "description": "Bloc <thinking> présent",
+          "id": "detection-artifact",
+          "description": "Artefact 00-context.md produit par DETECTION",
           "type": "contains",
-          "value": "<thinking>"
+          "value": "00-context.md"
         },
         {
-          "id": "all-four-sub-skills",
-          "description": "Les 4 sous-skills chargés pour une review complète",
-          "type": "regex",
-          "value": "ezai-project-architect"
+          "id": "review-artifact",
+          "description": "Artefact 01-review.md produit par REVIEW",
+          "type": "contains",
+          "value": "01-review.md"
         },
         {
-          "id": "architecture-section",
-          "description": "Section Architecture dans la review",
+          "id": "finding-id-convention",
+          "description": "Findings portent un ID stable 01-<DOMAIN>-NNN",
           "type": "regex",
-          "value": "(?i)## Architecture"
+          "value": "01-(ARCH|QUAL|PERF|CONF)-\\d"
         },
         {
-          "id": "security-section",
-          "description": "Section Security ou Sécurité dans la review",
+          "id": "human-gate",
+          "description": "PLANNING attend l'approbation humaine avant APPLY",
           "type": "regex",
-          "value": "(?i)## Securit|## Sécurit"
+          "value": "(?i)(approu|valid|attend|approv|wait)"
         }
       ]
     },
@@ -97,6 +97,60 @@
           "description": "Promise.allSettled utilisé (résistant aux échecs partiels)",
           "type": "contains",
           "value": "Promise.allSettled"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "capability": "code-review",
+      "prompt": "Revois ce petit module utilitaire de formatage de dates en TypeScript. Il n'y a aucune I/O ni concurrence, juste des fonctions pures.",
+      "expected_output": "Pipeline orchestré : DETECTION sélectionne dynamiquement les domaines et marque performance et config comme skipped (aucune I/O, aucune concurrence, pas de config), ne lançant que les subagents architect/quality pertinents. La sélection dynamique évite de lancer les 4 domaines par réflexe.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "detection-artifact",
+          "description": "DETECTION produit 00-context.md",
+          "type": "contains",
+          "value": "00-context.md"
+        },
+        {
+          "id": "dynamic-skip",
+          "description": "Au moins un domaine marqué skipped (sélection dynamique)",
+          "type": "regex",
+          "value": "(?i)skip"
+        },
+        {
+          "id": "performance-skipped",
+          "description": "Domaine performance non retenu (code sans I/O ni concurrence)",
+          "type": "regex",
+          "value": "(?i)performance"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "capability": "refactoring",
+      "prompt": "Refactore cette fonction de 80 lignes en Python pour réduire sa complexité cyclomatique.",
+      "expected_output": "Mode inline (Mode B) : refactoring n'est PAS orchestré. Aucun subagent ni artefact de pipeline. Bloc <thinking> + code refactoré complet selon report-format.md, workflow pipeline.md inline.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "thinking-block",
+          "description": "Bloc <thinking> présent (mode inline)",
+          "type": "contains",
+          "value": "<thinking>"
+        },
+        {
+          "id": "no-orchestration-artifact",
+          "description": "Aucun artefact de pipeline orchestré (mode inline)",
+          "type": "not_contains",
+          "value": "00-context.md"
+        },
+        {
+          "id": "no-review-folder",
+          "description": "Pas de dossier .senior-review (refactoring reste inline)",
+          "type": "not_contains",
+          "value": ".senior-review"
         }
       ]
     }
