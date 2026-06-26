@@ -1,7 +1,7 @@
 {
   "name": "ezai-docs-specialist-persona",
   "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"

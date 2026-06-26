@@ -52,10 +52,15 @@ node bin/ezai.js install <plugin>
 
 ### Windows without Node
 
-From a cloned copy, use the bundled batch wrapper:
+From a cloned copy, use the bundled batch wrapper. Like `ezai install`, it
+copies `SKILL.md` + `references/` into `.agents\skills\` and creates junctions
+into the platform skills folders (`~\.claude`, `~\.gemini`, `~\.copilot`) that
+exist:
 
 ```bat
-scripts\install.bat <plugin>
+scripts\install.bat              REM all plugins
+scripts\install.bat <plugin>     REM a single plugin
+scripts\install.bat <plugin> <dest>   REM custom destination (default: %USERPROFILE%)
 ```
 
 ### Why git/offline install works
