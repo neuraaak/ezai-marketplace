@@ -45,7 +45,8 @@ node bin/ezai.js install <plugin>
 **Windows without Node** — from a cloned copy:
 
 ```bat
-scripts\install.bat <plugin>
+scripts\install.bat              REM all plugins
+scripts\install.bat <plugin>     REM a single plugin
 ```
 
 > Offline-first: every plugin ships inside the package and the catalogue is local by
