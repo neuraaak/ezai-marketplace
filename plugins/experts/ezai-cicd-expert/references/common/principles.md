@@ -39,7 +39,7 @@ A release is a sequence of irreversible-then-reversible steps; design every step
 
 ## Maintainability — logic in scripts, not YAML
 
-Keep the real logic (tag sync, version extraction, build, publish step) in **scripts or a task runner** (`nox`, `tox`, `just`, `make`, `package.json` scripts) called by the pipeline. YAML stays a thin orchestration layer. This is what prevents drift when the same project ships both a GitHub and a GitLab pipeline — both call the same script instead of re-encoding the logic twice.
+Keep the real logic (tag sync, version extraction, build, publish step) in **scripts or a task runner** (`nox`, `tox`, `poe`, `just`, `make`, `package.json` scripts) called by the pipeline. YAML stays a thin orchestration layer. This is what prevents drift when the same project ships both a GitHub and a GitLab pipeline — both call the same script instead of re-encoding the logic twice.
 
 ## Caching
 

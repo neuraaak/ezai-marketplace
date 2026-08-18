@@ -3,23 +3,31 @@
 ## Rules
 
 - **VENV**: always `.venv`. Never install globally.
-- **TOOLS**: `uv` (packages), `ruff` (lint/format), `ty` (types — see note), `pre-commit` (gates), `mkdocs` (docs).
+- **TOOLS**: `uv` (packages), `ruff` (lint/format), `ty` (types — see note), `poethepoet` (tasks), `pre-commit` (gates), `mkdocs` (docs).
 - **TYPES**: `ty` (Astral) is the forward default but still **in preview** — recommend it for new projects, and keep `mypy` as the stable fallback for teams that need maturity today. Pick one; don't run both as blocking gates. `basedpyright` is a solid alternative for VS Code/Cursor teams (open-source Pylance features).
 - **LINT (deep)**: `ruff` covers PEP8 + a dozen tools, but `pylint` adds inter-file semantic analysis Ruff doesn't yet do — add it as a **CI-only second pass** if the project needs it, never as a pre-commit gate (too slow/noisy).
 - **BACKEND**: `hatchling` as the build backend — no `setuptools`, no `flit`.
 - **CENTRAL**: all tool config in `pyproject.toml` — no `setup.cfg`, no `tox.ini`.
-- **VERSION**: Python 3.12+ minimum. Pin in `.python-version`.
+- **VERSION**: Python 3.13+ minimum. Pin in `.python-version`.
 
 ## Environment
 
 ```bash
 uv venv                          # create .venv
 uv sync                          # install deps from uv.lock
-uv run pytest                    # run inside the venv without activating it
+uv run poe lint                  # tasks declared in [tool.poe.tasks]
+uv run poe test
+uv run poe check                 # lint + typecheck + test in one pass
+
+uv run pytest                    # raw form — same thing, spelled out
 uv run ruff check .
 uv run ruff format .
 uv run ty check
 ```
+
+Declare each dev command once in `[tool.poe.tasks]` and call it from the README, the
+pipeline and `pre-commit` — the role `package.json` scripts play in JS and
+`composer.json` scripts in PHP. Raw invocations stay valid; they just duplicate.
 
 ## `.python-version`
 
@@ -27,7 +35,9 @@ uv run ty check
 3.14
 ```
 
-Commit this file to pin the Python version used by `uv` and `pyenv`.
+Commit this file to pin the Python version used by `uv` and `pyenv`. It pins the
+**dev interpreter** (latest stable) — the supported floor is `requires-python`
+(3.13+), which is what the CI matrix drives from.
 
 ## `pyproject.toml` — full structure
 
@@ -43,12 +53,20 @@ build-backend = "hatchling.build"
 [project]
 name = "my-project"
 version = "0.1.0"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = []
 
 # 🧰 Dev tooling (PEP 735 — installed by `uv sync` by default)
 [dependency-groups]
-dev = ["pytest", "ruff", "ty", "mkdocs"]
+dev = ["pytest", "ruff", "ty", "mkdocs", "poethepoet"]
+
+# 🎯 Tasks (poethepoet — the project's command surface)
+[tool.poe.tasks]
+lint = "ruff check ."
+format = "ruff format ."
+typecheck = "ty check"
+test = "pytest --cov"
+check = ["lint", "typecheck", "test"]   # aggregate — what CI and contributors run
 
 # 🎨 Linting
 [tool.ruff.lint]
@@ -137,7 +155,7 @@ plugins:
             docstring_style: google
 ```
 
-## Core syntax (3.12+)
+## Core syntax (3.13+)
 
 ```python
 from __future__ import annotations  # deferred annotations — always
@@ -202,6 +220,7 @@ API_KEY = get_env("API_KEY")
 - `from __future__ import annotations` in every Python file.
 - `hatchling` as the build backend.
 - `ruff lint` + `ruff format` configured with commented rules.
+- Dev commands declared once in `[tool.poe.tasks]` — not duplicated across README, CI and `pre-commit`.
 - `pre-commit` installed with ruff + a type-check hook (`ty` by default, `mypy` as the stable fallback).
 - Multi-stage Docker images, non-root, pinned tags.
 - Secrets via environment variables — never hard-coded.

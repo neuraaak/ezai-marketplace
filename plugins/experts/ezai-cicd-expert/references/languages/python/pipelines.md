@@ -12,8 +12,9 @@ Lint / format-check / type-check / security-scan are independent and gate the re
 
 ## Python-specific concerns
 
-- **Version matrix:** drive it from the project's `requires-python` floor up to current stable (e.g. `["3.11", "3.12", "3.13"]`). Don't test versions below the declared floor.
+- **Version matrix:** drive it from the project's `requires-python` floor up to current stable (e.g. `["3.13", "3.14"]`). Don't test versions below the declared floor.
 - **Runner prefix:** Python tools run inside the environment — `uv run <tool>` (uv) or `poetry run <tool>` (poetry). The registry commands omit this prefix; add the one matching the detected package manager.
+- **Project tasks first:** if the project declares `[tool.poe.tasks]` (or a `Makefile`/`justfile`), call those — `uv run poe check` — instead of re-resolving each tool command; they stay correct as the project evolves. Fall back to the registry when no task surface exists.
 - **Frozen installs:** the install command must respect the lockfile (`uv sync --frozen`, `poetry install`, `pdm install --frozen-lockfile`). Adding `--extra`/`--all-extras` for optional groups does **not** waive `--frozen`.
 - **Publish auth:** prefer OIDC trusted publishing (no stored token); fall back to `PYPI_API_TOKEN`. Both resolutions are in the registry.
 
@@ -40,7 +41,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
-      matrix: { python: ["3.11", "3.12", "3.13"] }
+      matrix: { python: ["3.13", "3.14"] }
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
