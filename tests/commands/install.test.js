@@ -232,6 +232,28 @@ describe('runInstall', () => {
     expect(fs.existsSync(path.join(link, 'SKILL.md'))).toBe(true);
   });
 
+  it('échoue si le plugin ne contient aucun fichier runtime', async () => {
+    // `docs/` existe dans le dépôt mais n'a ni SKILL.md ni references/.
+    const catalogue = catalogueOf([{ name: 'ezai-fantome', source: 'docs' }]);
+
+    await expect(
+      runInstall('ezai-fantome', { dest: tmpDir, _platformDirs: [] }, catalogue)
+    ).rejects.toThrow('aucun fichier runtime');
+  });
+
+  it('ne détruit pas une install précédente quand la nouvelle source est vide', async () => {
+    const skillDir = path.join(tmpDir, '.agents', 'skills', 'ezai-fantome');
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), '# version qui marche');
+    const catalogue = catalogueOf([{ name: 'ezai-fantome', source: 'docs' }]);
+
+    await expect(
+      runInstall('ezai-fantome', { dest: tmpDir, _platformDirs: [] }, catalogue)
+    ).rejects.toThrow();
+
+    expect(fs.readFileSync(path.join(skillDir, 'SKILL.md'), 'utf8')).toBe('# version qui marche');
+  });
+
   it("refuse un nom de plugin qui s'échappe du répertoire cible", async () => {
     const outside = path.join(tmpDir, 'victime');
     fs.mkdirSync(outside, { recursive: true });

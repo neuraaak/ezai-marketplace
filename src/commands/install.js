@@ -128,13 +128,22 @@ async function runInstall(pluginName, options, catalogue) {
     const repoRoot = path.resolve(__dirname, '..', '..');
     const pluginDir = path.join(repoRoot, pluginRelPath);
     const destDir = path.join(agentsSkillsDir, plugin.name);
+
+    // Avant toute écriture : sans SKILL.md ni references/, l'install produisait
+    // un dossier vide en annonçant un succès. On échoue, et on échoue avant le
+    // rmSync pour ne pas détruire une install précédente qui, elle, marchait.
+    const files = collectRuntimeFiles(pluginDir);
+    if (files.length === 0) {
+      throw new Error(
+        `${plugin.name} : aucun fichier runtime trouvé dans ${pluginDir} (SKILL.md manquant ?)`
+      );
+    }
+
     // Purge le dossier du skill avant copie : une nouvelle version ne doit pas
     // hériter des fichiers d'une install antérieure (ex. evals/ ou graphify-out/
     // retirés de la whitelist, ou une référence supprimée en amont).
     fs.rmSync(destDir, { recursive: true, force: true });
     fs.mkdirSync(destDir, { recursive: true });
-
-    const files = collectRuntimeFiles(pluginDir);
 
     for (const { src, dest } of files) {
       const destFile = path.join(destDir, dest);
