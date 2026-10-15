@@ -143,7 +143,24 @@ function validateEvals(pluginsDir) {
   }
 }
 
-const catalogue = buildIndex();
+// updatedAt change chaque jour : réécrire le catalogue à chaque commit, même
+// quand aucun plugin n'a bougé, salit tous les diffs et fait conflit en merge
+// sur cette seule ligne. On conserve donc la date existante tant que le reste
+// du catalogue est identique.
+function keepDateIfUnchanged(next, outputPath) {
+  let current;
+  try {
+    current = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+  } catch {
+    return next;
+  }
+  const sameExceptDate =
+    JSON.stringify({ ...current, updatedAt: null }) ===
+    JSON.stringify({ ...next, updatedAt: null });
+  return sameExceptDate ? current : next;
+}
+
+const catalogue = keepDateIfUnchanged(buildIndex(), OUTPUT);
 fs.writeFileSync(OUTPUT, JSON.stringify(catalogue, null, 2), 'utf8');
 console.log(`\nCatalogue régénéré : ${catalogue.plugins.length} plugin(s) indexé(s).`);
 console.log(`Fichier : ${OUTPUT}`);
