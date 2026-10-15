@@ -17,7 +17,10 @@ function entryKind(dest) {
   }
 }
 
+// Renvoie les noms réellement déliés, pour que l'appelant n'annonce pas comme
+// purgé un skill qu'un garde-fou a laissé en place.
 function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
+  const unlinked = new Set();
   for (const platform of platformDirs) {
     const skillsDir = path.join(platform.dir, 'skills');
     for (const skillName of skillNames) {
@@ -32,6 +35,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
           continue;
         }
         fs.rmSync(dest, { recursive: true, force: true });
+        unlinked.add(skillName);
         console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
       } catch (err) {
         console.warn(
@@ -40,6 +44,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
       }
     }
   }
+  return unlinked;
 }
 
 async function runUninstall(skillName, options, catalogue) {

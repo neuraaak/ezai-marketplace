@@ -90,9 +90,16 @@ describe('runPurge', () => {
     fs.mkdirSync(handmade, { recursive: true });
     fs.writeFileSync(path.join(handmade, 'SKILL.md'), '# à moi');
 
+    const info = jest.spyOn(console, 'info').mockImplementation(() => {});
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     await runPurge(options(platform), catalogue);
+    const printed = info.mock.calls.flat().join('\n');
+    info.mockRestore();
+    warn.mockRestore();
 
     expect(fs.readFileSync(path.join(handmade, 'SKILL.md'), 'utf8')).toBe('# à moi');
+    // Ne pas annoncer purgé ce qui a été conservé.
+    expect(printed).not.toMatch(/purgé/);
   });
 
   it('supprime un lien de plateforme même si sa cible a disparu', async () => {

@@ -46,19 +46,32 @@ async function runPurge(options, catalogue) {
 
   // 1. Supprimer les symlinks plateformes en premier.
   console.info('Purge des skills obsolètes :');
-  unlinkFromPlatforms(stale, platformDirs);
+  const unlinked = unlinkFromPlatforms(stale, platformDirs);
 
-  // 2. Supprimer les dossiers dans .agents/skills/.
+  // 2. Supprimer les dossiers dans .agents/skills/. On n'annonce que ce qui a
+  // réellement disparu : un vrai dossier conservé par le garde-fou plateforme
+  // ne doit pas être compté comme purgé.
   console.info('');
+  const purged = [];
   for (const name of stale) {
     const skillDir = path.join(agentsSkillsDir, name);
     if (fs.existsSync(skillDir)) {
       fs.rmSync(skillDir, { recursive: true, force: true });
+      purged.push(name);
+    } else if (unlinked.has(name)) {
+      purged.push(name);
     }
+  }
+  for (const name of purged) {
     console.info(`  - ${name}`);
   }
 
-  const label = stale.length === 1 ? `"${stale[0]}"` : `${stale.length} skills obsolètes`;
+  if (purged.length === 0) {
+    console.info('Aucun skill obsolète supprimé (voir les avertissements).\n');
+    return;
+  }
+
+  const label = purged.length === 1 ? `"${purged[0]}"` : `${purged.length} skills obsolètes`;
   console.info(`\n${label} purgé(s).\n`);
 }
 
