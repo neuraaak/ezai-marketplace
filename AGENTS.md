@@ -60,8 +60,8 @@ pnpm test:coverage   # Jest with coverage report (≥70 % lines required)
 - **No TypeScript** — plain `.js` files.
 - **Language convention** — CLI messages and code comments are in French; documentation (`docs/`, `AGENTS.md`, plugin descriptions, `## Capabilities`) is in English. This split is intentional and must be preserved.
 - **No comments** unless the _why_ is non-obvious. Never describe what the code does.
-- **No magic numbers** — enforced by `herald.config.json`.
-- **Max 500 lines per file** — enforced by `herald.config.json`.
+- **No magic numbers** — convention, not tool-enforced.
+- **Max 500 lines per file** — convention, not tool-enforced.
 - **Path safety** — all plugin paths go through `assertSafeRelPath()` before any `fs` call; never bypass this.
 - **Error handling** — validate at system boundaries (user input, file system). Do not add defensive guards for states that cannot occur.
 
