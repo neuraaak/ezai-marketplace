@@ -18,10 +18,19 @@ Never hard-code a fixed stack. A poetry + mypy + sphinx project must yield a poe
 
 ## Package install (reproducible)
 
-- uv — `uv.lock` or `[tool.uv]` · `uv sync --frozen` (add `--extra <name>` / `--all-extras` for optional groups)
+- uv — `uv.lock` or `[tool.uv]` · `uv sync --frozen` (`--group <name>` for a PEP 735 dependency group, `--extra <name>` for a published extra)
 - poetry — `poetry.lock` or `[tool.poetry]` · `poetry install --no-interaction --sync`
 - pdm — `pdm.lock` or `[tool.pdm]` · `pdm install --frozen-lockfile`
 - pip — `requirements*.txt` · `pip install -r requirements.txt` (commit a pinned/hashed file)
+
+## Task runner (call these instead of the raw commands below)
+
+- poethepoet — `[tool.poe.tasks]` · `poe <task>` (`poe check` when the project aggregates lint+typecheck+test)
+- make — `Makefile` · `make <target>`
+- just — `justfile` · `just <recipe>`
+
+A task exists only if the project declares it: read the task table before
+calling one, and fall back to the registry below for every role it leaves out.
 
 ## Lint
 

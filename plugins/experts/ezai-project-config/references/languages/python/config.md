@@ -49,6 +49,10 @@ Section order (the emojis aid visual navigation):
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+# src-layout: hatchling cannot guess the package path, the wheel ships empty without this
+[tool.hatch.build.targets.wheel]
+packages = ["src/my_project"]
+
 # 📦 Metadata
 [project]
 name = "my-project"
@@ -56,9 +60,19 @@ version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = []
 
-# 🧰 Dev tooling (PEP 735 — installed by `uv sync` by default)
+# 🧰 Dev tooling (PEP 735 — `dev` is installed by `uv sync` by default)
 [dependency-groups]
-dev = ["pytest", "ruff", "ty", "mkdocs", "poethepoet"]
+lint = ["ruff", "pre-commit"]
+typing = ["ty"]
+test = ["pytest", "pytest-cov"]
+docs = ["mkdocs", "mkdocs-material"]
+dev = [
+    "poethepoet",
+    {include-group = "lint"},
+    {include-group = "typing"},
+    {include-group = "test"},
+    {include-group = "docs"},
+]
 
 # 🎯 Tasks (poethepoet — the project's command surface)
 [tool.poe.tasks]
@@ -100,6 +114,59 @@ addopts = "-v --tb=short"
 ```
 
 Always document ruff rule selections with inline comments.
+
+## Dependency groups (PEP 735)
+
+`[dependency-groups]` declares dependencies the **project** needs but the
+**package** does not. They are never published: they live only in the source
+tree, so a consumer installing the wheel never resolves them.
+
+### Nomenclature
+
+Use these names — a CI job, a `poe` task and a contributor should guess the
+group without reading `pyproject.toml`. One group per gate of `poe check`.
+
+| Group    | Holds                                                                              | Who installs it             |
+| :------- | :--------------------------------------------------------------------------------- | :-------------------------- |
+| `lint`   | `ruff`, `pre-commit`                                                               | the lint job, the hooks     |
+| `typing` | `ty` (or `mypy`)                                                                   | the typecheck job           |
+| `test`   | `pytest` and its plugins, fixtures, factories                                      | the test matrix             |
+| `docs`   | `mkdocs` and its plugins                                                           | the docs build, ReadTheDocs |
+| `dev`    | nothing of its own but `poethepoet` — it aggregates the others via `include-group` | a contributor's `uv sync`   |
+
+Add a group only when something installs it alone. `bench`, `typing-stubs` or
+`security` earn their place the day a job asks for them, not before.
+
+`dev` is special: `uv sync` installs it with no flag, so it must pull in every
+group a contributor needs. Keep it an aggregate — a tool pinned directly in
+`dev` is a tool no CI job can install without dragging in the whole toolchain.
+
+### Installing
+
+```bash
+uv sync                           # default group: dev (so: everything)
+uv sync --group test              # one gate only — what a CI job runs
+uv sync --no-default-groups       # runtime deps alone
+uv run --group docs mkdocs build  # one-shot, without touching .venv's groups
+```
+
+### Not `[project.optional-dependencies]`
+
+The two look alike and do opposite jobs:
+
+|                        | `[dependency-groups]`       | `[project.optional-dependencies]` |
+| :--------------------- | :-------------------------- | :-------------------------------- |
+| Published in the wheel | no                          | yes                               |
+| Installed by           | `uv sync --group X`         | `pip install pkg[X]`              |
+| For                    | the project's own toolchain | features a **consumer** opts into |
+
+So: `test`, `lint`, `docs` are groups. `postgres`, `redis`, `cli` — extras a
+user of your library enables — stay extras. A tool in `optional-dependencies`
+leaks your CI into every install of your package; a feature extra hidden in a
+group is unreachable for anyone who installed from PyPI.
+
+Only extras can be self-referenced (`pkg[all] = ["pkg[postgres]", …]`); groups
+compose with `include-group` instead, and may not be cyclic.
 
 ## `pre-commit` — config
 
@@ -158,8 +225,6 @@ plugins:
 ## Core syntax (3.13+)
 
 ```python
-from __future__ import annotations  # deferred annotations — always
-
 from pathlib import Path             # pathlib only, not os.path
 
 def read_file(path: str | Path) -> bytes:   # union with |, not Union[]
@@ -167,7 +232,12 @@ def read_file(path: str | Path) -> bytes:   # union with |, not Union[]
         return f.read()
 ```
 
-- `from __future__ import annotations` in every file
+- **`from __future__ import annotations`: drop it the day `requires-python`
+  reaches `>=3.14`; keep it below.** PEP 649 evaluates
+  annotations lazily by default, so forward references already work unquoted.
+  The future import is deprecated (removal planned once 3.13 is EOL) and opts
+  back into the old stringified behaviour, which costs runtime introspection
+  (`annotationlib`, `pydantic`, `dataclasses`).
 - `pathlib.Path` exclusively for filesystem operations
 - Union syntax `int | str` (not `Union`)
 - `with` statements for any resource cleanup
@@ -217,7 +287,6 @@ API_KEY = get_env("API_KEY")
 
 - `uv` exclusively for package management; `uv.lock` committed.
 - `pyproject.toml` is the single source of truth.
-- `from __future__ import annotations` in every Python file.
 - `hatchling` as the build backend.
 - `ruff lint` + `ruff format` configured with commented rules.
 - Dev commands declared once in `[tool.poe.tasks]` — not duplicated across README, CI and `pre-commit`.

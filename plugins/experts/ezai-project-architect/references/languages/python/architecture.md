@@ -98,7 +98,6 @@ class User:
 ## Type system
 
 ```python
-from __future__ import annotations
 from typing import Protocol, TypedDict, Literal, Annotated, Mapping
 
 # Native generics (not typing.List / typing.Dict)
@@ -177,5 +176,4 @@ def test_process_order() -> None:
 - Fakes (not complex mocks) used to test Ports.
 - `@dataclass(frozen=True)` for immutable Value Objects.
 - `TypedDict` for external data without logic.
-- `from __future__ import annotations` at the top of every file.
 - Zero `Any`, zero `typing.List`/`typing.Dict`.
