@@ -3,8 +3,12 @@ name: Tag sync
 # Release orchestration — three modes driven by tag_action:
 #
 #   create  — push to main, vX.Y.Z tag doesn't exist yet
-#               → create immutable vX.Y.Z + move vX-latest alias
-#               → publish to npm (03) then deploy versioned docs (04)
+#               → publish to npm (03) FIRST
+#               → then create immutable vX.Y.Z + move vX-latest alias
+#               → then deploy versioned docs (04)
+#             The tag is the record of a published version, so it is pushed only
+#             once npm accepted the upload: a failed publish leaves no tag, and
+#             the next run still sees tag_action=create and retries.
 #
 #   skip    — push to main, vX.Y.Z already exists (chore/fix without version bump)
 #               → no tag, no publish
@@ -36,11 +40,11 @@ jobs:
     uses: ./.github/workflows/01-ci.yml
 
   tag-sync:
-    name: Sync tag to package version
+    name: Decide tag action
     needs: ci
     runs-on: ubuntu-24.04
     permissions:
-      contents: write # push tags
+      contents: read # decision only — the tag is pushed by tag-create, after publish
     outputs:
       tag_action: ${{ steps.gate.outputs.tag_action }} # create | skip | preview
       version: ${{ steps.version.outputs.version }}
@@ -85,23 +89,6 @@ jobs:
             echo "Version $VERSION is new — will release $TAG_NAME."
           fi
 
-      - name: Create immutable tag + move floating alias
-        if: steps.gate.outputs.tag_action == 'create'
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          TAG_NAME="v$VERSION"
-          MAJOR=$(echo "$VERSION" | cut -d. -f1)
-          LATEST_TAG="v${MAJOR}-latest"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git tag "$TAG_NAME"            # NEVER -f: the release tag is immutable
-          git push origin "$TAG_NAME"
-          git tag -f "$LATEST_TAG"       # only the alias ever moves
-          git push origin --force "$LATEST_TAG"
-          echo "✅ Created $TAG_NAME, moved $LATEST_TAG"
-
       - name: Summary
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -112,7 +99,7 @@ jobs:
             echo "- **Version**: $VERSION"
             echo "- **Action**: \`$TAG_ACTION\`"
             if [ "$TAG_ACTION" = "create" ]; then
-              echo "- **Tags**: \`v$VERSION\` (immutable) + \`v${MAJOR}-latest\` (alias moved)"
+              echo "- **Tags**: \`v$VERSION\` + \`v${MAJOR}-latest\` — pushed after npm publish succeeds"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -132,20 +119,62 @@ jobs:
       tag: ${{ needs.tag-sync.outputs.tag_name }}
       tag_action: ${{ needs.tag-sync.outputs.tag_action }}
 
+  # The tag is pushed only once npm has accepted the upload. Tagging first meant
+  # a failed publish left vX.Y.Z behind: the next push to main then read that tag
+  # as tag_action=skip, never called publish again, and reported green while the
+  # version was never published. Publish is replay-safe (it treats an existing
+  # version as success), so a retry of this workflow is safe.
+  tag-create:
+    name: Create immutable tag + move floating alias
+    needs: [tag-sync, trigger-publish]
+    if: needs.tag-sync.outputs.tag_action == 'create'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # push tags
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0 # full history: need every tag
+
+      - name: Create immutable tag + move floating alias
+        run: |
+          VERSION="${{ needs.tag-sync.outputs.version }}"
+          TAG_NAME="v$VERSION"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          LATEST_TAG="v${MAJOR}-latest"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git tag "$TAG_NAME"            # NEVER -f: the release tag is immutable
+          git push origin "$TAG_NAME"
+          git tag -f "$LATEST_TAG"       # only the alias ever moves
+          git push origin --force "$LATEST_TAG"
+          echo "✅ Created $TAG_NAME, moved $LATEST_TAG"
+
+      - name: Summary
+        run: |
+          VERSION="${{ needs.tag-sync.outputs.version }}"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          {
+            echo "## 🏷️ Tag created (after publish)"
+            echo "- \`v$VERSION\` (immutable) + \`v${MAJOR}-latest\` (alias moved)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   # Docs ordering:
-  #   create  → wait for publish (irreversible first), then deploy vX.Y.Z + latest
+  #   create  → wait for publish then for the tag, then deploy vX.Y.Z + latest
   #   skip    → independent of publish (not called), deploy dev alias
   #   preview → independent of publish result, build only (no deploy)
   trigger-deploy-docs:
     name: Trigger Deploy Docs
-    needs: [tag-sync, trigger-publish]
+    needs: [tag-sync, trigger-publish, tag-create]
     if: |
       always() &&
       needs.tag-sync.result == 'success' &&
       (
         needs.tag-sync.outputs.tag_action == 'skip' ||
         needs.tag-sync.outputs.tag_action == 'preview' ||
-        needs.trigger-publish.result == 'success'
+        (needs.trigger-publish.result == 'success' && needs.tag-create.result == 'success')
       )
     permissions:
       contents: write
