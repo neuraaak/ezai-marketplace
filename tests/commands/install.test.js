@@ -218,6 +218,20 @@ describe('runInstall', () => {
     expect(fs.existsSync(path.join(skillDir, 'SKILL.md'))).toBe(true);
   });
 
+  it('crée les liens de plateforme sous --dest, pas dans le home réel', async () => {
+    // Plateforme détectée dans le bac à sable : linkToPlatforms ignore les
+    // racines absentes, il faut donc que le dossier existe.
+    fs.mkdirSync(path.join(tmpDir, '.claude'), { recursive: true });
+    const catalogue = catalogueOf([{ name: 'ezai-code-formatter', source: REAL_PLUGIN_SOURCE }]);
+
+    // Pas de _platformDirs : on veut justement exercer resolvePlatforms(options).
+    await runInstall(null, { dest: tmpDir, claude: true }, catalogue);
+
+    const link = path.join(tmpDir, '.claude', 'skills', 'ezai-code-formatter');
+    expect(fs.lstatSync(link).isSymbolicLink()).toBe(true);
+    expect(fs.existsSync(path.join(link, 'SKILL.md'))).toBe(true);
+  });
+
   it("refuse un nom de plugin qui s'échappe du répertoire cible", async () => {
     const outside = path.join(tmpDir, 'victime');
     fs.mkdirSync(outside, { recursive: true });
@@ -260,5 +274,18 @@ describe('resolvePlatforms', () => {
   it('combine plusieurs flags', () => {
     const result = resolvePlatforms({ claude: true, copilot: true });
     expect(result.map((p) => p.name)).toEqual(['Claude Code', 'Copilot']);
+  });
+
+  it('enracine les dossiers dans le home par défaut', () => {
+    expect(resolvePlatforms({ claude: true })[0].dir).toBe(path.join(os.homedir(), '.claude'));
+  });
+
+  it('enracine les dossiers dans --dest quand il est fourni', () => {
+    const dest = path.join(os.tmpdir(), 'ezai-dest-probe');
+    expect(resolvePlatforms({ dest }).map((p) => p.dir)).toEqual([
+      path.join(dest, '.claude'),
+      path.join(dest, '.gemini'),
+      path.join(dest, '.copilot'),
+    ]);
   });
 });
