@@ -4,16 +4,35 @@ const path = require('node:path');
 const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
 const { assertSafeRelPath } = require('./install');
 
+// Ne retire que des liens : dans un dossier skills/ de plateforme, un vrai
+// dossier n'a pas été posé par ezai (skill écrit à la main, copie manuelle) et
+// le supprimer est une perte de données. lstat plutôt que existsSync, qui
+// renvoie false sur un lien cassé — justement le cas que `purge` doit attraper.
+function entryKind(dest) {
+  try {
+    return fs.lstatSync(dest).isSymbolicLink() ? 'link' : 'real';
+  } catch (e) {
+    if (e.code === 'ENOENT') return 'missing';
+    throw e;
+  }
+}
+
 function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
   for (const platform of platformDirs) {
     const skillsDir = path.join(platform.dir, 'skills');
     for (const skillName of skillNames) {
       const dest = path.join(skillsDir, skillName);
       try {
-        if (fs.existsSync(dest)) {
-          fs.rmSync(dest, { recursive: true, force: true });
-          console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
+        const kind = entryKind(dest);
+        if (kind === 'missing') continue;
+        if (kind === 'real') {
+          console.warn(
+            `  [warn] ${platform.name} : ${dest} est un dossier réel, non supprimé — retirez-le manuellement si nécessaire`
+          );
+          continue;
         }
+        fs.rmSync(dest, { recursive: true, force: true });
+        console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
       } catch (err) {
         console.warn(
           `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`

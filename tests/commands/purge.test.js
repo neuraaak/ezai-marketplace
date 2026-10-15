@@ -82,6 +82,37 @@ describe('runPurge', () => {
     expect(fs.existsSync(keptAgents)).toBe(true);
   });
 
+  it('ne supprime pas un vrai dossier ezai- posé à la main dans une plateforme', async () => {
+    const platform = path.join(tmpDir, 'platform');
+    const platSkills = path.join(platform, 'skills');
+    // Vrai dossier, pas un lien : skill écrit à la main, ezai ne l'a jamais posé.
+    const handmade = path.join(platSkills, 'ezai-handmade');
+    fs.mkdirSync(handmade, { recursive: true });
+    fs.writeFileSync(path.join(handmade, 'SKILL.md'), '# à moi');
+
+    await runPurge(options(platform), catalogue);
+
+    expect(fs.readFileSync(path.join(handmade, 'SKILL.md'), 'utf8')).toBe('# à moi');
+  });
+
+  it('supprime un lien de plateforme même si sa cible a disparu', async () => {
+    const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
+    const platform = path.join(tmpDir, 'platform');
+    const platSkills = path.join(platform, 'skills');
+    const gone = path.join(agentsSkillsDir, 'ezai-gone');
+    fs.mkdirSync(gone, { recursive: true });
+    fs.mkdirSync(platSkills, { recursive: true });
+    const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+    const link = path.join(platSkills, 'ezai-gone');
+    fs.symlinkSync(gone, link, symlinkType);
+    fs.rmSync(gone, { recursive: true, force: true });
+
+    await runPurge(options(platform), catalogue);
+
+    expect(fs.existsSync(link)).toBe(false);
+    expect(fs.readdirSync(platSkills)).toEqual([]);
+  });
+
   it('ne touche pas les skills non-ezai', async () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
     const foreign = path.join(agentsSkillsDir, 'foreign-skill');
