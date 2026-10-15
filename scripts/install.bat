@@ -7,10 +7,12 @@ REM  install.bat <plugin>  -> installe un seul plugin
 REM  install.bat <plugin> <dest>
 REM  install.bat "" <dest>  -> tous les plugins, destination personnalisee
 REM
-REM Decouverte par walk de plugins\experts\* et plugins\personas\* (le nom du
-REM dossier = nom du plugin). Seuls SKILL.md + references\ sont copies, dans
-REM <dest>\.agents\skills\<nom>, puis lies par junction vers les plateformes
-REM installees (~\.claude, ~\.gemini, ~\.copilot).
+REM Un plugin = tout dossier contenant .claude-plugin\plugin.json, a n'importe
+REM quelle profondeur sous plugins\ (le nom du dossier = nom du plugin). Meme
+REM regle que scripts\lib\find-plugins.js : ajouter un dossier de regroupement
+REM ne demande aucune modification ici. Seuls SKILL.md + references\ sont
+REM copies, dans <dest>\.agents\skills\<nom>, puis lies par junction vers les
+REM plateformes installees (<dest>\.claude, \.gemini, \.copilot).
 
 set "PLUGIN_NAME=%~1"
 set "DEST=%~2"
@@ -24,14 +26,15 @@ set "FOUND=0"
 echo Installation depuis %REPO_ROOT%\plugins vers %AGENTS_DIR%
 echo.
 
-for /d %%P in ("%REPO_ROOT%\plugins\experts\*") do call :install_one "%%~nxP" "%%~fP"
-for /d %%P in ("%REPO_ROOT%\plugins\personas\*") do call :install_one "%%~nxP" "%%~fP"
+for /d /r "%REPO_ROOT%\plugins" %%P in (*) do (
+  if exist "%%~fP\.claude-plugin\plugin.json" call :install_one "%%~nxP" "%%~fP"
+)
 
 if "%FOUND%"=="0" (
   if not "%PLUGIN_NAME%"=="" (
-    echo Erreur : plugin "%PLUGIN_NAME%" introuvable dans plugins\experts ou plugins\personas
+    echo Erreur : plugin "%PLUGIN_NAME%" introuvable sous plugins\
     ) else (
-    echo Erreur : aucun plugin trouve dans plugins\experts ou plugins\personas
+    echo Erreur : aucun plugin trouve sous plugins\
   )
   exit /b 1
 )
