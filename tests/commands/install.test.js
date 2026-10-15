@@ -5,6 +5,7 @@ const {
   assertSafeRelPath,
   linkToPlatforms,
   collectRuntimeFiles,
+  runInstall,
   RUNTIME_INCLUDE,
 } = require('../../src/commands/install');
 const { resolvePlatforms } = require('../../src/platforms');
@@ -187,6 +188,49 @@ describe('linkToPlatforms', () => {
     expect(
       fs.existsSync(path.join(goodPlatform, 'skills', 'ezai-code-formatter', 'SKILL.md'))
     ).toBe(true);
+  });
+});
+
+// --- runInstall ---
+
+describe('runInstall', () => {
+  const REAL_PLUGIN_SOURCE = './plugins/experts/ezai-code-formatter';
+  let tmpDir;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ezai-install-test-'));
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  function catalogueOf(plugins) {
+    return { fetchCatalogue: async () => ({ plugins }) };
+  }
+
+  it('copie les fichiers runtime sous le répertoire de destination', async () => {
+    const catalogue = catalogueOf([{ name: 'ezai-code-formatter', source: REAL_PLUGIN_SOURCE }]);
+
+    await runInstall(null, { dest: tmpDir, _platformDirs: [] }, catalogue);
+
+    const skillDir = path.join(tmpDir, '.agents', 'skills', 'ezai-code-formatter');
+    expect(fs.existsSync(path.join(skillDir, 'SKILL.md'))).toBe(true);
+  });
+
+  it("refuse un nom de plugin qui s'échappe du répertoire cible", async () => {
+    const outside = path.join(tmpDir, 'victime');
+    fs.mkdirSync(outside, { recursive: true });
+    fs.writeFileSync(path.join(outside, 'precieux.txt'), 'données');
+
+    const catalogue = catalogueOf([{ name: '../../../victime', source: REAL_PLUGIN_SOURCE }]);
+
+    await expect(
+      runInstall(null, { dest: path.join(tmpDir, 'a', 'b', 'c'), _platformDirs: [] }, catalogue)
+    ).rejects.toThrow('chemin non sûr');
+
+    // Le rmSync d'install ne doit pas avoir touché au dossier voisin.
+    expect(fs.readFileSync(path.join(outside, 'precieux.txt'), 'utf8')).toBe('données');
   });
 });
 

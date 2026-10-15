@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
+const { assertSafeRelPath } = require('./install');
 
 function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
   for (const platform of platformDirs) {
@@ -32,6 +33,9 @@ async function runUninstall(skillName, options, catalogue) {
 
   let targets;
   if (skillName) {
+    // Le nom vient du catalogue, qui peut être distant : il sert de composant
+    // de chemin pour des suppressions récursives, donc il est validé.
+    assertSafeRelPath(skillName);
     if (!catalogueNames.has(skillName)) {
       console.error(`"${skillName}" n'est pas un skill du catalogue ezai.`);
       console.error('Utilisez `ezai list` pour voir les skills disponibles.');

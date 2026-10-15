@@ -121,6 +121,10 @@ async function runInstall(pluginName, options, catalogue) {
       typeof rawSource === 'string' ? rawSource : rawSource?.path || plugin.path || ''
     ).replace(/^\.\//, '');
     assertSafeRelPath(pluginRelPath);
+    // Le nom sert de dossier de destination : non validé, un `../..` dans le
+    // catalogue ferait pointer destDir hors de .agents/skills/, où le rmSync
+    // ci-dessous détruirait les données de l'utilisateur.
+    assertSafeRelPath(plugin.name);
     const repoRoot = path.resolve(__dirname, '..', '..');
     const pluginDir = path.join(repoRoot, pluginRelPath);
     const destDir = path.join(agentsSkillsDir, plugin.name);
