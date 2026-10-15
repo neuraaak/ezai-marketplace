@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint src/ bin/",
+    "lint": "eslint src/ bin/ scripts/ tests/",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build-index": "node scripts/build-index.js",

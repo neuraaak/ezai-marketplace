@@ -3,7 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { findPluginDirs } = require('./lib/find-plugins');
+const { findPluginDirs, readPluginJson } = require('./lib/find-plugins');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
@@ -13,7 +13,7 @@ let updated = 0;
 
 for (const pluginDir of findPluginDirs(PLUGINS_DIR)) {
   const pluginJsonPath = path.join(pluginDir, '.claude-plugin', 'plugin.json');
-  const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+  const meta = readPluginJson(pluginJsonPath);
   if (meta.version === version) continue;
 
   meta.version = version;

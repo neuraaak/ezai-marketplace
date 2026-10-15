@@ -52,8 +52,12 @@ ezai uninstall ezai-docs-writer --claude
 Set `EZAI_CATALOGUE_URL` to override the bundled `marketplace.json` with a remote URL:
 
 ```bash
-EZAI_CATALOGUE_URL=https://example.com/catalogue.json ezai install
+EZAI_CATALOGUE_URL=https://example.com/catalogue.json ezai list
 ```
+
+It overrides the **listing** only — `list`, `search` and `info`. Installation always
+reads the plugins bundled in the package, which is what makes offline install work, so
+a remote entry pointing at plugin files you do not have locally cannot be installed.
 
 ## 🔧 How to set up on Windows
 

@@ -7,7 +7,7 @@ module.exports = [
   {
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'module',
+      sourceType: 'commonjs',
       globals: {
         ...globals.node,
         ...globals.jest,
@@ -31,7 +31,8 @@ module.exports = [
     },
   },
   {
-    files: ['tests/**/*.js'],
+    // Les scripts de build parlent à la console : c'est leur sortie, pas du debug.
+    files: ['tests/**/*.js', 'scripts/**/*.js'],
     rules: {
       'no-console': 'off',
     },

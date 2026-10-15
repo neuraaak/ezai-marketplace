@@ -30,7 +30,7 @@ npm install -g ezai-marketplace
 
 ```bash
 # Pin a tag (recommended)
-npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.2.1"
+npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.4.5"
 
 # Short form (latest default branch)
 npm install -g github:Neuraaak/ezai-marketplace

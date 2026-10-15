@@ -3,7 +3,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { findPluginDirs } = require('./lib/find-plugins');
+const { findPluginDirs, readPluginJson } = require('./lib/find-plugins');
 
 const ROOT = path.resolve(__dirname, '..');
 const PLUGINS_DIR = path.join(ROOT, 'plugins');
@@ -12,8 +12,10 @@ const { version: PKG_VERSION } = JSON.parse(
 );
 const OUTPUT = path.join(ROOT, '.claude-plugin', 'marketplace.json');
 
+// Date locale, pas UTC : toISOString() daterait de la veille tout build lancé
+// en soirée depuis un fuseau UTC+X. 'sv-SE' formate déjà en YYYY-MM-DD.
 function today() {
-  return new Date().toISOString().split('T')[0];
+  return new Date().toLocaleDateString('sv-SE');
 }
 
 function buildIndex() {
@@ -30,24 +32,22 @@ function buildIndex() {
     };
   }
 
-  const entries = findPluginDirs(PLUGINS_DIR)
-    .map((pluginDir) => {
-      const pluginJsonPath = path.join(pluginDir, '.claude-plugin', 'plugin.json');
-      const meta = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
-      const relSource = path.relative(ROOT, pluginDir).replaceAll('\\', '/');
-      const entry = {
-        name: meta.name,
-        description: meta.description || '',
-        source: `./${relSource}`,
-        category: meta.category || 'development',
-      };
-      if (meta.version) entry.version = meta.version;
-      if (meta.author) entry.author = meta.author;
-      if (meta.capabilities) entry.capabilities = meta.capabilities;
-      if (meta.composes) entry.composes = meta.composes;
-      return entry;
-    })
-    .filter(Boolean);
+  const entries = findPluginDirs(PLUGINS_DIR).map((pluginDir) => {
+    const pluginJsonPath = path.join(pluginDir, '.claude-plugin', 'plugin.json');
+    const meta = readPluginJson(pluginJsonPath);
+    const relSource = path.relative(ROOT, pluginDir).replaceAll('\\', '/');
+    const entry = {
+      name: meta.name,
+      description: meta.description || '',
+      source: `./${relSource}`,
+      category: meta.category || 'development',
+    };
+    if (meta.version) entry.version = meta.version;
+    if (meta.author) entry.author = meta.author;
+    if (meta.capabilities) entry.capabilities = meta.capabilities;
+    if (meta.composes) entry.composes = meta.composes;
+    return entry;
+  });
 
   return {
     $schema: 'https://json.schemastore.org/claude-code-marketplace.json',

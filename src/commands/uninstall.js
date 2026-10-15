@@ -78,4 +78,4 @@ async function runUninstall(skillName, options, catalogue) {
   console.info(`\n${label} désinstallé(s) de ${agentsSkillsDir}\n`);
 }
 
-module.exports = { runUninstall, unlinkFromPlatforms, resolvePlatforms };
+module.exports = { runUninstall, unlinkFromPlatforms };

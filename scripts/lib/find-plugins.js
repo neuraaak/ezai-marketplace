@@ -22,4 +22,15 @@ function findPluginDirs(pluginsDir) {
   return found.sort((a, b) => a.localeCompare(b));
 }
 
-module.exports = { findPluginDirs };
+// Les deux scripts (build-index, sync-versions) lisent le même plugin.json :
+// sans ce wrapper, une virgule en trop avorte le hook pre-commit sur un
+// « Unexpected token » qui ne nomme pas le fichier fautif.
+function readPluginJson(pluginJsonPath) {
+  try {
+    return JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+  } catch (e) {
+    throw new Error(`${pluginJsonPath} : ${e.message}`, { cause: e });
+  }
+}
+
+module.exports = { findPluginDirs, readPluginJson };

@@ -1,11 +1,8 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const {
-  runUninstall,
-  unlinkFromPlatforms,
-  resolvePlatforms,
-} = require('../../src/commands/uninstall');
+const { runUninstall, unlinkFromPlatforms } = require('../../src/commands/uninstall');
+const { resolvePlatforms } = require('../../src/platforms');
 
 // --- helpers ---
 
