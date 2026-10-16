@@ -37,8 +37,7 @@ on:
         type: string
         default: preview
 
-permissions:
-  contents: read # minimum for checkout in 00-install-deps nested job
+permissions: {} # each job grants its own
 
 concurrency:
   group: publish
@@ -48,13 +47,11 @@ env:
   PACKAGE_NAME: ezai-marketplace
 
 jobs:
-  install-deps:
-    name: Install & cache deps
-    uses: ./.github/workflows/00-install-deps.yml
-
+  # No 00-install-deps primer: `validate` is the only job that installs
+  # (`publish` just downloads the artifact), so the primer would be a serial
+  # job warming a cache its single consumer warms itself.
   validate:
     name: Validate & build
-    needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -88,9 +85,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm lint
+      # Lint and tests already ran on this exact commit: 02-tag-sync gates the
+      # cascade on 01-ci before calling this workflow. They are re-run only for
+      # a direct workflow_dispatch, which has no upstream gate — and
+      # `github.event_name` is the right signal here precisely because a
+      # workflow_call inherits the caller's event (`push`), never
+      # 'workflow_dispatch'.
+      - if: github.event_name == 'workflow_dispatch'
+        run: pnpm lint
 
-      - run: pnpm test:coverage
+      - if: github.event_name == 'workflow_dispatch'
+        run: pnpm test:coverage
 
       # Replays the full publish path (manifest, files, registry validation)
       # without uploading. No OIDC/auth needed → preview stays out of the

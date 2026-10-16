@@ -41,17 +41,13 @@ on:
         type: string
         default: 'preview'
 
-permissions:
-  contents: read # minimum for checkout in 00-install-deps nested job
+permissions: {} # each job grants its own
 
 jobs:
-  install-deps:
-    name: Install & cache deps
-    uses: ./.github/workflows/00-install-deps.yml
-
+  # No 00-install-deps primer: `build` is the only job that installs, and it
+  # does so with --ignore-scripts, which the primer does not.
   build:
     name: Build docs
-    needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
