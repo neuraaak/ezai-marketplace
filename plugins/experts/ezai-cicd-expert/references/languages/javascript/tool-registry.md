@@ -10,7 +10,7 @@ Never hard-code a fixed stack. An npm + biome + jest project must yield a differ
 
 **Prefer the project's own scripts.** If `package.json` defines `"lint"`, `"test"`, `"build"`, call `pnpm lint`, `pnpm test`, `pnpm build` — they encode the intended invocation and stay correct as the project evolves. Use `pnpm exec <tool>` only when no script wraps it.
 
-**Pin the package manager version** with `corepack enable && corepack prepare pnpm@<version> --activate` (or equivalent for yarn) — avoids version drift across runner images.
+**Pin the package manager version** — either `pnpm/action-setup` with an explicit `version:`, or `corepack enable && corepack prepare pnpm@<version> --activate`. One mechanism only; mixing them is how a runner ends up on a different pnpm than the lockfile expects.
 
 **If multiple candidates match,** the one with a config file/lockfile present wins. If still ambiguous, ask.
 
@@ -49,7 +49,7 @@ Never hard-code a fixed stack. An npm + biome + jest project must yield a differ
 - eslint-plugin-security (SAST) — plugin in `eslint.config.*` · covered by the `eslint .` lint step (no separate command)
 - semgrep (SAST, custom rules) — `.semgrep.yml` or `semgrep` in deps · `semgrep --config=p/javascript --error`
 - codeql (SAST, GitHub-native) — GitHub repo · `github/codeql-action/analyze` with `languages: javascript`
-- pnpm/npm audit (dependencies) — lockfile present · `pnpm audit --omit=dev` (npm: `npm audit --omit=dev`)
+- pnpm/npm audit (dependencies) — lockfile present · `pnpm audit --audit-level high --prod` (npm: `npm audit --audit-level high --omit=dev`) — runtime deps only: dev-tree advisories with no upstream fix would block every PR
 - socket (supply chain, pre-install) — `@socketsecurity/cli` · `socket scan create` (behavioral, complements audit)
 
 ## Build (package artifact)
@@ -60,8 +60,8 @@ Never hard-code a fixed stack. An npm + biome + jest project must yield a differ
 
 ## Publish (to npm)
 
-- OIDC + provenance (preferred) — `id-token: write` (GitHub) · `npm publish --provenance --access public`, no stored token
-- API token (fallback) — `NPM_TOKEN` secret · `npm publish --access public` (env `NODE_AUTH_TOKEN=$NPM_TOKEN`)
+- OIDC + provenance (preferred) — `id-token: write` (GitHub) · `npm publish --provenance --access public --ignore-scripts`, no stored token
+- API token (fallback) — `NPM_TOKEN` secret · `npm publish --access public --ignore-scripts` (env `NODE_AUTH_TOKEN=$NPM_TOKEN`)
 
 ## Docs build / deploy
 
@@ -83,5 +83,5 @@ Never hard-code a fixed stack. An npm + biome + jest project must yield a differ
 | type check   | `pnpm exec tsc --noEmit`          |
 | test         | `pnpm test --run`                 |
 | build        | `pnpm build`                      |
-| publish      | `npm publish --provenance` (OIDC) |
+| publish      | `npm publish --provenance --ignore-scripts` (OIDC) |
 | docs         | `vitepress build docs`            |

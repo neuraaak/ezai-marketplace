@@ -25,7 +25,7 @@ jobs:
   lint:
     runs-on: ubuntu-24.04          # pinned, not ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@<sha>
 ```
 
 **Avoid double-runs.** Limiting `push` to `main` while keeping `pull_request` open means a branch with an open PR triggers one pipeline (the PR), not two. The PR run is the gate; a *required status check* in branch protection — not the workflow itself — is what blocks the merge.
@@ -69,7 +69,7 @@ runs-on: ${{ matrix.os }}
 Most setup actions cache natively — prefer that over hand-rolled `actions/cache`:
 
 ```yaml
-- uses: actions/setup-node@v4
+- uses: actions/setup-node@<sha>
   with:
     node-version: "22"
     cache: pnpm                    # keyed on pnpm-lock.yaml automatically
@@ -78,7 +78,7 @@ Most setup actions cache natively — prefer that over hand-rolled `actions/cach
 For manual caching, key on the lockfile:
 
 ```yaml
-- uses: actions/cache@v4
+- uses: actions/cache@<sha>
   with:
     path: ~/.cache/uv
     key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
@@ -90,7 +90,7 @@ For manual caching, key on the lockfile:
 ```yaml
 # Best: pin to a commit SHA (immutable)
 - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # v4.1.1
-# Acceptable: major tag
+# Acceptable: major tag (mutable — a tag can be repointed)
 - uses: actions/checkout@v4
 ```
 

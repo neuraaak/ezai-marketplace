@@ -57,12 +57,16 @@ Callers `needs: [install-deps]`, then repeat `‹lang-setup›` + `‹frozen-ins
 
 ## `01-ci` — parallel quality gate
 
-Internal parallelism: the `lint`/format job and the `test` matrix are independent and both only `needs: [install-deps]`, so they run concurrently off the warm cache.
+Three independent jobs hang off `needs: [install-deps]` and run concurrently off the warm cache: `quality` (lint + format), `type-check` (plus any import-contract check), and `security` (SAST + dependency CVEs). The `test` matrix gates on the **deterministic** ones only — `needs: [quality, type-check]` — never on `security`, which reads an external advisory feed and can turn red without the code changing.
+
+On a repo with no type system (plain JS, no `tsc`), drop that job and let `test` gate on `quality` alone. On a small repo the security scan is often folded into `quality` as one extra step rather than a third job; split it out once it needs its own toolchain.
 
 ```yaml
 # 01-ci.yml (abbreviated)
 on:
   pull_request:
+    # Omit `paths:` entirely when a check covers the whole tree (repo-wide
+    # formatter, generated-index diff) — a filtered trigger hides those breaks.
     paths: ["<source globs>", "‹version-file›", "‹lockfile›", ".github/workflows/01-ci.yml"]
   workflow_call:                      # called by 02-tag-sync as the release gate
   workflow_dispatch:
@@ -81,15 +85,43 @@ jobs:
   quality:
     needs: [install-deps]
     runs-on: ubuntu-24.04
-    steps: [ checkout, ‹lang-setup›, ‹frozen-install›, ‹lint›, ‹format-check› ]
+    timeout-minutes: 15
+    # ‹generated-file-diff› = ‹regenerate› && git diff --exit-code <generated file>,
+    # for any generated artifact that is committed (index, schema, snapshot).
+    steps: [ checkout, ‹lang-setup›, ‹frozen-install›, ‹lint›, ‹format-check›, ‹generated-file-diff› ]
+
+  type-check:
+    needs: [install-deps]             # parallel with quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps: [ checkout, ‹lang-setup›, ‹frozen-install›, ‹type-check›, ‹import-contracts› ]
+
+  security:
+    needs: [install-deps]             # parallel; deliberately NOT a gate for `test`
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # SAST on the project's own code + CVEs in the locked deps. Every ignored
+    # advisory carries impact and an exit condition in a comment (principles.md).
+    steps: [ checkout, ‹lang-setup›, ‹frozen-install›, ‹sast›, ‹dep-audit› ]
 
   test:
-    needs: [install-deps]             # parallel with quality — no gate between them
-    runs-on: ubuntu-24.04
+    needs: [quality, type-check]      # deterministic gates only
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     strategy:
       fail-fast: false
-      matrix: { version: ["<pinned>", "<floating-major>"] }   # language-version matrix
-    steps: [ checkout, ‹lang-setup (matrix.version)›, ‹frozen-install›, ‹test›, coverage-on-pinned-cell ]
+      matrix:
+        os: [ubuntu-24.04]            # add windows-latest ONLY if behaviour is OS-specific
+        version: ["<pinned>", "<floating-major>"]
+    env:
+      REQUIRE_EXTRAS: "1"             # turns a silently skipped extras suite into a failure
+    steps:
+      - [ checkout, ‹lang-setup (matrix.version)›, ‹frozen-install› ]
+      - ‹test + coverage threshold›   # the threshold lives here, not in the project config
+      - uses: actions/upload-artifact@<sha>
+        # always(): the report of a failing run is the one worth keeping.
+        if: matrix.os == 'ubuntu-24.04' && matrix.version == '<pinned>' && always()
+        with: { name: coverage-report, path: <coverage paths>, retention-days: 7 }
 ```
 
 ## `02-tag-sync` — orchestrator with three-state `tag_action`
@@ -229,6 +261,10 @@ jobs:
       - if: steps.published.outputs.exists == 'false'
         run: ‹publish --provenance›    # resolve via tool-registry (npm publish / twine / uv publish)
 ```
+
+**Attestations break under `workflow_call`.** With the publish job invoked from `02`, the OIDC token's Build Config URI reflects the **caller**, not `03-publish.yml`, so registry-side attestation verification fails. Disable them on the publish action (`attestations: false` for `gh-action-pypi-publish`) while keeping the Trusted Publisher match itself — or publish from a directly-triggered workflow. npm's `--provenance` is unaffected: it signs from the job's own `id-token`.
+
+**Disable lifecycle scripts when publishing.** `npm publish --ignore-scripts` (and equivalents): the publish job is the one place holding a live release credential, and a compromised `prepublishOnly` anywhere in the tree would run there.
 
 **Trusted Publishing + reusable workflows.** When `03` is invoked via `workflow_call` from `02`, the npm/PyPI Trusted Publisher must be registered against **the file that contains the publish job** (`03-publish.yml`) and its `environment` — not the caller. Renaming the workflow file or environment breaks the OIDC match and the registry rejects the upload (npm returns a misleading **404** on `PUT`). Re-register the Trusted Publisher after any rename.
 

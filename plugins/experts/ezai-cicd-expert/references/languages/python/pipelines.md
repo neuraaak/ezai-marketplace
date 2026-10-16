@@ -16,7 +16,8 @@ Lint / format-check / type-check / security-scan are independent and gate the re
 - **Runner prefix:** Python tools run inside the environment — `uv run <tool>` (uv) or `poetry run <tool>` (poetry). The registry commands omit this prefix; add the one matching the detected package manager.
 - **Project tasks first:** if the project declares `[tool.poe.tasks]` (or a `Makefile`/`justfile`), call those — `uv run poe check` — instead of re-resolving each tool command; they stay correct as the project evolves. Fall back to the registry when no task surface exists.
 - **Frozen installs:** the install command must respect the lockfile (`uv sync --frozen`, `poetry install`, `pdm install --frozen-lockfile`). Adding `--extra`/`--all-extras` for optional groups does **not** waive `--frozen`.
-- **Publish auth:** prefer OIDC trusted publishing (no stored token); fall back to `PYPI_API_TOKEN`. Both resolutions are in the registry.
+- **Publish auth:** prefer OIDC trusted publishing (no stored token); fall back to `PYPI_API_TOKEN`. Both resolutions are in the registry. When the publish workflow is reached via `workflow_call`, set `attestations: false` — the OIDC Build Config URI reflects the caller and verification fails (see `github/orchestration.md`).
+- **Accepted CVEs are documented, not silenced:** `pip-audit --ignore-vuln <GHSA-...>` carries a comment stating the impact, why it is acceptable here, and the exit condition (usually "drop when <upstream> relaxes its pin").
 
 ## Worked example (uv + ruff + mypy + pytest)
 
@@ -27,27 +28,30 @@ jobs:
   quality:
     runs-on: ubuntu-24.04
     permissions: { contents: read }
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@<sha>      # pin every action to a SHA (principles.md)
+      - uses: astral-sh/setup-uv@<sha>
         with: { enable-cache: true }
       - run: uv sync --frozen --all-extras
-      - run: uv run ruff check .
-      - run: uv run ruff format --check .
-      - run: uv run mypy src
+      - run: uv run --frozen ruff check .
+      - run: uv run --frozen ruff format --check .
+      - run: uv run --frozen mypy src
 
   test:
     needs: [quality]
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix: { python: ["3.13", "3.14"] }
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@<sha>
+      - uses: astral-sh/setup-uv@<sha>
         with: { python-version: "${{ matrix.python }}", enable-cache: true }
-      - run: uv sync --frozen
-      - run: uv run pytest --cov --cov-report=xml
+      - run: uv sync --frozen --all-extras
+      # The threshold lives here, not in addopts: a partial local run must not exit 1.
+      - run: uv run --frozen pytest --cov --cov-report=xml --cov-fail-under=70
 ```
 
 For **GitLab CI**, wrap the same resolved commands as `script:` entries with a lockfile-keyed `cache:` (see `gitlab/syntax.md`). For **publish** and **docs deploy**, resolve those roles in the registry and place them in the orchestration file's release cascade.
