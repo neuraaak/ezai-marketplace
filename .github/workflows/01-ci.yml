@@ -41,15 +41,35 @@ jobs:
           node-version: '24.16.0'
           cache: pnpm # cache hit from install job — no network download
       - run: pnpm install --frozen-lockfile
+      # eslint-plugin-security runs inside this step: for JS the SAST *is* the
+      # linter, so there is no separate command to give the security job.
       - run: pnpm lint
-      - run: pnpm exec prettier --check .
-      # Runtime-dependency CVEs only: dev-tree advisories with no upstream fix
-      # would block every PR without making the shipped CLI any safer.
-      - run: pnpm audit --audit-level high --prod
+      - run: pnpm format:check
       - name: Verify catalogue is up to date
         run: |
           pnpm build-index
           git diff --exit-code .claude-plugin/marketplace.json
+
+  security:
+    name: Security scan
+    # No install and no primer: `pnpm audit` reads the lockfile, not node_modules.
+    # Separate from `quality` so an upstream advisory reddens its own job instead
+    # of the deterministic gate — and never gates the tests.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: '11'
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: '24.16.0'
+      # Runtime dependencies only: dev-tree advisories with no upstream fix
+      # would block every PR without making the shipped CLI any safer.
+      - run: pnpm audit --audit-level high --prod
 
   test:
     name: Tests

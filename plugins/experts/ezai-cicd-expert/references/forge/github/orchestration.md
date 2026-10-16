@@ -402,6 +402,8 @@ Filters apply to `push` and `pull_request` **only** — `workflow_call` and `wor
           BEFORE="${{ github.event.before }}"
           # First push to a branch (all-zero SHA) or a dispatch: assume changed.
           case "$BEFORE" in ""|0000000000000000000000000000000000000000) echo "docs=true" >> "$GITHUB_OUTPUT"; exit 0;; esac
+          # A force-push can leave BEFORE unreachable even with fetch-depth: 0.
+          git cat-file -e "${BEFORE}^{commit}" 2>/dev/null || { echo "docs=true" >> "$GITHUB_OUTPUT"; exit 0; }
           git diff --name-only "$BEFORE" HEAD > /tmp/changed.txt
           grep -qE '^(docs/|mkdocs\.yml|‹docs-config›)' /tmp/changed.txt \
             && echo "docs=true" >> "$GITHUB_OUTPUT" || echo "docs=false" >> "$GITHUB_OUTPUT"
