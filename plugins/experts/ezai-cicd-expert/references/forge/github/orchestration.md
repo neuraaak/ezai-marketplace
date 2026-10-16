@@ -416,7 +416,16 @@ then add `( needs.tag-sync.outputs.tag_action != 'skip' || needs.tag-sync.output
 - **`03`'s `validate` job builds and checks the artifact — it does not re-run lint, type-check or the test suite.** Those passed on this SHA minutes ago. Keep manifest-level work: resolve the version (and fail on a mismatch with the input), build, `Verify package metadata`, `Verify package contents`, `Dry-run publish`.
 - **`04` likewise builds the docs; it does not re-run the test suite.** A coverage report *rendered into* the docs is a docs input, not a test run — generate it with reporting flags, not with the threshold gate.
 
-A manual `workflow_dispatch` of `03` has no upstream gate, which is the one case this costs something — and it is also why dispatch defaults to `preview`.
+A manual `workflow_dispatch` of `03` has no upstream gate, which is the one case this costs something. Keep the gate-equivalent steps, behind that event:
+
+```yaml
+      - if: github.event_name == 'workflow_dispatch'
+        run: ‹lint›
+      - if: github.event_name == 'workflow_dispatch'
+        run: ‹test›
+```
+
+`github.event_name` is the correct signal **here** — and only here. A `workflow_call` inherits the caller's event (`push`), so it never matches, which is exactly the semantics wanted: "was there an upstream gate?". It stays forbidden for gating a *mutating* step, where the inheritance works against you (see `03-publish` above).
 
 ### Call the cache primer once
 
