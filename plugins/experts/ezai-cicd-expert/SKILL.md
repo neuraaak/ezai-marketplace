@@ -43,6 +43,7 @@ rules.
    - Language: `pyproject.toml` → Python; `package.json` → JS/TS; `composer.json` → PHP. A repo may combine several.
 
 2. **Load references** — always `common/principles.md` (strategy, core rules, audit checklist), plus:
+   - **`common/naming.md`** whenever you write a new pipeline, add a job, or normalize an existing one — the canonical names are not negotiable defaults.
    - **`forge/<platform>/syntax.md`** for any write/audit/debug task.
    - **`forge/<platform>/orchestration.md`** only when the task touches releasing, publishing, tagging, or deploying docs.
    - **`languages/<language>/pipelines.md`** + **`languages/<language>/tool-registry.md`** for the detected language(s).
@@ -56,4 +57,4 @@ rules.
    - **Audit** — review against the checklist in `common/principles.md`; report by severity (security → correctness → speed → style).
    - **Debug** — diagnose from the failing job's log. If the log is truncated or shows only a non-zero exit code, ask the user to re-run with debug logging (`ACTIONS_STEP_DEBUG: true` / `CI_DEBUG_TRACE: "true"`).
 
-Mirror the project's actual toolchain — never invent tools the project doesn't use. Pin everything. Explain trade-offs made.
+Mirror the project's actual toolchain — never invent tools the project doesn't use. Pin everything. Name every workflow, job and step from `common/naming.md`. Explain trade-offs made.

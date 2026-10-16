@@ -36,7 +36,7 @@ jobs:
     uses: ./.github/workflows/01-ci.yml
 
   tag-sync:
-    name: Sync tag to package version
+    name: Tag sync
     needs: ci
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -46,13 +46,14 @@ jobs:
       tag_action: ${{ steps.gate.outputs.tag_action }} # create | skip | preview
       version: ${{ steps.version.outputs.version }}
       tag_name: ${{ steps.gate.outputs.tag_name }}
+      docs_changed: ${{ steps.changed.outputs.docs }} # only consulted on skip
 
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
           fetch-depth: 0 # full history: need every tag
 
-      - name: Extract version from package.json
+      - name: Resolve version
         id: version
         run: |
           VERSION=$(node -p "require('./package.json').version")
@@ -86,7 +87,35 @@ jobs:
             echo "Version $VERSION is new — will release $TAG_NAME."
           fi
 
-      - name: Create immutable tag + move floating alias
+      # Consulted only on `skip`: a release always redeploys the docs. Unknown
+      # range (first push, dispatch) → 'true': a scoping optimisation must never
+      # be the reason a version ships without its documentation.
+      - name: Determine changed paths
+        id: changed
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          case "$BEFORE" in
+            '' | 0000000000000000000000000000000000000000)
+              echo "docs=true" >> "$GITHUB_OUTPUT"
+              echo "Unknown diff range — assuming docs changed."
+              exit 0
+              ;;
+          esac
+          # A force-push can leave BEFORE unreachable even with fetch-depth: 0.
+          if ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "docs=true" >> "$GITHUB_OUTPUT"
+            echo "$BEFORE is unreachable — assuming docs changed."
+            exit 0
+          fi
+          if git diff --name-only "$BEFORE" HEAD |
+            grep -qE '^(docs/|cliff\.toml|package\.json|pnpm-lock\.yaml|\.github/workflows/04-docs\.yml)'; then
+            echo "docs=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag & move alias
         if: steps.gate.outputs.tag_action == 'create'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -120,14 +149,14 @@ jobs:
   # publish is irreversible → runs before docs on create (golden rule #5).
   # On preview: runs in dry-run (build + pack, no upload).
   # On skip: not called (already published in a previous event).
-  trigger-publish:
-    name: Trigger Publish
+  publish:
+    name: Publish (npm)
     needs: tag-sync
     if: needs.tag-sync.outputs.tag_action != 'skip'
     permissions:
       contents: read
       id-token: write
-    uses: ./.github/workflows/03-publish-npm.yml
+    uses: ./.github/workflows/03-publish.yml
     with:
       version: ${{ needs.tag-sync.outputs.version }}
       tag_action: ${{ needs.tag-sync.outputs.tag_action }}
@@ -136,19 +165,25 @@ jobs:
   #   create  → wait for publish (irreversible first), then deploy vX.Y.Z + latest
   #   skip    → independent of publish (not called), deploy dev alias
   #   preview → independent of publish result, build only (no deploy)
-  trigger-deploy-docs:
-    name: Trigger Deploy Docs
-    needs: [tag-sync, trigger-publish]
+  docs:
+    name: Docs
+    needs: [tag-sync, publish]
     if: |
       always() &&
       needs.tag-sync.result == 'success' &&
       (
         needs.tag-sync.outputs.tag_action == 'skip' ||
         needs.tag-sync.outputs.tag_action == 'preview' ||
-        needs.trigger-publish.result == 'success'
+        needs.publish.result == 'success'
+      ) &&
+      (
+        needs.tag-sync.outputs.tag_action != 'skip' ||
+        needs.tag-sync.outputs.docs_changed == 'true'
       )
     permissions:
-      contents: write
+      # Build-time versioning: the site is deployed as a Pages artifact, so
+      # nothing is pushed to a docs branch — checkout-level read is enough.
+      contents: read
       pages: write
       id-token: write
     uses: ./.github/workflows/04-docs.yml

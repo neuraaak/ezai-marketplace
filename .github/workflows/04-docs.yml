@@ -1,4 +1,4 @@
-name: Deploy docs
+name: 04 · Docs
 
 # Called by 02-tag-sync.yml with tag_action = create | skip | preview.
 # Also triggered on pull_request for validation builds (never deploys on PR).
@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'cliff.toml'
+      - '.github/workflows/04-docs.yml'
   workflow_dispatch:
     inputs:
       tag_action:
@@ -41,16 +42,13 @@ on:
         type: string
         default: 'preview'
 
-permissions:
-  contents: read # minimum for checkout in 00-install-deps nested job
+permissions: {} # each job grants its own
 
 jobs:
-  install-deps:
-    name: Install dependencies
-    uses: ./.github/workflows/00-install-deps.yml
-
+  # No 00-install-deps primer: `build` is the only job that installs, and it
+  # does so with --ignore-scripts, which the primer does not.
   build:
-    needs: [install-deps]
+    name: Build docs
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -59,7 +57,7 @@ jobs:
       group: docs-build-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
           fetch-depth: 0 # full history for lastUpdated and git-cliff
 
@@ -84,6 +82,7 @@ jobs:
           path: docs/.vitepress/dist
 
   deploy:
+    name: Deploy docs
     needs: build
     # Versioning is build-time (vitepress-versioning-plugin builds every version
     # into one static artifact) — deploy is a single GitHub Pages publish of that

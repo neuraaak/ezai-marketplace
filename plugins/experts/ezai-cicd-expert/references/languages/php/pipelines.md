@@ -28,8 +28,8 @@ jobs:
     runs-on: ubuntu-24.04
     permissions: { contents: read }
     steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@<sha>
+      - uses: shivammathur/setup-php@<sha>
         with:
           php-version: "8.3"
           extensions: mbstring, pdo
@@ -45,8 +45,8 @@ jobs:
       fail-fast: false
       matrix: { php: ["8.2", "8.3"] }
     steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@<sha>
+      - uses: shivammathur/setup-php@<sha>
         with:
           php-version: "${{ matrix.php }}"
           extensions: mbstring, pdo

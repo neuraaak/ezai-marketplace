@@ -1,9 +1,11 @@
 const js = require('@eslint/js');
 const globals = require('globals');
 const prettier = require('eslint-config-prettier/flat');
+const security = require('eslint-plugin-security');
 
 module.exports = [
   js.configs.recommended,
+  security.configs.recommended,
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -23,6 +25,11 @@ module.exports = [
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-process-exit': 'error',
       'no-return-await': 'error',
+
+      // Every fs path in this CLI is dynamic by nature; the real boundary is
+      // assertSafeRelPath(), which the rule cannot see. Left on, it is 16
+      // permanent warnings that train the reader to ignore the output.
+      'security/detect-non-literal-fs-filename': 'off',
 
       // ES6+
       'prefer-arrow-callback': 'error',
