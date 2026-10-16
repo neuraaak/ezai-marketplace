@@ -1,6 +1,6 @@
 # CI/CD Principles — Platform & Language Agnostic
 
-The strategy that holds regardless of platform or language. Naming of workflows, jobs and steps lives in `common/naming.md` — load it whenever you write or rename a pipeline. Pair this with a platform file (`github/syntax.md` / `gitlab/syntax.md`, plus the matching `orchestration.md` for release tasks) and one language file.
+The strategy that holds regardless of platform or language. Naming of workflows, jobs and steps lives in `common/naming.md` — load it on every CI/CD task; its tables are normative, not examples. Pair this with a platform file (`github/syntax.md` / `gitlab/syntax.md`, plus the matching `orchestration.md` for release tasks) and one language file.
 
 ## Pipeline shape
 
@@ -150,5 +150,5 @@ When reviewing an existing pipeline, report findings in this severity order:
 
 ### 🎨 Style
 
-- Jobs and steps named clearly?
+- Every workflow file, job key, job label and step verb matches the tables in `common/naming.md`? (Run that file's own checklist — "named clearly" is not a criterion, the tables are.)
 - No copy-pasted blocks that should be a reusable/composite workflow or YAML anchor?

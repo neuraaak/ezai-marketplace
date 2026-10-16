@@ -29,6 +29,7 @@ rules.
 | :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `write-github-actions`   | Generate a complete .github/workflows/*.yml from detected toolchain                                                                                                                                    |
 | `write-gitlab-ci`        | Generate a complete .gitlab-ci.yml from detected toolchain                                                                                                                                             |
+| `naming-contract`        | Apply the frozen workflow/job/step name tables (`common/naming.md`); audit an existing pipeline for synonyms                                                                            |
 | `audit-pipeline`         | Audit an existing pipeline: security → correctness → speed → style                                                                                                                                     |
 | `debug-ci-failure`       | Diagnose a failing job from logs; request debug logs if needed                                                                                                                                         |
 | `python-ci-pipeline`     | Python jobs: uv/poetry/pdm, ruff/mypy/ty, pytest, OIDC PyPI trusted publishing                                                                                                                         |
@@ -42,8 +43,7 @@ rules.
    - Platform: `.github/workflows/*.yml` → GitHub Actions; `.gitlab-ci.yml` → GitLab CI. If neither exists, ask or infer from the git remote.
    - Language: `pyproject.toml` → Python; `package.json` → JS/TS; `composer.json` → PHP. A repo may combine several.
 
-2. **Load references** — always `common/principles.md` (strategy, core rules, audit checklist), plus:
-   - **`common/naming.md`** whenever you write a new pipeline, add a job, or normalize an existing one — the canonical names are not negotiable defaults.
+2. **Load references** — always `common/principles.md` (strategy, core rules, audit checklist) **and `common/naming.md`** (the frozen name tables), plus:
    - **`forge/<platform>/syntax.md`** for any write/audit/debug task.
    - **`forge/<platform>/orchestration.md`** only when the task touches releasing, publishing, tagging, or deploying docs.
    - **`languages/<language>/pipelines.md`** + **`languages/<language>/tool-registry.md`** for the detected language(s).
@@ -52,9 +52,18 @@ rules.
 
 3. **Resolve the toolchain** via the tool registry. Don't assume `uv`/`pnpm`/`mike`. For each pipeline role (install, lint, type-check, test, build, publish, docs), detect which tool the project actually uses and look up its CI command in the registry.
 
-4. **Classify and execute:**
+4. **Fix the names before writing any YAML.** Open `common/naming.md` and copy the identifiers out of its tables — never derive them. For the task at hand, write down:
+   - the workflow **filename and `name:`** (`NN-<role>.yml` / `NN · Role`) for each file you touch;
+   - the **job key** and **job `name:`** for every job, including the matrix suffix;
+   - the **step verb** for every step that needs a `name:` at all.
+
+   If a role you need is not in a table, say so and ask — do not invent a name, do not paraphrase an existing one (`quality`, never `lint-and-format`). On GitLab, map through the table in `naming.md` → *GitLab CI mapping* and use the five fixed stages.
+
+5. **Classify and execute:**
    - **Write** — generate a new pipeline from the resolved toolchain.
-   - **Audit** — review against the checklist in `common/principles.md`; report by severity (security → correctness → speed → style).
+   - **Audit** — review against the checklist in `common/principles.md`, then against the checklist at the end of `common/naming.md`; report by severity (security → correctness → speed → style, naming under style). Flag `03-publish.yml` renames as blocked on re-registering the Trusted Publisher.
    - **Debug** — diagnose from the failing job's log. If the log is truncated or shows only a non-zero exit code, ask the user to re-run with debug logging (`ACTIONS_STEP_DEBUG: true` / `CI_DEBUG_TRACE: "true"`).
 
-Mirror the project's actual toolchain — never invent tools the project doesn't use. Pin everything. Name every workflow, job and step from `common/naming.md`. Explain trade-offs made.
+Mirror the project's actual toolchain — never invent tools the project doesn't use. Pin everything. Explain trade-offs made.
+
+**Before handing back any pipeline, run the naming checklist at the end of `common/naming.md` against your output and state the result.** A pipeline whose names you chose yourself, rather than copied from the tables, is not finished.

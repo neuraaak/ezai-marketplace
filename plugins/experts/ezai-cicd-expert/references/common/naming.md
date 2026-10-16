@@ -65,21 +65,21 @@ Tests (${{ matrix.os }}, Node ${{ matrix.node }})   # both axes
 
 Verb vocabulary — pick from this list, never a synonym:
 
-| Verb        | Use for                                     | Canonical names                                                                      |
-| :---------- | :------------------------------------------ | :----------------------------------------------------------------------------------- |
-| `Resolve`   | Compute a value for later steps             | `Resolve version`, `Resolve docs version`                                            |
-| `Determine` | Decide a branch of the pipeline             | `Determine tag action`                                                               |
+| Verb        | Use for                                     | Canonical names                                                                                                 |
+| :---------- | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------- |
+| `Resolve`   | Compute a value for later steps             | `Resolve version`, `Resolve docs version`                                                                       |
+| `Determine` | Decide a branch of the pipeline             | `Determine tag action`                                                                                          |
 | `Verify`    | Assert a fact, fail otherwise               | `Verify catalogue is up to date`, `Verify package contents`, `Verify package metadata`, `Verify version is new` |
-| `Enforce`   | Apply a structural contract                 | `Enforce import contracts`                                                           |
-| `Generate`  | Produce a derived input                     | `Generate changelog`, `Generate coverage report`, `Generate architecture graph`      |
-| `Create`    | Mutate the repository                       | `Create tag & move alias`                                                            |
-| `Build`     | Produce the artifact                        | `Build package`, `Build docs` |
-| `Configure` | Set up state a later step needs             | `Configure git` (the `github-actions[bot]` identity before any push) |
-| `Dry-run`   | Exercise a mutating command without effect  | `Dry-run publish`                                                                    |
-| `Publish`   | The irreversible upload                     | `Publish (OIDC)`                                                                     |
-| `Deploy`    | Ship the built site                         | `Deploy release docs (create)`, `Deploy dev docs (skip)`                             |
-| `Validate`  | A deploy-shaped command that pushes nothing | `Validate docs build (preview)`                                                      |
-| `Summary`   | Write to the run summary                    | `Summary` (bare — it is always the last step)                                        |
+| `Enforce`   | Apply a structural contract                 | `Enforce import contracts`                                                                                      |
+| `Generate`  | Produce a derived input                     | `Generate changelog`, `Generate coverage report`, `Generate architecture graph`                                 |
+| `Create`    | Mutate the repository                       | `Create tag & move alias`                                                                                       |
+| `Build`     | Produce the artifact                        | `Build package`, `Build docs`                                                                                   |
+| `Configure` | Set up state a later step needs             | `Configure git` (the `github-actions[bot]` identity before any push)                                            |
+| `Dry-run`   | Exercise a mutating command without effect  | `Dry-run publish`                                                                                               |
+| `Publish`   | The irreversible upload                     | `Publish (OIDC)`                                                                                                |
+| `Deploy`    | Ship the built site                         | `Deploy release docs (create)`, `Deploy dev docs (skip)`                                                        |
+| `Validate`  | A deploy-shaped command that pushes nothing | `Validate docs build (preview)`                                                                                 |
+| `Summary`   | Write to the run summary                    | `Summary` (bare — it is always the last step)                                                                   |
 
 `Verify package contents` covers the tarball (npm) and the wheel (Python) — the artifact differs, the role does not. `Verify package metadata` is the manifest-level check next to it (`twine check`, `publint`).
 

@@ -1,13 +1,13 @@
 # CI/CD Expert — References Index
 
-Two routing axes: **forge** (where the pipeline runs) and **language** (what the jobs do). Always load `common/principles.md`, then dispatch to the sub-indexes below.
+Two routing axes: **forge** (where the pipeline runs) and **language** (what the jobs do). Always load `common/principles.md` and `common/naming.md`, then dispatch to the sub-indexes below.
 
 ## Common (`common/`)
 
-| File                   | Load when…                     | Contents                                                                |
-| :--------------------- | :----------------------------- | :---------------------------------------------------------------------- |
-| `common/principles.md` | Every CI/CD task               | Strategy, caching, secrets/OIDC, environments, deploy gates, audit list |
-| `common/naming.md`     | Writing or renaming a pipeline | Canonical workflow/job/step names, forge-agnostic, + GitLab mapping     |
+| File                   | Load when…       | Contents                                                                |
+| :--------------------- | :--------------- | :---------------------------------------------------------------------- |
+| `common/principles.md` | Every CI/CD task | Strategy, caching, secrets/OIDC, environments, deploy gates, audit list |
+| `common/naming.md`     | Every CI/CD task | Canonical workflow/job/step names, forge-agnostic, + GitLab mapping     |
 
 ## Forge (`forge/`)
 
