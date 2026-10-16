@@ -200,7 +200,7 @@ jobs:
           git push origin --force "v${MAJOR}-latest"
 
   # publish is irreversible → runs before docs on create (golden rule: publish → docs).
-  trigger-publish:
+  publish:                            # role key, not `trigger-publish` (common/naming.md)
     needs: tag-sync
     if: needs.tag-sync.outputs.tag_action != 'skip'   # skip = already published earlier
     permissions:
@@ -212,14 +212,14 @@ jobs:
       tag:        ${{ needs.tag-sync.outputs.tag_name }}
       tag_action: ${{ needs.tag-sync.outputs.tag_action }}
 
-  trigger-deploy-docs:
-    needs: [tag-sync, trigger-publish]
+  docs:
+    needs: [tag-sync, publish]
     if: |
       always() &&
       needs.tag-sync.result == 'success' &&
       ( needs.tag-sync.outputs.tag_action == 'skip' ||
         needs.tag-sync.outputs.tag_action == 'preview' ||
-        needs.trigger-publish.result == 'success' )
+        needs.publish.result == 'success' )
     permissions:                      # grant only what the docs mechanism needs
       contents: write                 #   branch-push tool (mike) — drop for Pages-artifact
       pages: write                    #   Pages-artifact deploy — drop for a branch-push tool
@@ -230,9 +230,9 @@ jobs:
       tag_action: ${{ needs.tag-sync.outputs.tag_action }}
 ```
 
-**Keep `preview` in the docs condition.** Dropping the `preview` branch appears to work — on `preview` the publish job runs (dry-run) and succeeds, so `needs.trigger-publish.result == 'success'` happens to be true. That is an accident: the moment publish is also skipped on `preview`, docs silently stop running. Name all three modes explicitly.
+**Keep `preview` in the docs condition.** (Job keys here are the canonical roles — see `common/naming.md`.) Dropping the `preview` branch appears to work — on `preview` the publish job runs (dry-run) and succeeds, so `needs.publish.result == 'success'` happens to be true. That is an accident: the moment publish is also skipped on `preview`, docs silently stop running. Name all three modes explicitly.
 
-**Docs gating subtlety.** `trigger-deploy-docs` uses `always()` because `skip`/`preview` deliberately do **not** run publish, so the job must not inherit `trigger-publish`'s `skipped` result as a failure. The explicit `if` re-encodes the intent: deploy when tag-sync succeeded **and** either we're on a non-publish path (`skip`/`preview`) **or** publish actually succeeded (`create`). This preserves **publish → docs** ordering on release while letting the other two modes proceed independently.
+**Docs gating subtlety.** The `docs` job uses `always()` because `skip`/`preview` deliberately do **not** run publish, so the job must not inherit the `publish` job's `skipped` result as a failure. The explicit `if` re-encodes the intent: deploy when tag-sync succeeded **and** either we're on a non-publish path (`skip`/`preview`) **or** publish actually succeeded (`create`). This preserves **publish → docs** ordering on release while letting the other two modes proceed independently.
 
 **Immutability.** `vX.Y.Z` is created **once, never force-pushed** — replaying `02` on the same version yields `tag_action=skip` (the gate finds the tag). Only `vX-latest` is force-pushed: a moving major-alias is *meant* to move (`common/principles.md`).
 
@@ -302,12 +302,12 @@ Docs mirror publish: build on every path (PR validation included), deploy condit
 | **A — branch-push tool** (`mike` for MkDocs, `gh-pages` for others) | at **deploy** time, one commit per version on the docs branch | the tool pushes (`--push`) | `contents: write` only             |
 | **B — build-time versioning** (e.g. a VitePress versioning plugin) | at **build** time, every version compiled into one artifact | `upload-pages-artifact` + `deploy-pages`   | `pages: write` + `id-token: write` |
 
-Family **A** needs the three `tag_action` deploy steps below (the mode changes the *command*). Family **B** has a single generic deploy job — the mode only decides *whether* it runs — so the three-step block collapses into one `if`. Never grant both permission sets: `contents: write` on a Pages-artifact deploy is useless privilege, and `pages: write` on a branch-push tool is too.
+Family **A** is **one job** (`docs`): the tool builds and pushes in the same command, so a separate deploy job would build twice. It carries the three `tag_action` steps below, since the mode changes the *command*. Family **B** is **two jobs** (`build` + `deploy`) around the Pages artifact, and the mode only decides *whether* deploy runs — so the three-step block collapses into one `if`. Never grant both permission sets: `contents: write` on a Pages-artifact deploy is useless privilege, and `pages: write` on a branch-push tool is too.
 
-**The build job generates its own inputs.** All three reference chains produce part of the docs during the build: a changelog (`orhun/git-cliff-action`, pinned), a coverage HTML report, an architecture graph. They are build steps, not committed files — and they need `fetch-depth: 0` (changelog and "last updated" both read the full history).
+**The docs build generates its own inputs** (in the `build` job for family B, inside `docs` for family A). All three reference chains produce part of the docs during the build: a changelog (`orhun/git-cliff-action`, pinned), a coverage HTML report, an architecture graph. They are build steps, not committed files — and they need `fetch-depth: 0` (changelog and "last updated" both read the full history).
 
 ```yaml
-# 04-docs.yml (deploy job, abbreviated — versioned docs)
+# 04-docs.yml (family A — one `docs` job, abbreviated)
 on:
   pull_request:
     paths: ["docs/**", "‹version-file›", "‹lockfile›"]
@@ -318,10 +318,8 @@ on:
       tag_action: { required: false, type: string, default: "preview" }
 
 jobs:
-  build:                             # ‹docs-build› + upload-pages-artifact (every path)
-    ...
-  deploy:
-    needs: build
+  docs:                              # one job: ‹docs-build› happens inside the deploy command
+    name: Build & deploy docs
     # Gate on the INPUT, never on github.event_name: a reusable workflow
     # inherits the caller's event (`push`), and a pull_request supplies no
     # input at all — so `event_name != 'pull_request'` would also let a manual
@@ -351,10 +349,13 @@ jobs:
 
 The three steps are mutually exclusive on `tag_action`: **`create`** publishes the version and moves the `latest` alias — and sets it as the site default — now that publish has succeeded upstream; **`skip`** refreshes the `dev` alias without touching any release version; **`preview`** runs the same command **without pushing**, so a broken versioning config fails in CI instead of on the docs branch. `preview` is also reachable from `workflow_dispatch`, which must default to it: the choice input lists `preview | skip | create` with `preview` first.
 
-**Family B** keeps the same `on:` block, the same build job and the same input-keyed `if`, but the deploy job holds one step:
+**Family B** keeps the same `on:` block and the same input-keyed `if`, but splits in two: a `build` job that runs on every path, and a deploy job holding a single step:
 
 ```yaml
+  build:                             # name: Build docs — ‹docs-build› + upload-pages-artifact
+    ...
   deploy:
+    name: Deploy docs
     needs: build
     if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
     runs-on: ubuntu-24.04

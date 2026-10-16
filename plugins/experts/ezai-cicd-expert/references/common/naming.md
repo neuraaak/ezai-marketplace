@@ -43,8 +43,11 @@ Job **key** is the stable identifier (also the GitLab job name); job **name** is
 | `publish`                  | `Publish (<registry>)` | 02 (as `uses:`), 03 | `(npm)`, `(PyPI)`, `(Packagist)`                                          |
 | `docs`                     | `Docs`                 | 02 (as `uses:`)     | The cascade's entry to 04                                                 |
 | `validate`                 | `Validate & build`     | 03                  | Build + integrity checks, every mode                                      |
-| `build`                    | `Build docs`           | 04                  | Also any build job whose output is an artifact                            |
-| `deploy`                   | `Deploy docs`          | 04                  |                                                                           |
+| `build`                    | `Build docs`           | 04 (family B)       | Also any build job whose output is an artifact                            |
+| `deploy`                   | `Deploy docs`          | 04 (family B)       |                                                                           |
+| `docs`                     | `Build & deploy docs`  | 04 (family A)       | One job: the versioning tool builds **and** pushes in a single command    |
+
+**`04` has one job or two, depending on the docs family** (`github/orchestration.md` → `04-docs`). A branch-push tool like `mike` builds and pushes in one command, so splitting it would mean building twice: one `docs` job. A build-time-versioning site hands an artifact to `deploy-pages`: `build` + `deploy`. Don't force one shape onto the other family.
 
 **Cascade jobs in `02`** keep the role key (`publish`, `docs`) rather than a `trigger-` prefix: the `uses:` line already says it delegates, and the prefix makes the same role unrecognizable between `02` and `03`.
 
@@ -66,17 +69,19 @@ Verb vocabulary — pick from this list, never a synonym:
 | :---------- | :------------------------------------------ | :----------------------------------------------------------------------------------- |
 | `Resolve`   | Compute a value for later steps             | `Resolve version`, `Resolve docs version`                                            |
 | `Determine` | Decide a branch of the pipeline             | `Determine tag action`                                                               |
-| `Verify`    | Assert a fact, fail otherwise               | `Verify catalogue is up to date`, `Verify package contents`, `Verify version is new` |
+| `Verify`    | Assert a fact, fail otherwise               | `Verify catalogue is up to date`, `Verify package contents`, `Verify package metadata`, `Verify version is new` |
 | `Enforce`   | Apply a structural contract                 | `Enforce import contracts`                                                           |
 | `Generate`  | Produce a derived input                     | `Generate changelog`, `Generate coverage report`, `Generate architecture graph`      |
 | `Create`    | Mutate the repository                       | `Create tag & move alias`                                                            |
+| `Build`     | Produce the artifact                        | `Build package`, `Build docs` |
+| `Configure` | Set up state a later step needs             | `Configure git` (the `github-actions[bot]` identity before any push) |
 | `Dry-run`   | Exercise a mutating command without effect  | `Dry-run publish`                                                                    |
 | `Publish`   | The irreversible upload                     | `Publish (OIDC)`                                                                     |
 | `Deploy`    | Ship the built site                         | `Deploy release docs (create)`, `Deploy dev docs (skip)`                             |
 | `Validate`  | A deploy-shaped command that pushes nothing | `Validate docs build (preview)`                                                      |
 | `Summary`   | Write to the run summary                    | `Summary` (bare — it is always the last step)                                        |
 
-`Verify package contents` covers the tarball (npm) and the wheel (Python): the artifact differs, the role does not.
+`Verify package contents` covers the tarball (npm) and the wheel (Python) — the artifact differs, the role does not. `Verify package metadata` is the manifest-level check next to it (`twine check`, `publint`).
 
 ## GitLab CI mapping
 

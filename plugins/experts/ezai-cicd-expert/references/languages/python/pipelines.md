@@ -50,7 +50,8 @@ jobs:
       - uses: astral-sh/setup-uv@<sha>
         with: { python-version: "${{ matrix.python }}", enable-cache: true }
       - run: uv sync --frozen --all-extras
-      # The threshold lives here, not in addopts: a partial local run must not exit 1.
+      # The threshold lives here (or in a dedicated `poe test-ci` task), never in
+      # addopts: a partial local run must not exit 1.
       - run: uv run --frozen pytest --cov --cov-report=xml --cov-fail-under=70
 ```
 

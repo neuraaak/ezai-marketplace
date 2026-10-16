@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-node@<sha>
         with: { node-version: "${{ matrix.node }}", cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      # The coverage threshold belongs to this command, not to the jest/vitest config.
+      # The threshold belongs to this script, not to the jest/vitest config.
       - run: pnpm test:coverage
 ```
 
