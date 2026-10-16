@@ -372,6 +372,71 @@ The three steps are mutually exclusive on `tag_action`: **`create`** publishes t
 
 Here `preview` and `pull_request` are covered for free: the build job still runs (and `upload-pages-artifact` still validates the output), only the deploy is gated.
 
+## Trigger scoping & parallelism
+
+Two questions decide how much a cascade costs: **what starts a run**, and **what inside it has to wait**.
+
+### Where a `paths` filter belongs
+
+Filters apply to `push` and `pull_request` **only** — `workflow_call` and `workflow_dispatch` ignore them entirely. So scoping a trigger never affects the cascade from `02` nor `preview` mode; it only decides whether a *PR* opens a run.
+
+| Workflow | `paths` filter on its PR trigger?                                                                           |
+| :------- | :---------------------------------------------------------------------------------------------------------- |
+| `00`     | n/a — `workflow_call` only                                                                                  |
+| `01`     | **Only if no job checks the whole tree.** A repo-wide formatter or a generated-index diff makes a filter a hole |
+| `02`     | **Never.** It is the gate *and* the decision; a filtered orchestrator means pushes to `main` that run nothing |
+| `03`     | n/a — called, or dispatched                                                                                 |
+| `04`     | **Yes**: `docs/**`, the docs config, `‹version-file›`, `‹lockfile›`. The docs build reads nothing else       |
+
+> **A `paths` filter on a required check blocks every PR that doesn't match.** A required status check that never reports leaves the PR stuck on "Expected — waiting for status", forever. Either leave the required workflow unfiltered, or pair the filter with a same-named no-op job on the inverse condition. Decide this *before* adding the filter — it is the single most common way a scoped trigger turns into a merge freeze.
+
+### Not deploying docs on a `skip` push
+
+`create` always deploys (the version dimension moved). On `skip` — a push to `main` with no version change — the docs rebuild is only worth it if the docs actually changed. Compute it in `tag-sync`, no extra action needed:
+
+```yaml
+  # tag-sync job: outputs: { …, docs_changed: "${{ steps.changed.outputs.docs }}" }
+      - name: Determine changed paths
+        id: changed
+        run: |
+          BEFORE="${{ github.event.before }}"
+          # First push to a branch (all-zero SHA) or a dispatch: assume changed.
+          case "$BEFORE" in ""|0000000000000000000000000000000000000000) echo "docs=true" >> "$GITHUB_OUTPUT"; exit 0;; esac
+          git diff --name-only "$BEFORE" HEAD > /tmp/changed.txt
+          grep -qE '^(docs/|mkdocs\.yml|‹docs-config›)' /tmp/changed.txt \
+            && echo "docs=true" >> "$GITHUB_OUTPUT" || echo "docs=false" >> "$GITHUB_OUTPUT"
+```
+
+then add `( needs.tag-sync.outputs.tag_action != 'skip' || needs.tag-sync.outputs.docs_changed == 'true' )` to the `docs` job's condition. It needs the `fetch-depth: 0` checkout that is already there, and it degrades to "run it" whenever the range is unknown — a scoping optimization must never be the reason a release is missing its docs.
+
+### Don't re-do what the gate already proved
+
+`02` runs `01-ci` on the exact commit it is about to release. Downstream, in the same run:
+
+- **`03`'s `validate` job builds and checks the artifact — it does not re-run lint, type-check or the test suite.** Those passed on this SHA minutes ago. Keep manifest-level work: resolve the version (and fail on a mismatch with the input), build, `Verify package metadata`, `Verify package contents`, `Dry-run publish`.
+- **`04` likewise builds the docs; it does not re-run the test suite.** A coverage report *rendered into* the docs is a docs input, not a test run — generate it with reporting flags, not with the threshold gate.
+
+A manual `workflow_dispatch` of `03` has no upstream gate, which is the one case this costs something — and it is also why dispatch defaults to `preview`.
+
+### Call the cache primer once
+
+`00` pays off from about three consumers (`common/principles.md` → "Caching"). In the cascade, `01` has three (`quality`, `type-check`, `security` — `test` too); `03` has one job that installs (`validate`, since `publish` only downloads the artifact) and `04` has one (`build`). **So `00` is called by `01` only.** In `03` and `04` the primer is a serial job that warms a cache its single consumer would have warmed itself — and inside `02`'s cascade that cache is already hot from the gate.
+
+### What parallelizes — and what must not
+
+| Jobs                                    | Verdict                                                                                          |
+| :-------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| `quality` ∥ `type-check` ∥ `security`   | **Parallel.** Independent, all on `needs: [install-deps]`, all read-only                          |
+| `test` matrix cells                     | **Parallel** with `fail-fast: false` — one failing version must not hide another                  |
+| `test` ∥ `security`                     | **Parallel.** `test` gates on `quality`/`type-check` only                                         |
+| `ci` → `tag-sync`                       | **Serial.** The gate exists to stop a red commit before anything mutates                          |
+| `tag-sync` → `publish`                  | **Serial.** Publish consumes the decision and the resolved version                                |
+| `validate` → `publish`                  | **Serial.** Publish uploads the artifact `validate` produced — never rebuild it in the upload job |
+| `publish` → `docs`                      | **Serial by design.** Irreversible first; docs for a version whose package failed are a lie       |
+| `build` → `deploy` (docs family B)      | **Serial.** Artifact handoff                                                                      |
+
+The release path is deliberately a chain: everything parallel lives *inside* `01`. If a release feels slow, the lever is the duplicated work above, not the ordering.
+
 ## Reusable & composite workflows — the two tools
 
 - **Reusable workflow** (`on: workflow_call`) — a whole callable job graph with typed `inputs`/`secrets`. This is what `00`–`04` are.

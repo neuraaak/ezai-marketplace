@@ -49,6 +49,7 @@ The goal is to skip re-downloading dependencies, **not** to skip producing a cor
 - **Key the cache on the lockfile hash.** When `uv.lock` / `pnpm-lock.yaml` changes, the key changes and you get a clean install. Same lockfile → cache hit.
 - **Cache the package store, not `node_modules` / `.venv`.** Restoring the global store + a fast `--frozen` install is more robust than restoring a half-resolved tree.
 - **Never cache build outputs as if they were inputs.** A stale `dist/` that masks a broken build is worse than no cache.
+- **Each check runs once per change.** One trigger per change (PR *or* push, never both), and no downstream job re-running what the gate just proved on the same commit. Re-verification feels safe and costs a full matrix every release.
 - **A dedicated cache-primer job earns its place only from ~3 consumers.** It adds one serial link (~30-60 s) ahead of the parallel jobs; with two downstream jobs it is a net loss — run the language setup + frozen install directly in each job instead.
 
 ## Secrets & authentication

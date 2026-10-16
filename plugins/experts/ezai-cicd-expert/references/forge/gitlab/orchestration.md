@@ -13,6 +13,7 @@ The GitLab port of the numbered release cascade. Where GitHub chains many reusab
 | Orchestrator        | `02-tag-sync.yml` calls `03`/`04`        | root `.gitlab-ci.yml` includes all sub-files                 |
 | Per-job output gate | job `outputs` + `if:`                    | `dotenv` artifact var + `rules: if: $VAR`                    |
 | Shared dep cache    | `00-install-deps` reusable workflow      | one `install` job, `cache: policy: pull-push`; others `pull` |
+| Trigger scoping     | `on: pull_request: paths:`               | `rules: changes:` per job (pipeline-level in `workflow:rules`) |
 | Docs aliases        | versioned-docs tool (e.g. `mike`)        | directory layout under `public/` (no native alias mechanism) |
 
 **`include:` vs `trigger:`.** Use `include: local:` (flatten into one pipeline — the default choice; stage order gives you the cascade). Reserve `trigger:` child pipelines for when you genuinely need isolation (separate pipeline graph, independent retry). The rule prefers the single-pipeline form: natural orchestration via stages.
@@ -222,6 +223,13 @@ pages:
 ```
 
 The three modes mirror the GitHub versioned-docs steps: `create` → `public/X.Y.Z` + `public/latest`; `skip` → `public/dev`; `preview` → build only, no `pages` job. Re-deploying a version overwrites its own subfolder only → idempotent. (GitLab Pages republishes the whole `public/` artifact each run; if you need to preserve sibling version folders, fetch the previously published site into `public/` before overwriting the target subfolder.)
+
+## Trigger scoping
+
+`rules: changes:` is the `paths:` equivalent, and the placement rules of `github/orchestration.md` → "Trigger scoping & parallelism" carry over unchanged: scope the docs jobs, never the orchestrator, and scope `01`'s jobs only if nothing checks the whole tree. Two GitLab specifics:
+
+- `changes:` is evaluated at **pipeline-creation** time against the MR diff (or the push range). On a branch push outside an MR it degrades to comparing against the previous commit — so, as on GitHub, make the unknown case run the job.
+- A job skipped by `rules:` simply does not exist in the pipeline, so it cannot block an MR the way a missing required check does on GitHub. The MR-approval setting to watch instead is "all jobs must succeed", which is satisfied by a pipeline that never created the job.
 
 ## Carry-over rules (unchanged from GitHub)
 
