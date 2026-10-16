@@ -1,6 +1,6 @@
 # CI/CD Principles — Platform & Language Agnostic
 
-The strategy that holds regardless of platform or language. Pair this with a platform file (`github/syntax.md` / `gitlab/syntax.md`, plus the matching `orchestration.md` for release tasks) and one language file.
+The strategy that holds regardless of platform or language. Naming of workflows, jobs and steps lives in `common/naming.md` — load it whenever you write or rename a pipeline. Pair this with a platform file (`github/syntax.md` / `gitlab/syntax.md`, plus the matching `orchestration.md` for release tasks) and one language file.
 
 ## Pipeline shape
 

@@ -36,7 +36,7 @@ jobs:
     uses: ./.github/workflows/01-ci.yml
 
   tag-sync:
-    name: Sync tag to package version
+    name: Tag sync
     needs: ci
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -52,7 +52,7 @@ jobs:
         with:
           fetch-depth: 0 # full history: need every tag
 
-      - name: Extract version from package.json
+      - name: Resolve version
         id: version
         run: |
           VERSION=$(node -p "require('./package.json').version")
@@ -86,7 +86,7 @@ jobs:
             echo "Version $VERSION is new — will release $TAG_NAME."
           fi
 
-      - name: Create immutable tag + move floating alias
+      - name: Create tag & move alias
         if: steps.gate.outputs.tag_action == 'create'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -120,8 +120,8 @@ jobs:
   # publish is irreversible → runs before docs on create (golden rule #5).
   # On preview: runs in dry-run (build + pack, no upload).
   # On skip: not called (already published in a previous event).
-  trigger-publish:
-    name: Trigger Publish
+  publish:
+    name: Publish (npm)
     needs: tag-sync
     if: needs.tag-sync.outputs.tag_action != 'skip'
     permissions:
@@ -136,16 +136,16 @@ jobs:
   #   create  → wait for publish (irreversible first), then deploy vX.Y.Z + latest
   #   skip    → independent of publish (not called), deploy dev alias
   #   preview → independent of publish result, build only (no deploy)
-  trigger-deploy-docs:
-    name: Trigger Deploy Docs
-    needs: [tag-sync, trigger-publish]
+  docs:
+    name: Docs
+    needs: [tag-sync, publish]
     if: |
       always() &&
       needs.tag-sync.result == 'success' &&
       (
         needs.tag-sync.outputs.tag_action == 'skip' ||
         needs.tag-sync.outputs.tag_action == 'preview' ||
-        needs.trigger-publish.result == 'success'
+        needs.publish.result == 'success'
       )
     permissions:
       contents: write

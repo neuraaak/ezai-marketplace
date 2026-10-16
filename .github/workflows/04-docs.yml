@@ -1,4 +1,4 @@
-name: Deploy docs
+name: 04 · Docs
 
 # Called by 02-tag-sync.yml with tag_action = create | skip | preview.
 # Also triggered on pull_request for validation builds (never deploys on PR).
@@ -46,10 +46,11 @@ permissions:
 
 jobs:
   install-deps:
-    name: Install dependencies
+    name: Install & cache deps
     uses: ./.github/workflows/00-install-deps.yml
 
   build:
+    name: Build docs
     needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -84,6 +85,7 @@ jobs:
           path: docs/.vitepress/dist
 
   deploy:
+    name: Deploy docs
     needs: build
     # Versioning is build-time (vitepress-versioning-plugin builds every version
     # into one static artifact) — deploy is a single GitHub Pages publish of that

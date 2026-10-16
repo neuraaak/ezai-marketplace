@@ -21,11 +21,11 @@ concurrency:
 
 jobs:
   install-deps:
-    name: Install dependencies
+    name: Install & cache deps
     uses: ./.github/workflows/00-install-deps.yml
 
   quality:
-    name: Lint & Format
+    name: Lint & format
     needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -46,7 +46,7 @@ jobs:
       # Runtime-dependency CVEs only: dev-tree advisories with no upstream fix
       # would block every PR without making the shipped CLI any safer.
       - run: pnpm audit --audit-level high --prod
-      - name: Catalogue is up to date
+      - name: Verify catalogue is up to date
         run: |
           pnpm build-index
           git diff --exit-code .claude-plugin/marketplace.json

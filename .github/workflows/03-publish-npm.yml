@@ -1,4 +1,4 @@
-name: Publish to npm
+name: 03 · Publish
 
 # Called by 02-tag-sync.yml with tag_action = create | preview.
 # Never called on skip (no publish when version is unchanged).
@@ -49,11 +49,11 @@ env:
 
 jobs:
   install-deps:
-    name: Install dependencies
+    name: Install & cache deps
     uses: ./.github/workflows/00-install-deps.yml
 
   validate:
-    name: Validate & Pack
+    name: Validate & build
     needs: [install-deps]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Extract and verify version
+      - name: Resolve version
         id: version
         env:
           INPUT_VERSION: ${{ inputs.version }}
@@ -96,12 +96,12 @@ jobs:
       # without uploading. No OIDC/auth needed → preview stays out of the
       # protected 'npm' environment. Mirrors the real publish step minus
       # --provenance (which requires an id-token) and the upload itself.
-      - name: Dry-run publish (validate the full publish manifest)
+      - name: Dry-run publish
         run: npm publish --dry-run --access public --ignore-scripts
 
       # The `files` field decides what ships; a typo there would publish a
       # package whose bin entry point is missing. Check the real tarball.
-      - name: Verify tarball contents
+      - name: Verify package contents
         run: |
           npm pack --ignore-scripts >/dev/null
           TARBALL=$(ls ./*.tgz | head -1)
@@ -112,7 +112,7 @@ jobs:
           echo "Tarball integrity check passed"
 
   publish:
-    name: Publish to npm (OIDC)
+    name: Publish (npm)
     needs: validate
     # preview = build/pack only; the upload needs an explicit `create`.
     if: inputs.tag_action == 'create'
@@ -135,7 +135,7 @@ jobs:
 
       # Re-run safe: treat "version already published" as success so a replayed
       # release doesn't 409. (golden rule #4 — replay-safe delivery)
-      - name: Check if version already published
+      - name: Verify version is new
         id: published
         env:
           VERSION: ${{ needs.validate.outputs.version }}
@@ -147,7 +147,7 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish
+      - name: Publish (OIDC)
         if: steps.published.outputs.exists == 'false'
         run: npm publish --provenance --access public --ignore-scripts
 
