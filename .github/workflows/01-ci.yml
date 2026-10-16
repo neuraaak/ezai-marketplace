@@ -1,4 +1,4 @@
-name: CI
+name: 01 · CI
 
 # Quality gate on every push and every pull request.
 # Release workflows never run if this one is red.
@@ -7,14 +7,7 @@ name: CI
 # release gate via workflow_call from 02-tag-sync.yml (which fires on every push to
 # main). This keeps exactly one CI run per change — no double-runs.
 on:
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'bin/**'
-      - 'tests/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/01-ci.yml'
+  pull_request: # no paths filter: prettier/build-index cover the whole tree
   workflow_call: # called by 02-tag-sync.yml as the release gate
   workflow_dispatch:
 
@@ -39,7 +32,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: '11'
@@ -50,34 +43,35 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm exec prettier --check .
+      # Runtime-dependency CVEs only: dev-tree advisories with no upstream fix
+      # would block every PR without making the shipped CLI any safer.
+      - run: pnpm audit --audit-level high --prod
+      - name: Catalogue is up to date
+        run: |
+          pnpm build-index
+          git diff --exit-code .claude-plugin/marketplace.json
 
   test:
-    name: Tests (Node ${{ matrix.node }})
+    name: Tests
     needs: [install-deps] # parallel with quality — no gate between them
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     permissions:
       contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        node: ['24.16.0', '24']
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: '11'
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: '${{ matrix.node }}'
+          node-version: '24.16.0'
           cache: pnpm # cache hit from install job — no network download
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-      - name: Coverage (threshold check)
-        if: matrix.node == '24.16.0'
-        run: pnpm test:coverage
-      - uses: actions/upload-artifact@v4
-        if: matrix.node == '24.16.0' && always()
+      # test:coverage runs the full suite + the >=70% threshold gate in one pass.
+      - run: pnpm test:coverage
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
         with:
           name: coverage-report
           path: coverage/

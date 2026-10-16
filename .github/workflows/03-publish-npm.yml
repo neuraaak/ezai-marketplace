@@ -6,31 +6,36 @@ name: Publish to npm
 #   create  → validate + upload to npm (OIDC, no stored token)
 #   preview → validate + publish --dry-run, no upload (pipeline resilience check)
 #
-# Manual workflow_dispatch always behaves like 'create' (full publish).
+# Gating is keyed on the `tag_action` INPUT, never on github.event_name: in a
+# reusable workflow the event is inherited from the caller (`push`), so an
+# `event_name == 'workflow_dispatch'` escape hatch would let a manual run from
+# an arbitrary ref fire the irreversible npm upload. A manual dispatch therefore
+# defaults to `preview` and must opt in to `create` explicitly.
+#
 # Requires an npm Trusted Publisher configured at:
 # https://www.npmjs.com/settings/<org>/packages → ezai-marketplace → Publishing
 
 on:
   workflow_dispatch:
     inputs:
-      skip_tests:
-        description: 'Skip tests before publishing (not recommended)'
-        required: false
-        default: 'false'
+      tag_action:
+        description: 'create = upload to npm (irreversible) | preview = build + pack only'
+        required: true
         type: choice
-        options: ['false', 'true']
+        default: preview
+        options:
+          - preview
+          - create
   workflow_call:
     inputs:
       version:
         required: true
         type: string
-      tag:
-        required: true
-        type: string
       tag_action:
         description: 'create | preview — controls whether the package is actually uploaded'
-        required: true
+        required: false
         type: string
+        default: preview
 
 permissions:
   contents: read # minimum for checkout in 00-install-deps nested job
@@ -51,6 +56,7 @@ jobs:
     name: Validate & Pack
     needs: [install-deps]
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
       contents: read
     outputs:
@@ -84,9 +90,7 @@ jobs:
 
       - run: pnpm lint
 
-      - name: Run tests
-        if: github.event.inputs.skip_tests != 'true'
-        run: pnpm test
+      - run: pnpm test:coverage
 
       # Replays the full publish path (manifest, files, registry validation)
       # without uploading. No OIDC/auth needed → preview stays out of the
@@ -95,12 +99,25 @@ jobs:
       - name: Dry-run publish (validate the full publish manifest)
         run: npm publish --dry-run --access public --ignore-scripts
 
+      # The `files` field decides what ships; a typo there would publish a
+      # package whose bin entry point is missing. Check the real tarball.
+      - name: Verify tarball contents
+        run: |
+          npm pack --ignore-scripts >/dev/null
+          TARBALL=$(ls ./*.tgz | head -1)
+          for entry in package/bin/ezai.js package/src/catalogue.js package/.claude-plugin/marketplace.json; do
+            tar -tzf "$TARBALL" | grep -qx "$entry" || {
+              echo "::error::Missing from published tarball: $entry"; exit 1; }
+          done
+          echo "Tarball integrity check passed"
+
   publish:
     name: Publish to npm (OIDC)
     needs: validate
-    # preview = build/pack only; upload only on create or manual dispatch
-    if: inputs.tag_action == 'create' || github.event_name == 'workflow_dispatch'
+    # preview = build/pack only; the upload needs an explicit `create`.
+    if: inputs.tag_action == 'create'
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     permissions:
       contents: read
       id-token: write # mint OIDC token for npm Trusted Publishing

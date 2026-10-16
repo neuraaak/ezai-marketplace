@@ -20,6 +20,16 @@ on:
       - 'pnpm-lock.yaml'
       - 'cliff.toml'
   workflow_dispatch:
+    inputs:
+      tag_action:
+        description: 'create = release docs | skip = dev docs | preview = build only'
+        required: true
+        type: choice
+        default: preview
+        options:
+          - preview
+          - skip
+          - create
   workflow_call: # on release/skip: called by 02-tag-sync after publish
     inputs:
       version:
@@ -42,6 +52,7 @@ jobs:
   build:
     needs: [install-deps]
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
       contents: read
     concurrency:
@@ -77,8 +88,11 @@ jobs:
     # Versioning is build-time (vitepress-versioning-plugin builds every version
     # into one static artifact) — deploy is a single GitHub Pages publish of that
     # artifact. PRs and preview only validate the build; create/skip deploy.
-    if: github.event_name != 'pull_request' && (inputs.tag_action == 'create' || inputs.tag_action == 'skip')
+    # Keyed on the tag_action input alone: a reusable workflow inherits the
+    # caller's event, and a pull request supplies no input at all.
+    if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       pages: write # deploy the Pages artifact
       id-token: write # OIDC for actions/deploy-pages
