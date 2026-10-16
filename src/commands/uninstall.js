@@ -1,7 +1,6 @@
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
-const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
+const { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms } = require('../platforms');
 
 function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
   for (const platform of platformDirs) {
@@ -23,8 +22,7 @@ function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
 }
 
 async function runUninstall(skillName, options, catalogue) {
-  const baseDestRoot = options.dest || os.homedir();
-  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
+  const agentsSkillsDir = resolveAgentsSkillsDir(options.dest);
 
   // Source de vérité : seuls les skills du catalogue peuvent être désinstallés
   const { plugins } = await catalogue.fetchCatalogue();

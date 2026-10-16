@@ -12,7 +12,7 @@ async function fetchCatalogue() {
     }
     const data = await res.json();
     if (!Array.isArray(data.plugins)) {
-      throw new Error('Catalogue distant invalide : champ "plugins" manquant ou non-tableau');
+      throw new TypeError('Catalogue distant invalide : champ "plugins" manquant ou non-tableau');
     }
     return data;
   }

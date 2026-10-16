@@ -68,78 +68,81 @@ const VALID_ASSERTION_TYPES = new Set([
   'no_logic_change',
 ]);
 
+// Chaque niveau retourne ses messages au lieu d'incrémenter un compteur partagé :
+// le comptage et l'affichage restent à la charge de validateEvals.
+function validateAssertion(a, loc) {
+  const warnings = [];
+  if (!VALID_ASSERTION_TYPES.has(a.type)) {
+    warnings.push(
+      `${loc} assertion "${a.id ?? '?'}" : type "${a.type}" inconnu (valides : ${[...VALID_ASSERTION_TYPES].join(', ')})`
+    );
+  }
+  if (typeof a.value !== 'string' || a.value.trim() === '') {
+    warnings.push(`${loc} assertion "${a.id ?? '?'}" : value manquante`);
+  }
+  return warnings;
+}
+
+function validateEval(ev, prefix) {
+  const loc = `${prefix}#${ev.id ?? '?'}`;
+  const warnings = [];
+  if (typeof ev.id !== 'number') warnings.push(`${loc} : id doit être un number`);
+  if (typeof ev.prompt !== 'string' || ev.prompt.trim() === '') {
+    warnings.push(`${loc} : prompt manquant`);
+  }
+  if (!Array.isArray(ev.assertions)) {
+    warnings.push(`${loc} : assertions[] absent (requis depuis Phase 4)`);
+    return warnings;
+  }
+  for (const a of ev.assertions) warnings.push(...validateAssertion(a, loc));
+  return warnings;
+}
+
+function validateEvalFile(filePath, prefix) {
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return [`${prefix} : JSON invalide`];
+  }
+
+  const warnings = [];
+  if (typeof data.skill_name !== 'string') {
+    warnings.push(`${prefix} : champ skill_name manquant ou non-string`);
+  }
+  if (!Array.isArray(data.evals)) {
+    warnings.push(`${prefix} : champ evals[] manquant`);
+    return warnings;
+  }
+
+  for (const ev of data.evals) warnings.push(...validateEval(ev, prefix));
+
+  if (data.skill_name && !data.skill_name.startsWith('ezai-')) {
+    warnings.push(`${prefix} : skill_name "${data.skill_name}" ne commence pas par "ezai-"`);
+  }
+  return warnings;
+}
+
 function validateEvals(pluginsDir) {
   if (!fs.existsSync(pluginsDir)) return;
-  let warnings = 0;
+  const warnings = [];
 
   for (const pluginDir of findPluginDirs(pluginsDir)) {
-    const dirName = path.basename(pluginDir);
     const evalsDir = path.join(pluginDir, 'evals');
     if (!fs.existsSync(evalsDir)) continue;
 
     for (const file of fs.readdirSync(evalsDir)) {
       if (!file.startsWith('eval_set_') || !file.endsWith('.json')) continue;
-      const filePath = path.join(evalsDir, file);
-      let data;
-      try {
-        data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      } catch {
-        console.warn(`  [eval] ${dirName}/${file} : JSON invalide`);
-        warnings++;
-        continue;
-      }
-
-      const prefix = `  [eval] ${dirName}/${file}`;
-      if (typeof data.skill_name !== 'string') {
-        console.warn(`${prefix} : champ skill_name manquant ou non-string`);
-        warnings++;
-      }
-      if (!Array.isArray(data.evals)) {
-        console.warn(`${prefix} : champ evals[] manquant`);
-        warnings++;
-        continue;
-      }
-
-      for (const ev of data.evals) {
-        const loc = `${prefix}#${ev.id ?? '?'}`;
-        if (typeof ev.id !== 'number') {
-          console.warn(`${loc} : id doit être un number`);
-          warnings++;
-        }
-        if (typeof ev.prompt !== 'string' || ev.prompt.trim() === '') {
-          console.warn(`${loc} : prompt manquant`);
-          warnings++;
-        }
-        if (!Array.isArray(ev.assertions)) {
-          console.warn(`${loc} : assertions[] absent (requis depuis Phase 4)`);
-          warnings++;
-          continue;
-        }
-        for (const a of ev.assertions) {
-          if (!VALID_ASSERTION_TYPES.has(a.type)) {
-            console.warn(
-              `${loc} assertion "${a.id ?? '?'}" : type "${a.type}" inconnu (valides : ${[...VALID_ASSERTION_TYPES].join(', ')})`
-            );
-            warnings++;
-          }
-          if (typeof a.value !== 'string' || a.value.trim() === '') {
-            console.warn(`${loc} assertion "${a.id ?? '?'}" : value manquante`);
-            warnings++;
-          }
-        }
-      }
-
-      if (data.skill_name && !data.skill_name.startsWith('ezai-')) {
-        console.warn(`${prefix} : skill_name "${data.skill_name}" ne commence pas par "ezai-"`);
-        warnings++;
-      }
+      const prefix = `  [eval] ${path.basename(pluginDir)}/${file}`;
+      warnings.push(...validateEvalFile(path.join(evalsDir, file), prefix));
     }
   }
 
-  if (warnings === 0) {
+  for (const warning of warnings) console.warn(warning);
+  if (warnings.length === 0) {
     console.log('  Evals : OK (aucune anomalie de schéma détectée)');
   } else {
-    console.warn(`  Evals : ${warnings} avertissement(s) de schéma`);
+    console.warn(`  Evals : ${warnings.length} avertissement(s) de schéma`);
   }
 }
 

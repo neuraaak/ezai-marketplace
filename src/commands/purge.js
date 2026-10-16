@@ -1,7 +1,6 @@
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
-const { resolvePlatforms } = require('../platforms');
+const { resolveAgentsSkillsDir, resolvePlatforms } = require('../platforms');
 const { unlinkFromPlatforms } = require('./uninstall');
 
 const MANAGED_PREFIX = 'ezai-';
@@ -29,8 +28,7 @@ function collectManagedSkills(agentsSkillsDir, platformDirs) {
 }
 
 async function runPurge(options, catalogue) {
-  const baseDestRoot = options.dest || os.homedir();
-  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
+  const agentsSkillsDir = resolveAgentsSkillsDir(options.dest);
   const platformDirs = options._platformDirs || resolvePlatforms(options);
 
   // Obsolète = skill géré (ezai-) présent en local mais absent du catalogue courant.

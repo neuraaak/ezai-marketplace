@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
@@ -8,6 +9,23 @@ const DEFAULT_PLATFORMS = [
   { name: 'Gemini CLI', dir: path.join(os.homedir(), '.gemini') },
   { name: 'Copilot', dir: path.join(os.homedir(), '.copilot') },
 ];
+
+// `--dest` vient de la ligne de commande et sert de racine à des rmSync/mkdirSync :
+// il est résolu en absolu et doit désigner un dossier existant, pour qu'une faute
+// de frappe ne fabrique pas une arborescence ailleurs sur le disque.
+function resolveAgentsSkillsDir(dest) {
+  if (dest === undefined || dest === null) {
+    return path.join(os.homedir(), '.agents', 'skills');
+  }
+  if (typeof dest !== 'string' || dest.length === 0) {
+    throw new Error('--dest : chemin invalide');
+  }
+  const root = path.resolve(dest);
+  if (!fs.statSync(root, { throwIfNoEntry: false })?.isDirectory()) {
+    throw new Error(`--dest : dossier introuvable — ${root}`);
+  }
+  return path.join(root, '.agents', 'skills');
+}
 
 function resolvePlatforms(options = {}) {
   const deployAll = !options.claude && !options.gemini && !options.copilot;
@@ -20,4 +38,4 @@ function resolvePlatforms(options = {}) {
   });
 }
 
-module.exports = { DEFAULT_PLATFORMS, resolvePlatforms };
+module.exports = { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms };

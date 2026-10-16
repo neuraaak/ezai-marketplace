@@ -1,7 +1,6 @@
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
-const { DEFAULT_PLATFORMS, resolvePlatforms } = require('../platforms');
+const { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms } = require('../platforms');
 
 // Entrées (fichier ou dossier) à la racine d'un plugin qui sont copiées chez
 // l'utilisateur. Tout le reste (`.claude-plugin/`, `evals/`, `graphify-out/`, …)
@@ -50,6 +49,25 @@ function collectRuntimeFiles(pluginDir, include = RUNTIME_INCLUDE) {
   return files;
 }
 
+// Libère `dest` avant la pose du lien. Retourne false si la place est prise par
+// un vrai dossier : on ne supprime jamais autre chose qu'un lien.
+function clearLinkTarget(dest, platformName) {
+  try {
+    fs.readlinkSync(dest);
+    fs.rmSync(dest, { recursive: true, force: true });
+    return true;
+  } catch (e) {
+    if (e.code === 'ENOENT') return true;
+    if (e.code === 'EINVAL') {
+      console.warn(
+        `  [warn] ${platformName} : ${dest} est un dossier réel, non remplacé — supprimez-le manuellement si nécessaire`
+      );
+      return false;
+    }
+    throw e;
+  }
+}
+
 function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS) {
   const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
   let linked = 0;
@@ -69,22 +87,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
       const src = path.resolve(path.join(agentsDir, skillName));
       const dest = path.join(skillsDir, skillName);
       try {
-        try {
-          fs.readlinkSync(dest);
-          fs.rmSync(dest, { recursive: true, force: true });
-        } catch (e) {
-          if (e.code === 'ENOENT') {
-            // dest n'existe pas — ok
-          } else if (e.code === 'EINVAL') {
-            // vrai dossier (pas un lien) — ne pas supprimer
-            console.warn(
-              `  [warn] ${platform.name} : ${dest} est un dossier réel, non remplacé — supprimez-le manuellement si nécessaire`
-            );
-            continue;
-          } else {
-            throw e;
-          }
-        }
+        if (!clearLinkTarget(dest, platform.name)) continue;
         fs.symlinkSync(src, dest, symlinkType);
         console.info(`  ↔ ${platform.name.padEnd(12)} → ${dest}`);
         linked++;
@@ -110,8 +113,7 @@ async function runInstall(pluginName, options, catalogue) {
     throw new Error(`Plugin "${pluginName}" introuvable`);
   }
 
-  const baseDestRoot = options.dest || os.homedir();
-  const agentsSkillsDir = path.join(baseDestRoot, '.agents', 'skills');
+  const agentsSkillsDir = resolveAgentsSkillsDir(options.dest);
   const platformDirs = options._platformDirs || resolvePlatforms(options);
   const installedNames = [];
 
