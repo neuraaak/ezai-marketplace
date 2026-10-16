@@ -20,6 +20,10 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Two consumers only (quality, test): no type-check job in a plain-JS repo,
+  # and `security` audits the lockfile without installing. The ~3-consumer
+  # heuristic would drop this primer; it is kept on purpose, so this chain
+  # reads identically to the Python repos that share the 00-04 architecture.
   install-deps:
     name: Install & cache deps
     uses: ./.github/workflows/00-install-deps.yml

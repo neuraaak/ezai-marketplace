@@ -431,7 +431,9 @@ A manual `workflow_dispatch` of `03` has no upstream gate, which is the one case
 
 ### Call the cache primer once
 
-`00` pays off from about three consumers (`common/principles.md` → "Caching"). In the cascade, `01` has three (`quality`, `type-check`, `security` — `test` too); `03` has one job that installs (`validate`, since `publish` only downloads the artifact) and `04` has one (`build`). **So `00` is called by `01` only.** In `03` and `04` the primer is a serial job that warms a cache its single consumer would have warmed itself — and inside `02`'s cascade that cache is already hot from the gate.
+`00` pays off from about three consumers (`common/principles.md` → "Caching"). **So `00` is called by `01` only.** In `03` and `04` the primer is a serial job that warms a cache its single consumer would have warmed itself (`validate` and `build`; `publish` and `deploy` only move artifacts) — and inside `02`'s cascade that cache is already hot from the gate.
+
+**Count the jobs that actually install.** In `01` that is typically `quality`, `type-check` and `test` — but not every role installs: a dependency audit reads the lockfile, so a `security` job that only audits adds a job without adding a consumer. A repo with no type system is therefore down to two, and the heuristic says drop the primer. Keeping it there is the fleet-symmetry override of `common/principles.md`: legitimate, but it belongs in a comment on the job, next to the count, so the arithmetic is visible to whoever reads it next.
 
 ### What parallelizes — and what must not
 
