@@ -14,7 +14,7 @@ enabled with `corepack enable`:
 
 ```json
 {
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@12.11.2",
   "engines": { "node": ">=24" }
 }
 ```
@@ -32,7 +32,7 @@ Volta remains an alternative that pins both Node and pnpm in one place:
 {
   "volta": {
     "node": "24.1.0",
-    "pnpm": "9.12.0"
+    "pnpm": "12.11.2"
   }
 }
 ```
@@ -48,10 +48,69 @@ Volta remains an alternative that pins both Node and pnpm in one place:
     "lint": "eslint src/",
     "format": "prettier --write src/",
     "test": "node --test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm lint && pnpm typecheck && pnpm test"
   }
 }
 ```
+
+`check` is the project's command surface — the aggregate the README, the CI job
+and the pre-commit hook all call, so a gate is declared once and never drifts
+between the three. The same role `poe check` plays in Python.
+
+`node --test` runs `.ts` test files directly: Node 24 strips types natively, no
+build step and no transpiler for tests. On Node 22 the same script needs
+`--experimental-strip-types`. Type stripping erases annotations, it does not
+check them — `typecheck` stays a separate gate.
+
+## Which bucket a dependency goes in
+
+`package.json` has no dependency groups: it has four buckets, and only the
+first one ships to whoever installs your package.
+
+| Bucket                 | Holds                                             | Installed by                    |
+| :--------------------- | :------------------------------------------------ | :------------------------------ |
+| `dependencies`         | what the published code imports at runtime        | every consumer, always          |
+| `devDependencies`      | the toolchain: linter, types, test runner, build  | `pnpm install`, never consumers |
+| `peerDependencies`     | what the **host app** must provide (`react`, `vue`) | nobody — it is a constraint     |
+| `optionalDependencies` | native/platform extras whose install may fail     | consumers, failure tolerated    |
+
+A tool in `dependencies` is downloaded by every consumer of your package, for
+nothing. A runtime import in `devDependencies` builds fine locally and crashes
+in production, where only `dependencies` was installed.
+
+```bash
+pnpm install --frozen-lockfile   # everything, CI and local
+pnpm install --prod              # dependencies only — what the runtime image gets
+```
+
+For a library, a framework belongs in `peerDependencies` (plus
+`devDependencies` so the repo can build it), never in `dependencies` — that is
+how two Reacts end up in one bundle.
+
+## Pinning versions across a monorepo — pnpm catalogs
+
+Declare each shared version once in `pnpm-workspace.yaml`, reference it with
+`catalog:` everywhere:
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - "packages/*"
+catalog:
+  react: ^19.0.0
+  typescript: ^5.7.0
+```
+
+```json
+// packages/ui/package.json
+{ "dependencies": { "react": "catalog:" } }
+```
+
+An upgrade is then one line in one file, and two packages of the workspace can
+no longer drift onto different majors of the same dependency. `pnpm` resolves
+`catalog:` at install time; the lockfile and published `package.json` carry the
+real range, so consumers never see the alias.
 
 ## `tsconfig.json` (TS 5.x)
 
@@ -72,7 +131,7 @@ Volta remains an alternative that pins both Node and pnpm in one place:
 ```
 
 - `strict: true` non-negotiable
-- `types: []` speeds up compilation by disabling automatic type inclusion
+- `types: []` speeds up compilation by disabling automatic type inclusion — it also drops the Node globals (`process`, `Buffer`, `__dirname`); use `types: ["node"]` if you touch them. Explicit `node:*` imports keep their types either way
 - `noUncheckedIndexedAccess` catches array-index bugs
 
 > **Forward note — TypeScript 7 (`tsgo`):** the compiler is being rewritten in Go
@@ -201,6 +260,8 @@ node --permission --allow-fs-read="./data" --allow-fs-write="./output" app.js
 - `"type": "module"` in `package.json`.
 - `strict: true` in `tsconfig.json`.
 - `pnpm-lock.yaml` committed; `--frozen-lockfile` in CI.
+- A `check` script aggregating lint + typecheck + test, called by README, CI and hooks.
+- Runtime imports in `dependencies`, toolchain in `devDependencies`, framework of a library in `peerDependencies`.
 - One lint/format toolchain: Biome (recommended) or ESLint flat config + Prettier.
 - Prefer the `Temporal` API over `Date` for new code where the runtime ships it.
 - `using` / `await using` for resource management.

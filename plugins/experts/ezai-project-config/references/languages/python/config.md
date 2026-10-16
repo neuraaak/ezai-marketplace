@@ -168,6 +168,37 @@ group is unreachable for anyone who installed from PyPI.
 Only extras can be self-referenced (`pkg[all] = ["pkg[postgres]", …]`); groups
 compose with `include-group` instead, and may not be cyclic.
 
+## Monorepo — uv workspaces
+
+One lockfile, one `.venv`, several packages. Each member keeps its own
+`pyproject.toml`; the root declares the workspace:
+
+```toml
+# pyproject.toml (root)
+[tool.uv.workspace]
+members = ["packages/*"]
+
+# a member depending on another member
+[project]
+dependencies = ["my-core"]
+
+[tool.uv.sources]
+my-core = { workspace = true }
+```
+
+```bash
+uv sync                      # resolves the whole workspace at once
+uv run --package my-api pytest   # act on one member
+```
+
+`[tool.uv.sources]` is dev-only metadata: on publish, `my-core` resolves from
+PyPI like any other dependency, so a workspace member stays installable alone.
+Dependency groups are declared per member, not at the root — a package that
+needs `pytest` says so itself.
+
+Reach for a workspace when the packages are released together. Two products on
+their own release cadence are two repositories.
+
 ## `pre-commit` — config
 
 ```yaml
