@@ -65,7 +65,8 @@ Never hard-code a fixed stack. A poetry + mypy + sphinx project must yield a poe
 
 ## Docs build / deploy
 
-- mkdocs + mike (versioned) — `mkdocs.yml` + `mike` in deps · `mike deploy --push --update-aliases <version> latest` (pre-release: `mike deploy --push <version>`, no alias move)
+- mkdocs + mike (versioned) — `mkdocs.yml` + `mike` in deps · `mike deploy --push --update-aliases <version> latest` then `mike set-default --push latest` (pre-release: `mike deploy --push <version>`, no alias move). Family **A** (branch-push): deploy needs `contents: write` only — see `github/orchestration.md` → `04-docs`
+- mike, dry-run — validate the versioning config without touching the docs branch · same command **without** `--push`
 - mkdocs (single version) — `mkdocs.yml`, no mike · `mkdocs gh-deploy --force`
 - sphinx — `docs/conf.py` · `sphinx-build docs _site`
 

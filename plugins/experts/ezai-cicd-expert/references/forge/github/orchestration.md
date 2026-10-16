@@ -156,6 +156,7 @@ jobs:
   tag-sync:
     needs: ci
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     permissions:
       contents: write                 # push tags
     outputs:
@@ -165,7 +166,16 @@ jobs:
     steps:
       - uses: actions/checkout@<sha>
         with: { fetch-depth: 0 }      # full history: need every tag
-      # ... read VERSION from ‹version-file› into steps.version (language-specific one-liner) ...
+      - name: Extract version from ‹version-file›
+        id: version
+        run: |
+          # package.json:   VERSION=$(node -p "require('./package.json').version")
+          # pyproject.toml: VERSION=$(grep -E '^version\s*=\s*"' pyproject.toml | head -1 \
+          #                   | sed 's/.*version\s*=\s*"\([^"]*\)".*/\1/')
+          VERSION=‹read-version›
+          # An empty version must stop the release, not tag `v`.
+          test -n "$VERSION" || { echo "::error::No version found in ‹version-file›"; exit 1; }
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Determine tag action
         id: gate
         run: |
@@ -210,15 +220,17 @@ jobs:
       ( needs.tag-sync.outputs.tag_action == 'skip' ||
         needs.tag-sync.outputs.tag_action == 'preview' ||
         needs.trigger-publish.result == 'success' )
-    permissions:
-      contents: write                 # versioned-docs tool pushes to the docs branch
-      pages: write
-      id-token: write
+    permissions:                      # grant only what the docs mechanism needs
+      contents: write                 #   branch-push tool (mike) — drop for Pages-artifact
+      pages: write                    #   Pages-artifact deploy — drop for a branch-push tool
+      id-token: write                 #   idem (OIDC for deploy-pages)
     uses: ./.github/workflows/04-docs.yml
     with:
       version:    ${{ needs.tag-sync.outputs.version }}
       tag_action: ${{ needs.tag-sync.outputs.tag_action }}
 ```
+
+**Keep `preview` in the docs condition.** Dropping the `preview` branch appears to work — on `preview` the publish job runs (dry-run) and succeeds, so `needs.trigger-publish.result == 'success'` happens to be true. That is an accident: the moment publish is also skipped on `preview`, docs silently stop running. Name all three modes explicitly.
 
 **Docs gating subtlety.** `trigger-deploy-docs` uses `always()` because `skip`/`preview` deliberately do **not** run publish, so the job must not inherit `trigger-publish`'s `skipped` result as a failure. The explicit `if` re-encodes the intent: deploy when tag-sync succeeded **and** either we're on a non-publish path (`skip`/`preview`) **or** publish actually succeeded (`create`). This preserves **publish → docs** ordering on release while letting the other two modes proceed independently.
 
@@ -228,7 +240,7 @@ jobs:
 
 ## `03-publish` — build always, upload on `create`
 
-The called publish workflow keys every mutating step on `tag_action`. On `preview` it builds and packages only (dry-run resilience check); on `create` it uploads via OIDC. It is never called on `skip`. The actual build/package/publish commands and the existence-check come from the language tool-registry — the **gating** is VCS-level:
+The called publish workflow keys every mutating step on the `tag_action` **input** — never on `github.event_name`. On `preview` it builds and packages only (dry-run resilience check); on `create` it uploads via OIDC. It is never called on `skip`. The actual build/package/publish commands and the existence-check come from the language tool-registry — the **gating** is VCS-level:
 
 ```yaml
 # 03-publish.yml (publish job, abbreviated)
@@ -238,14 +250,25 @@ on:
       version:    { required: true, type: string }
       tag:        { required: true, type: string }
       tag_action: { required: true, type: string }   # create | preview
-  workflow_dispatch:                                  # manual run behaves like create
+  workflow_dispatch: # manual run: defaults to preview, `create` is opt-in
+    inputs:
+      tag_action:
+        description: "create = upload (irreversible) | preview = build only"
+        required: true
+        type: choice
+        default: preview
+        options: [preview, create]
 
 jobs:
   validate:                          # ‹lint› + ‹test› + ‹package --dry-run› (runs on every mode)
     ...
   publish:
     needs: validate
-    if: inputs.tag_action == 'create' || github.event_name == 'workflow_dispatch'
+    # Gate on the INPUT alone. `github.event_name` is inherited from the caller
+    # in a reusable workflow (so `== 'workflow_call'` never matches), and an
+    # `event_name == 'workflow_dispatch'` escape hatch would let a manual run
+    # from an arbitrary ref fire the irreversible upload.
+    if: inputs.tag_action == 'create'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -270,7 +293,18 @@ jobs:
 
 ## `04-docs` — build always, deploy by mode
 
-Docs mirror publish: build on every path (PR validation included), deploy conditionally on `tag_action`. The `‹docs-build›` command and the versioned-docs tool come from the language tool-registry (e.g. `mike` for MkDocs); the **deploy mechanics and gating** are VCS-level.
+Docs mirror publish: build on every path (PR validation included), deploy conditionally on `tag_action`. The `‹docs-build›` command and the versioned-docs tool come from the language tool-registry; the **deploy mechanics and gating** are VCS-level.
+
+**Two families — pick one before writing the workflow.** They differ in where versioning happens, and that decides the job split *and* the permissions:
+
+| Family                                                          | Versioning            | Deploy                                      | Permissions on deploy              |
+| :-------------------------------------------------------------- | :-------------------- | :------------------------------------------ | :--------------------------------- |
+| **A — branch-push tool** (`mike` for MkDocs, `gh-pages` for others) | at **deploy** time, one commit per version on the docs branch | the tool pushes (`--push`) | `contents: write` only             |
+| **B — build-time versioning** (e.g. a VitePress versioning plugin) | at **build** time, every version compiled into one artifact | `upload-pages-artifact` + `deploy-pages`   | `pages: write` + `id-token: write` |
+
+Family **A** needs the three `tag_action` deploy steps below (the mode changes the *command*). Family **B** has a single generic deploy job — the mode only decides *whether* it runs — so the three-step block collapses into one `if`. Never grant both permission sets: `contents: write` on a Pages-artifact deploy is useless privilege, and `pages: write` on a branch-push tool is too.
+
+**The build job generates its own inputs.** All three reference chains produce part of the docs during the build: a changelog (`orhun/git-cliff-action`, pinned), a coverage HTML report, an architecture graph. They are build steps, not committed files — and they need `fetch-depth: 0` (changelog and "last updated" both read the full history).
 
 ```yaml
 # 04-docs.yml (deploy job, abbreviated — versioned docs)
@@ -288,33 +322,54 @@ jobs:
     ...
   deploy:
     needs: build
-    if: github.event_name != 'pull_request'    # PRs only validate the build
+    # Gate on the INPUT, never on github.event_name: a reusable workflow
+    # inherits the caller's event (`push`), and a pull_request supplies no
+    # input at all — so `event_name != 'pull_request'` would also let a manual
+    # dispatch from an arbitrary ref push the `latest` alias.
+    if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
-      contents: write                # versioned-docs tool pushes to the docs branch
-      pages: write
-      id-token: write
-    environment: { name: github-pages, url: "${{ steps.deployment.outputs.page_url }}" }
+      contents: write                # family A only (branch-push tool)
     concurrency:
       group: pages
       cancel-in-progress: false      # never interrupt a live Pages deploy
     steps:
       - uses: actions/checkout@<sha>
         with: { fetch-depth: 0 }     # versioned-docs tool needs full history
+      - run: ‹git config user.name/email as github-actions[bot]›
       - name: Deploy (create — versioned release)
         if: inputs.tag_action == 'create'
-        run: ‹docs-deploy version=$VERSION + move 'latest' alias›
+        run: ‹docs-deploy $VERSION + 'latest' alias›  # then: set the default to 'latest'
       - name: Deploy (skip — dev alias for main between releases)
         if: inputs.tag_action == 'skip'
         run: ‹docs-deploy dev alias›
-      - name: Deploy (preview — local build check, no push)
-        if: inputs.tag_action == 'preview' || inputs.tag_action == ''
-        run: ‹docs-deploy without push›   # validates the versioning config without touching the docs branch
+      - name: Validate (preview — no push)
+        if: inputs.tag_action == 'preview'
+        run: ‹docs-deploy without push›   # validates the versioning config, touches nothing
+```
+
+The three steps are mutually exclusive on `tag_action`: **`create`** publishes the version and moves the `latest` alias — and sets it as the site default — now that publish has succeeded upstream; **`skip`** refreshes the `dev` alias without touching any release version; **`preview`** runs the same command **without pushing**, so a broken versioning config fails in CI instead of on the docs branch. `preview` is also reachable from `workflow_dispatch`, which must default to it: the choice input lists `preview | skip | create` with `preview` first.
+
+**Family B** keeps the same `on:` block, the same build job and the same input-keyed `if`, but the deploy job holds one step:
+
+```yaml
+  deploy:
+    needs: build
+    if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write                   # no contents: write — nothing is pushed to a branch
+      id-token: write
+    environment: { name: github-pages, url: "${{ steps.deployment.outputs.page_url }}" }
+    concurrency: { group: pages, cancel-in-progress: false }
+    steps:
       - id: deployment
-        if: inputs.tag_action == 'create' || inputs.tag_action == 'skip'
         uses: actions/deploy-pages@<sha>
 ```
 
-The three deploy steps are mutually exclusive on `tag_action`: **`create`** moves the `latest` alias to the new release (publish already succeeded upstream); **`skip`** refreshes the `dev` alias without touching any release version; **`preview`** runs the deploy command **without pushing** to validate the versioning config only.
+Here `preview` and `pull_request` are covered for free: the build job still runs (and `upload-pages-artifact` still validates the output), only the deploy is gated.
 
 ## Reusable & composite workflows — the two tools
 
@@ -323,7 +378,7 @@ The three deploy steps are mutually exclusive on `tag_action`: **`create`** move
 
 ## Simple (unversioned) Pages deploy
 
-When there's no version dimension, skip the versioned-docs tool — upload an artifact and deploy:
+When there's no version dimension at all, skip the versioning tool entirely — upload an artifact and deploy (this is family B with a single version):
 
 ```yaml
 permissions: { contents: read, pages: write, id-token: write }

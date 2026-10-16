@@ -66,6 +66,7 @@ Never hard-code a fixed stack. An npm + biome + jest project must yield a differ
 ## Docs build / deploy
 
 - vitepress — `.vitepress/config.*` · `vitepress build docs`, deploy the generated `docs/.vitepress/dist`
+- vitepress + versioning plugin — `versioning` key in `.vitepress/config.*` · same build command: every version is compiled into one artifact. Family **B** (build-time versioning): deploy is a single `upload-pages-artifact` + `deploy-pages`, needing `pages: write` + `id-token: write` and **no** `contents: write` — see `github/orchestration.md` → `04-docs`
 - docusaurus — `docusaurus.config.*` · `docusaurus build`, deploy `build/`
 - typedoc — `typedoc.json` or `typedoc` in deps · `typedoc` (API reference, output to `docs/api`)
 

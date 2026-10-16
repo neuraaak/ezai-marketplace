@@ -18,6 +18,7 @@ Lint / format-check / type-check / security-scan are independent and gate the re
 - **Pin the package manager:** either `pnpm/action-setup` with an explicit `version:`, or `corepack enable && corepack prepare pnpm@<version> --activate`. Pick one — `packageManager` in `package.json` plus a floating action version is how pnpm drifts between runners.
 - **Publish auth:** prefer OIDC + `npm publish --provenance` (signed attestation); fall back to `NPM_TOKEN`. Both resolutions are in the registry.
 - **Always `--ignore-scripts` on publish:** the publish job holds the release credential; a compromised `prepublishOnly` must not run there.
+- **`--ignore-scripts` on a docs/build install too**, then `pnpm rebuild <pkg…>` for the handful of packages that genuinely need a native binary (esbuild, sharp…). This cuts arbitrary install-time code execution down to an explicit list.
 - **Dependency audit scope:** `pnpm audit --audit-level high --prod`. The dev tree routinely carries advisories with no upstream fix — gating on them blocks every PR without making the shipped package any safer.
 
 ## Worked example (pnpm + eslint + tsc + vitest)
