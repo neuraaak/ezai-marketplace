@@ -7,7 +7,7 @@ order. The number sorts them in the file tree and documents the cascade.
 00-install-deps  ← primes the pnpm store cache (keyed on pnpm-lock.yaml)
 01-ci            ← lint, format, catalogue drift, audit; tests + coverage gate
 02-tag-sync      ← orchestrator: CI gate → tag → publish → docs
-03-publish-npm   ← npm publish via OIDC Trusted Publishing (no stored token)
+03-publish       ← npm publish via OIDC Trusted Publishing (no stored token)
 04-docs          ← VitePress build + GitHub Pages deploy
 ```
 
@@ -51,7 +51,7 @@ irreversible, docs are replayable.
 
 ## Replay safety
 
-- `03-publish-npm` checks npm for the version first and treats "already
+- `03-publish` checks npm for the version first and treats "already
   published" as success, so a replayed release does not 409.
 - `03` validates with `npm publish --dry-run` and asserts the packed tarball
   really contains the `bin` entry point and the catalogue before the real
@@ -75,7 +75,7 @@ pnpm build-index && git diff --exit-code .claude-plugin/marketplace.json
 pnpm audit --audit-level high --prod
 pnpm test:coverage
 
-# 03-publish-npm (validation only)
+# 03-publish (validation only)
 npm publish --dry-run --access public --ignore-scripts
 npm pack --ignore-scripts && tar -tzf ./*.tgz
 
