@@ -289,7 +289,11 @@ jobs:
 
 **Disable lifecycle scripts when publishing.** `npm publish --ignore-scripts` (and equivalents): the publish job is the one place holding a live release credential, and a compromised `prepublishOnly` anywhere in the tree would run there.
 
-**Trusted Publishing + reusable workflows.** When `03` is invoked via `workflow_call` from `02`, the npm/PyPI Trusted Publisher must be registered against **the file that contains the publish job** (`03-publish.yml`) and its `environment` — not the caller. Renaming the workflow file or environment breaks the OIDC match and the registry rejects the upload (npm returns a misleading **404** on `PUT`). Re-register the Trusted Publisher after any rename.
+**Trusted Publishing + reusable workflows — register the workflow that *started the run*.** When `03` is invoked via `workflow_call` from `02`, GitHub mints a token carrying two different claims: `workflow_ref` points at the **caller** (`02-tag-sync.yml`), `job_workflow_ref` at the file holding the job (`03-publish.yml`). **npm matches the caller**: a Trusted Publisher registered on `03-publish.yml` is refused, with a misleading **404 on `PUT`** that arrives *after* the provenance statement was signed — signature OK, write refused, which is the signature of a publisher mismatch rather than a missing package. Register `02-tag-sync.yml` plus the job's `environment`, and re-register after renaming either.
+
+Read the failure by where it stops: a mismatch fails at the upload, never before. And check the registry's own state — npm shows such a config as *Pending validation* until one publish succeeds through it.
+
+> Verified on npm. For another registry, confirm which claim it matches before registering — the two conventions exist, and the symptom is identical.
 
 ## `04-docs` — build always, deploy by mode
 
