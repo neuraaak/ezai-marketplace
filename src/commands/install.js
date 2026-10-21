@@ -102,6 +102,15 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
   if (linked > 0) console.info('');
 }
 
+function resolvePluginDir(plugin) {
+  const rawSource = plugin.source;
+  const pluginRelPath = (
+    typeof rawSource === 'string' ? rawSource : rawSource?.path || plugin.path || ''
+  ).replace(/^\.\//, '');
+  assertSafeRelPath(pluginRelPath);
+  return path.join(path.resolve(__dirname, '..', '..'), pluginRelPath);
+}
+
 async function runInstall(pluginName, options, catalogue) {
   const { plugins } = await catalogue.fetchCatalogue();
 
@@ -117,14 +126,18 @@ async function runInstall(pluginName, options, catalogue) {
   const platformDirs = options._platformDirs || resolvePlatforms(options);
   const installedNames = [];
 
-  for (const plugin of targets) {
-    const rawSource = plugin.source;
-    const pluginRelPath = (
-      typeof rawSource === 'string' ? rawSource : rawSource?.path || plugin.path || ''
-    ).replace(/^\.\//, '');
-    assertSafeRelPath(pluginRelPath);
-    const repoRoot = path.resolve(__dirname, '..', '..');
-    const pluginDir = path.join(repoRoot, pluginRelPath);
+  // Tout est vérifié avant la première suppression : un catalogue distant peut
+  // référencer un plugin absent de ce paquet, et l'install existante doit survivre.
+  const sources = targets.map((plugin) => {
+    const pluginDir = resolvePluginDir(plugin);
+    if (!fs.existsSync(path.join(pluginDir, 'SKILL.md'))) {
+      console.error(`Plugin "${plugin.name}" absent du paquet local — mettez à jour ezai.`);
+      throw new Error(`Plugin "${plugin.name}" absent du paquet local`);
+    }
+    return { plugin, pluginDir };
+  });
+
+  for (const { plugin, pluginDir } of sources) {
     const destDir = path.join(agentsSkillsDir, plugin.name);
     // Purge le dossier du skill avant copie : une nouvelle version ne doit pas
     // hériter des fichiers d'une install antérieure (ex. evals/ ou graphify-out/
