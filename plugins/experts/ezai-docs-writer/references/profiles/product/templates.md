@@ -183,6 +183,8 @@ Same template as Task, for administrators. Prerequisites name the access needed 
 ```markdown
 # Product name
 
+[badges block — same set as README.md, see `common/readme.md`]
+
 **Product name** — one sentence on what it lets users do.
 
 ## 🚀 Quick start
