@@ -10,7 +10,8 @@
     },
     "date": {
       "type": "string",
-      "description": "ISO date, YYYY-MM-DD"
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
     },
     "inputs_read": {
       "type": "array",
@@ -33,7 +34,14 @@
             "enum": ["run", "skipped"]
           },
           "reason": {
-            "type": ["string", "null"],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Why it was skipped (e.g. 'user scope'), else null"
           }
         },

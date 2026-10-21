@@ -10,7 +10,8 @@
     },
     "date": {
       "type": "string",
-      "description": "ISO date, YYYY-MM-DD"
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
     },
     "inputs_read": {
       "type": "array",
@@ -39,7 +40,14 @@
             "type": "string"
           },
           "why": {
-            "type": ["string", "null"],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "One-line rationale when non-obvious, else null"
           }
         },

@@ -10,7 +10,8 @@
     },
     "date": {
       "type": "string",
-      "description": "ISO date, YYYY-MM-DD"
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
     },
     "inputs_read": {
       "type": "array",
@@ -52,7 +53,14 @@
             "enum": ["FIXED", "OPEN", "REGRESSED"]
           },
           "note": {
-            "type": ["string", "null"],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Optional one-line observation, else null"
           }
         },
