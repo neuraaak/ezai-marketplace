@@ -75,7 +75,7 @@ export default defineVersionedConfig(
     themeConfig: {
       search: { provider: 'local' }, // client-side full-text search, no external service
 
-      // Top navbar — one entry per Diátaxis section.
+      // Top navbar — one entry per section of the site's profile (Diátaxis shown here).
       nav: [
         { text: 'Getting Started', link: '/getting-started' },
         { text: 'Guides', link: '/guides/' },

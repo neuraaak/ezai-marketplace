@@ -27,7 +27,7 @@ Theme is `material` with both palette schemes (light `default` + dark `slate`) a
 
 ## Navigation (`nav`)
 
-- Mirror the Diátaxis structure: Home → Getting Started → Guides → Concepts → API Reference → CLI Reference → Examples, then Architecture / Coverage / Changelog as leaf pages.
+- Mirror the navigation structure of the site's profile (`profiles/<profile>/templates.md`). Diátaxis: Home → Getting Started → Guides → Concepts → API Reference → CLI Reference → Examples, then Architecture / Coverage / Changelog as leaf pages. Product: Home → Get started → Guides → Concepts → Reference → Troubleshooting → FAQ → Release notes, then Administration when present.
 - **`section-index` rule:** any section that has an `index.md` must list it as the **first child entry** of that section, otherwise the section header isn't clickable.
 - Auto-generated pages (`coverage.md`, `changelog.md`, `api/reference/*`) are produced by the build — list them in `nav` but never hand-author them.
 
