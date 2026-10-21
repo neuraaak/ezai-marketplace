@@ -85,13 +85,13 @@ VitePress containers: `tip`, `info`, `warning`, `danger`, `details`. Map the uni
 
 ## Page structure
 
-Diátaxis nav structure and page templates apply identically to JS/TS projects — load `profiles/diataxis/templates.md`; every template is language-agnostic, only replace Python code snippets with TypeScript/JavaScript equivalents.
+The navigation structure and page templates of the site's profile apply identically to JS/TS projects — load `profiles/<profile>/templates.md`; every template is language-agnostic, only replace Python code snippets with TypeScript/JavaScript equivalents.
 
 ---
 
 ## JS/TS-specific anti-patterns
 
-The Diátaxis anti-patterns live in `profiles/diataxis/structure.md`. These are language-specific:
+The profile anti-patterns live in `profiles/<profile>/structure.md`. These are language-specific:
 
 | Anti-pattern                             | Problem                         | Fix                                          |
 | :--------------------------------------- | :------------------------------ | :------------------------------------------- |
