@@ -308,6 +308,32 @@
           "value": "401"
         }
       ]
+    },
+    {
+      "prompt": "Tu peux améliorer la qualité de mon code ?",
+      "expected_output": "Aucun test ni correctif généré : l'agent pose en un seul appel les questions de cadrage restantes (Task, Target, puis Test level ou Exposure), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Tt]ask|[Tt]arget|[Cc]ible|[Pp]érimètre|[Ee]xposure)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-artifact",
+          "description": "Ne produit pas d'artefact avant la réponse",
+          "type": "not_contains",
+          "value": "<thinking>"
+        }
+      ],
+      "id": 11
     }
   ]
 }
