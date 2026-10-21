@@ -13,11 +13,13 @@ Load only the profile of the zone being written or audited.
 
 Read the repository before asking. The signals usually settle it:
 
-| Signal                                                                                                                                                                                                                  | Profile                |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- |
-| Published package: `[project]` with a build backend and no application entry point, `package.json` with `exports` and without `"private": true`, `composer.json` of type `library`; public API documented in docstrings | **Diátaxis**           |
-| User interface (frontend app, Electron, mobile), `Dockerfile` / compose / Helm chart without a published package, `"private": true`, existing FAQ or Troubleshooting pages                                              | **Product**            |
-| Both an application and a public SDK or API                                                                                                                                                                             | **Both, in two zones** |
+| Signal                                                                                                                                                                                                                                                                                          | Profile                |
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- |
+| Published to a package registry — PyPI (`[project]` with a build backend), npm (`package.json` with `exports` or `bin`, without `"private": true`), Packagist (`composer.json` of type `library`) — whether or not it ships `[project.scripts]` or a `bin`; public API documented in docstrings | **Diátaxis**           |
+| Deployed or distributed without being published as a package: user interface (frontend app, Electron, mobile), `Dockerfile` / compose / Helm chart, `"private": true`, existing FAQ or Troubleshooting pages                                                                                    | **Product**            |
+| Both an application and a public SDK or API published to a registry                                                                                                                                                                                                                             | **Both, in two zones** |
+
+Publication is the deciding signal: a CLI installed from PyPI or npm is developer tooling and takes the Diátaxis profile, even though it has an entry point.
 
 When the signals conflict or are absent, the Scope step asks the `profile` question. Its default is Diátaxis.
 
