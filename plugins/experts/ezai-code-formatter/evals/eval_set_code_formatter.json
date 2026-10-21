@@ -79,6 +79,32 @@
           "description": "result/append/strip logic preserved"
         }
       ]
+    },
+    {
+      "prompt": "Remets le code du projet aux standards visuels.",
+      "expected_output": "Aucune modification : l'agent pose en un seul appel les questions de cadrage restantes (Target, Rules, Comments), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Tt]arget|[Cc]ible|[Ff]ichiers|[Rr]ules|[Rr]ègles)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-edit",
+          "description": "N'insère pas de séparateur avant la réponse",
+          "type": "not_contains",
+          "value": "# ///"
+        }
+      ],
+      "id": 4
     }
   ]
 }
