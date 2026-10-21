@@ -120,7 +120,7 @@ Each TODO carries the finding ID from `01-audit.md` so VALIDATION can cross-refe
 **Inputs:** `.docs-audit/00-context.md` + `.docs-audit/02-plan.md`
 **Output:** Real file patches + `.docs-audit/03-changes.md`
 
-The GENERATION subagent reads the approved plan and executes it file by file. For each TODO it **invokes `ezai-docs-writer`** via the Skill tool to produce or correct the target file. It does not write documentation content itself.
+The GENERATION subagent reads the approved plan and executes it file by file. For each TODO it **invokes `ezai-docs-writer`** via the Skill tool to produce or correct the target file, passing the `profile` and `zones` from `00-context.md` so the writer uses the same profile as the audit. It does not write documentation content itself.
 
 If `ezai-docs-writer` is unavailable, GENERATION must:
 
