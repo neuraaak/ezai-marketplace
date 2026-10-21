@@ -153,6 +153,32 @@
           "value": ".senior-review"
         }
       ]
+    },
+    {
+      "prompt": "Aide-moi à améliorer ce projet.",
+      "expected_output": "Ni pipeline ni code : la persona pose en un seul appel ses questions de cadrage (Mode, Target), options recommandées en premier, puis attend la réponse avant tout dispatch.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Mm]ode|[Tt]arget|[Cc]ible|[Rr]evue|[Rr]eview)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-pipeline",
+          "description": "Ne lance pas le pipeline de revue avant la réponse",
+          "type": "not_contains",
+          "value": ".senior-review/"
+        }
+      ],
+      "id": 6
     }
   ]
 }

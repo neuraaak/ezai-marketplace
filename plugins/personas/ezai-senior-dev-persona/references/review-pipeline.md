@@ -34,19 +34,22 @@ Finding IDs are stable across stages: `01-<DOMAIN>-NNN` where DOMAIN ∈
 ## Stage 0 — DETECTION
 
 **Who:** Dedicated subagent (read-only).
-**Inputs:** Reviewed code scope (target files/modules), `pyproject.toml`,
-`package.json`, file extensions.
+**Inputs:** The persona's Scope answers, reviewed code scope (target
+files/modules), `pyproject.toml`, `package.json`, file extensions.
 **Output:** `.senior-review/00-context.md`
 
 ### Role
 
 1. **Language** — Python or JavaScript/TypeScript, from `pyproject.toml` /
    `package.json` / extensions.
-2. **Review scope** — the exact files/modules under review.
+2. **Review scope** — the exact files/modules under review, bounded by the
+   `target` answer of the Scope step.
 3. **Domain selection** — pick the relevant domains among `architect`,
    `quality`, `performance`, `config`. Do **not** launch all four by reflex: a
    domain that does not apply must be listed as `skipped` with a one-line
-   reason (e.g. no async/concurrent code ⇒ skip `performance`).
+   reason (e.g. no async/concurrent code ⇒ skip `performance`). When the
+   `domains` answer restricts the review, keep only those domains and mark the
+   others `skipped (reason: user scope)`.
 
 If the artifact is empty or malformed (missing required fields), stop and tell
 the user which fields are absent — do not proceed to REVIEW with incomplete
@@ -59,6 +62,7 @@ context.
 Inputs read: <files/scope read>
 Artifact produced: .senior-review/00-context.md
 
+- user-scope: target=<answer or default>, domains=<answer or default>
 - language: python | javascript | typescript
 - review-scope: <files/modules under review>
 - domains:
