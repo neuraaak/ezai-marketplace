@@ -79,6 +79,8 @@ Collapsible — use for information that is true but not critical to the flow.
 :::
 ```
 
+On a Docusaurus or Starlight site, use the syntax in `docusaurus.md` or `starlight.md` instead.
+
 VitePress containers: `tip`, `info`, `warning`, `danger`, `details`. Map the universal types from `common/standards.md` onto these (`note` → `info`, `example` → a fenced code block, `abstract` → lead paragraph).
 
 ---

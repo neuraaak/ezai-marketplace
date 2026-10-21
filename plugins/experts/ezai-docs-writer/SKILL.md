@@ -76,8 +76,8 @@ Read `references/index.md` — it is the root router. Follow it to load only wha
 - **Any writing task** → `languages/<lang>/standards.md` + `common/standards.md`
 - **Generating a page** → add `profiles/<profile>/structure.md` + `profiles/<profile>/templates.md` for the zone's profile (see `profiles/index.md`)
 - **README** → add `common/readme.md`
-- **Toolchain / config** → `languages/<lang>/toolchain.md`
-- **Deploy / plugins** → `languages/<lang>/plugins-deploy.md`
+- **Toolchain / config** → `languages/<lang>/toolchain.md` (Docusaurus or Starlight site → `languages/javascript/docusaurus.md` or `starlight.md` instead)
+- **Deploy / plugins** → `languages/<lang>/plugins-deploy.md` (same Docusaurus / Starlight exception)
 - **Badge block** → `forge/<host>/badge-registry.md` + `languages/<lang>/badge-registry.md`
 
 ### 4. Classify and generate
