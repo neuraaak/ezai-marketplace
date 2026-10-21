@@ -46,6 +46,8 @@ Badge data lives in two registries — load the pair that matches the project:
 
 Emit only badges whose detection condition is met. Never hard-code a tool stack.
 
+Under the product profile, skip the package-registry version badges (PyPI, npm, Packagist) when the product is not published to a registry; keep CI, Docs and License.
+
 ---
 
 ## Logo and tagline

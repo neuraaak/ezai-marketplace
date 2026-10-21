@@ -1,11 +1,14 @@
 ---
 name: ezai-docs-writer
 description:
-  "Use for any single documentation artifact: a Diátaxis page (Tutorial,
-  How-To, Reference, Explanation, Examples), a README, docstrings on
-  undocumented code, or a badge block. Trigger on phrases like 'write a
-  tutorial', 'add docstrings', 'generate a README', 'create a how-to',
-  'document this class', 'add badges', or 'write an explanation page'.
+  "Use for any single documentation artifact: a developer docs page
+  (Diátaxis: Tutorial, How-To, Reference, Explanation, Examples), a product
+  docs page for end users or admins (Get started, Task, Troubleshooting, FAQ,
+  Release notes), a README, docstrings on undocumented code, or a badge
+  block. Trigger on phrases like 'write a tutorial', 'add docstrings',
+  'generate a README', 'create a how-to', 'document this class', 'add
+  badges', 'write an explanation page', 'write the user guide', 'add a
+  troubleshooting page', or 'write the release notes'.
 
   Scope: one file or one set of docstrings. For whole-site audits or
   multi-page upgrades, use ezai-docs-specialist-persona instead. Not for
@@ -28,15 +31,17 @@ context-specific overrides live in the user's rules.
 
 ## Capabilities
 
-| Key           | Output                                       |
-| :------------ | :------------------------------------------- |
-| `badges`      | Badge block for README + docs/index.md       |
-| `readme`      | Full README.md generation or targeted update |
-| `api-ref`     | Docstrings → reference page                  |
-| `tutorial`    | Tutorial page (Diátaxis — learning-oriented) |
-| `how-to`      | How-to guide (Diátaxis — task-oriented)      |
-| `explanation` | Explanation page (Diátaxis — conceptual)     |
-| `examples`    | Minimal runnable snippet page                |
+| Key             | Output                                                                    |
+| :-------------- | :------------------------------------------------------------------------ |
+| `badges`        | Badge block for README + docs/index.md                                    |
+| `readme`        | Full README.md generation or targeted update                              |
+| `api-ref`       | Docstrings → reference page                                               |
+| `tutorial`      | Tutorial page (Diátaxis — learning-oriented)                              |
+| `how-to`        | How-to guide (Diátaxis — task-oriented)                                   |
+| `explanation`   | Explanation page (Diátaxis — conceptual)                                  |
+| `examples`      | Minimal runnable snippet page                                             |
+| `product-page`  | Product page: Get started, Task, Concept, Reference, Troubleshooting, FAQ |
+| `release-notes` | User-facing release notes (product profile)                               |
 
 ## Scope
 
@@ -62,13 +67,14 @@ Run the Scope step above.
 
 - Detect the project language (`pyproject.toml` → Python, `package.json` → JS/TS, `composer.json` → PHP) and the doc config (`mkdocs.yml`, `docs/.vitepress/config.*`, `conf.py`, `docusaurus.config.js`, `phpdoc.dist.xml`, `doctum.php`). If no config found, proceed from directory structure and flag that nav validation is unavailable.
 - Detect the documentation language (French or English) from existing `.md` files or explicit instruction. Default to English.
+- Detect the documentation profile — Diátaxis or Product — and, on a hybrid site, the zone of the target page, using the signals in `references/profiles/index.md`.
 
 ### 3. Load references
 
 Read `references/index.md` — it is the root router. Follow it to load only what the task needs (two or three files is typical). Quick cheat sheet:
 
 - **Any writing task** → `languages/<lang>/standards.md` + `common/standards.md`
-- **Generating a page** → add `profiles/diataxis/structure.md` + `profiles/diataxis/templates.md`
+- **Generating a page** → add `profiles/<profile>/structure.md` + `profiles/<profile>/templates.md` for the zone's profile (see `profiles/index.md`)
 - **README** → add `common/readme.md`
 - **Toolchain / config** → `languages/<lang>/toolchain.md`
 - **Deploy / plugins** → `languages/<lang>/plugins-deploy.md`
@@ -76,7 +82,7 @@ Read `references/index.md` — it is the root router. Follow it to load only wha
 
 ### 4. Classify and generate
 
-Assign exactly one Diátaxis type (Tutorial / How-To / Reference / Explanation / Examples). If the request spans two quadrants equally, use the `quadrant` answer from the Scope step. Apply the matching page template, write content, and self-check against the success criteria in `profiles/diataxis/structure.md` and `common/standards.md`.
+Assign exactly one page type of the zone's profile — Diátaxis: Tutorial / How-To / Reference / Explanation / Examples; Product: Get started / Task / Concept / Reference / Troubleshooting / FAQ / Release notes. If the request spans two page types equally, use the `page_type` answer from the Scope step. Apply the matching page template, write content, and self-check against the success criteria in the profile's `structure.md` and `common/standards.md`.
 
 ## Output format
 
@@ -84,7 +90,7 @@ Open with a `<thinking>` block covering:
 
 - Project language detected and reference subdirectory used
 - Documentation language (French / English)
-- Diátaxis type assigned and target file path
+- Profile, zone (hybrid sites only), page type assigned and target file path
 - Reference files loaded
 - Whether the doc config nav needs updating
 
