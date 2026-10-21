@@ -10,7 +10,7 @@
   "capabilities": [
     {
       "id": "docs-audit",
-      "description": "Full site audit: structure gaps vs Diátaxis quadrants, coherence findings"
+      "description": "Full site audit: structure gaps vs the documentation profile, coherence findings"
     },
     {
       "id": "docs-upgrade-plan",

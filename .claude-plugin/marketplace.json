@@ -89,7 +89,7 @@
     },
     {
       "name": "ezai-docs-writer",
-      "description": "Write a single documentation artifact for a software project: one .md page (any Diátaxis type), a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
+      "description": "Write a single documentation artifact for a software project: one .md page (a Diátaxis page for developer docs, or a product page for end users and admins), release notes, a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
       "source": "./plugins/experts/ezai-docs-writer",
       "category": "development",
       "version": "1.5.2",
@@ -125,6 +125,14 @@
         {
           "id": "examples",
           "description": "Examples page (minimal runnable snippets)"
+        },
+        {
+          "id": "product-page",
+          "description": "Product page: Get started, Task, Concept, Reference, Troubleshooting, FAQ"
+        },
+        {
+          "id": "release-notes",
+          "description": "User-facing release notes (product profile)"
         }
       ]
     },
@@ -313,7 +321,7 @@
       "capabilities": [
         {
           "id": "docs-audit",
-          "description": "Full site audit: structure gaps vs Diátaxis quadrants, coherence findings"
+          "description": "Full site audit: structure gaps vs the documentation profile, coherence findings"
         },
         {
           "id": "docs-upgrade-plan",
