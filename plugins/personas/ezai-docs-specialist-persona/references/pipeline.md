@@ -20,12 +20,12 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 ## Stage 0 — DETECTION
 
 **Who:** Dedicated subagent (read-only).
-**Inputs:** The persona's Scope answers, project root — file extensions, `pyproject.toml`, `package.json`, `mkdocs.yml`, `docs/.vitepress/config.*`, `docusaurus.config.*`, `astro.config.*`, `conf.py`, `.github/`, `.gitlab-ci.yml`.
+**Inputs:** The persona's Scope answers, project root — file extensions, `pyproject.toml`, `package.json`, `composer.json`, `mkdocs.yml`, `docs/.vitepress/config.*`, `docusaurus.config.*`, `astro.config.*`, `conf.py`, `.github/`, `.gitlab-ci.yml`.
 **Output:** `.docs-audit/00-context.md`
 
 ### Questions to answer
 
-1. **Language** — Python or JavaScript/TypeScript? Detected from `pyproject.toml` / `package.json`.
+1. **Language** — Python, JavaScript/TypeScript or PHP? Detected from `pyproject.toml` / `package.json` / `composer.json`.
 2. **Docs tooling** — MkDocs / VitePress / Docusaurus / Starlight / Sphinx / none? Detected from config file presence: `mkdocs.yml`, `docs/.vitepress/config.*`, `docusaurus.config.*`, `astro.config.*` importing `@astrojs/starlight`, `conf.py`.
 3. **Versioning platform** — GitHub or GitLab? Detected from `.github/` or `.gitlab-ci.yml`.
 4. **Documentation profile and zones** — Diátaxis, Product, or a hybrid site with one profile per zone. Detected with the signals and zone rules in `ezai-docs-writer/references/profiles/index.md`.
@@ -35,13 +35,13 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 
 ```markdown
 ## DETECTION — YYYY-MM-DD
-Inputs read: pyproject.toml, package.json, mkdocs.yml, docs/.vitepress/config.*, docusaurus.config.*, astro.config.*, conf.py, .github/, .gitlab-ci.yml
+Inputs read: pyproject.toml, package.json, composer.json, mkdocs.yml, docs/.vitepress/config.*, docusaurus.config.*, astro.config.*, conf.py, .github/, .gitlab-ci.yml
 Artifact produced: .docs-audit/00-context.md
 
 - user-scope: mode=<full | targeted>, focus=<structure | coherence | both>, section=<whole site | path>
 - profile: diataxis | product | hybrid
 - zones: <hybrid only — one line per top-level folder: path → profile>
-- language: python | javascript
+- language: python | javascript | php
 - docs-tooling: mkdocs | vitepress | docusaurus | starlight | sphinx | none
 - platform: github | gitlab
 - docs-writer-refs:
