@@ -39,9 +39,9 @@ The orchestrator validates each artifact before the next stage reads it.
 
 ### Questions to answer
 
-1. **Language** — Python, JavaScript/TypeScript or PHP? Detected from `pyproject.toml` / `package.json` / `composer.json`.
+1. **Language** — Python, JavaScript/TypeScript or PHP? Detected from `pyproject.toml` / `package.json` / `composer.json`. Any other language is `other`: `ezai-docs-writer` has no language reference for it, so the audit says so.
 2. **Docs tooling** — MkDocs / VitePress / Docusaurus / Starlight / none? Detected from config file presence: `mkdocs.yml`, `docs/.vitepress/config.*`, `docusaurus.config.*`, `astro.config.*` importing `@astrojs/starlight`. A docs site built with another tool is `other`: `ezai-docs-writer` has no recipe for it, so the audit says so instead of applying another tool's config rules.
-3. **Versioning platform** — GitHub or GitLab? Detected from `.github/` or `.gitlab-ci.yml`.
+3. **Versioning platform** — GitHub or GitLab? Detected from `.github/` or `.gitlab-ci.yml`, or the git remote; `none` when neither applies, and the badge checks that depend on a forge are skipped.
 4. **Documentation profile and zones** — Diátaxis, Product, or a hybrid site with one profile per zone. Detected with the signals and zone rules in `ezai-docs-writer/references/profiles/index.md`.
 5. **ezai-docs-writer reference files to load** — the exact list of files from `ezai-docs-writer/references/` that AUDIT and GENERATION must load for this project. Start at `ezai-docs-writer/references/index.md`, then follow it into `languages/index.md` (per-language files), `forge/index.md` (badge registries) and `profiles/index.md` (one `structure.md` per profile in use).
 

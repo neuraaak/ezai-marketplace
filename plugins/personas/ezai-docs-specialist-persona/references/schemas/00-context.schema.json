@@ -63,7 +63,8 @@
     },
     "language": {
       "type": "string",
-      "enum": ["python", "javascript", "php"]
+      "enum": ["python", "javascript", "php", "other"],
+      "description": "'other' for a language ezai-docs-writer has no reference for"
     },
     "docs_tooling": {
       "type": "string",
@@ -71,7 +72,8 @@
     },
     "platform": {
       "type": "string",
-      "enum": ["github", "gitlab"]
+      "enum": ["github", "gitlab", "none"],
+      "description": "'none' when the repository has neither a GitHub nor a GitLab remote or CI"
     },
     "docs_writer_refs": {
       "type": "array",
