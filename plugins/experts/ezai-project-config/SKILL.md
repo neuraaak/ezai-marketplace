@@ -50,6 +50,8 @@ Before loading any other reference, settle the scope with the user.
 
 Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
 
+**Under a persona.** Skip this step when the skill runs in a subagent of a persona pipeline: the persona settled the scope before dispatch and wrote it to the pipeline's `00-context.md`. When a persona hands the task over inline, run this step but drop every question the persona already asked.
+
 ## Workflow
 
 1. **Scope** — settle the scope with the user (see above)
