@@ -4,10 +4,11 @@ Two routing axes: **forge** (where the pipeline runs) and **language** (what the
 
 ## Common (`common/`)
 
-| File                   | Load when…       | Contents                                                                |
-| :--------------------- | :--------------- | :---------------------------------------------------------------------- |
-| `common/principles.md` | Every CI/CD task | Strategy, caching, secrets/OIDC, environments, deploy gates, audit list |
-| `common/naming.md`     | Every CI/CD task | Canonical workflow/job/step names, forge-agnostic, + GitLab mapping     |
+| File                   | Load when…                       | Contents                                                                |
+| :--------------------- | :------------------------------- | :---------------------------------------------------------------------- |
+| `common/principles.md` | Every CI/CD task                 | Strategy, caching, secrets/OIDC, environments, deploy gates, audit list |
+| `common/naming.md`     | Every CI/CD task                 | Canonical workflow/job/step names, forge-agnostic, + GitLab mapping     |
+| `common/scoping.md`    | Scope step, before anything else | Ordered scoping questions, when to ask each, recommended defaults       |
 
 ## Forge (`forge/`)
 
