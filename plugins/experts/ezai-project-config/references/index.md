@@ -4,9 +4,10 @@ Two routing axes: **common** (always loaded) and **language**. See `languages/in
 
 ## Common (`common/`)
 
-| File               | Load when…                  | Contents                                                                    |
-| :----------------- | :-------------------------- | :-------------------------------------------------------------------------- |
-| `common/config.md` | Every config/toolchain task | Lockfiles, Docker multi-stage, Observability, health checks, no latest tags |
+| File                | Load when…                       | Contents                                                                    |
+| :------------------ | :------------------------------- | :-------------------------------------------------------------------------- |
+| `common/config.md`  | Every config/toolchain task      | Lockfiles, Docker multi-stage, Observability, health checks, no latest tags |
+| `common/scoping.md` | Scope step, before anything else | Ordered scoping questions, when to ask each, recommended defaults           |
 
 ## Languages (`languages/`)
 

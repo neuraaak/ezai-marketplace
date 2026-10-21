@@ -476,6 +476,32 @@
           "value": "config:cache"
         }
       ]
+    },
+    {
+      "id": 14,
+      "prompt": "Configure le tooling de mon projet Python.",
+      "expected_output": "Aucune config générée : l'agent pose en un seul appel les questions de cadrage restantes (Task, Nature, Scope), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Tt]ask|[Nn]ature|[Ss]cope|[Pp]érimètre)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-config",
+          "description": "Ne génère pas de pyproject.toml avant la réponse",
+          "type": "not_contains",
+          "value": "[build-system]"
+        }
+      ]
     }
   ]
 }
