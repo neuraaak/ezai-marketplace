@@ -12,6 +12,16 @@ const { runPurge } = require('../src/commands/purge');
 
 const program = new Command();
 
+const BASE_DIR_HELP = 'Répertoire de base (défaut : répertoire home)';
+
+function addTargetOptions(command, destHelp, platformVerb) {
+  return command
+    .option('--dest <chemin>', destHelp)
+    .option('--claude', `${platformVerb} ~/.claude/skills/`)
+    .option('--gemini', `${platformVerb} ~/.gemini/skills/`)
+    .option('--copilot', `${platformVerb} ~/.copilot/skills/`);
+}
+
 program
   .name('ezai')
   .description('CLI du marketplace de skills IA ezai')
@@ -32,31 +42,24 @@ program
   .description("Afficher les détails d'un plugin")
   .action((plugin) => runInfo(plugin, catalogue));
 
-program
-  .command('install [plugin]')
+addTargetOptions(
+  program.command('install [plugin]'),
+  'Répertoire de destination (défaut : répertoire home)',
+  'Déployer les symlinks vers'
+)
   .description('Installer un plugin (ou tous si aucun nom fourni) dans .agents/')
-  .option('--dest <chemin>', 'Répertoire de destination (défaut : répertoire home)')
-  .option('--claude', 'Déployer les symlinks vers ~/.claude/skills/')
-  .option('--gemini', 'Déployer les symlinks vers ~/.gemini/skills/')
-  .option('--copilot', 'Déployer les symlinks vers ~/.copilot/skills/')
   .action((plugin, options) => runInstall(plugin, options, catalogue));
 
-program
-  .command('purge')
+addTargetOptions(program.command('purge'), BASE_DIR_HELP, 'Cibler uniquement')
   .description('Supprimer les skills ezai obsolètes (absents du catalogue actuel)')
-  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire home)')
-  .option('--claude', 'Cibler uniquement ~/.claude/skills/')
-  .option('--gemini', 'Cibler uniquement ~/.gemini/skills/')
-  .option('--copilot', 'Cibler uniquement ~/.copilot/skills/')
   .action((options) => runPurge(options, catalogue));
 
-program
-  .command('uninstall [skill]')
+addTargetOptions(
+  program.command('uninstall [skill]'),
+  BASE_DIR_HELP,
+  'Supprimer uniquement les symlinks'
+)
   .description('Désinstaller un skill (ou tous si aucun nom fourni)')
-  .option('--dest <chemin>', 'Répertoire de base (défaut : répertoire home)')
-  .option('--claude', 'Supprimer uniquement les symlinks ~/.claude/skills/')
-  .option('--gemini', 'Supprimer uniquement les symlinks ~/.gemini/skills/')
-  .option('--copilot', 'Supprimer uniquement les symlinks ~/.copilot/skills/')
   .action((skill, options) => runUninstall(skill, options, catalogue));
 
 program.parseAsync().catch((err) => {
