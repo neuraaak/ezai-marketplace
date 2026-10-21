@@ -472,6 +472,84 @@
         }
       ],
       "id": 13
+    },
+    {
+      "capability": "how-to",
+      "prompt": "Ajoute une page How-To à mon site Docusaurus pour configurer le cache de `fetchkit`, avec un avertissement sur l'invalidation.",
+      "expected_output": "Page How-To en Markdown Docusaurus : front matter avec sidebar_position, étapes numérotées, admonition Docusaurus (:::warning), aucune syntaxe MkDocs.",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"fetchkit\",\n  \"version\": \"2.0.0\",\n  \"exports\": { \".\": \"./dist/index.js\" },\n  \"devDependencies\": { \"@docusaurus/core\": \"^3.8.0\" }\n}"
+        },
+        {
+          "path": "docusaurus.config.ts",
+          "content": "export default { title: 'fetchkit', url: 'https://acme.github.io', baseUrl: '/fetchkit/' };"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "docusaurus-admonition",
+          "description": "Admonition au format Docusaurus",
+          "type": "regex",
+          "value": ":::(warning|caution|danger)"
+        },
+        {
+          "id": "no-mkdocs-syntax",
+          "description": "Pas de syntaxe d'admonition MkDocs",
+          "type": "not_contains",
+          "value": "!!!"
+        },
+        {
+          "id": "sidebar-position",
+          "description": "Ordre de la page via le front matter",
+          "type": "contains",
+          "value": "sidebar_position"
+        }
+      ],
+      "id": 14
+    },
+    {
+      "capability": "how-to",
+      "prompt": "Écris une page How-To sur mon site Starlight pour activer le mode hors ligne de `fetchkit`, en signalant le risque de données périmées.",
+      "expected_output": "Page Starlight : title dans le front matter, pas de H1 dans le corps, aside :::caution (pas :::warning), étapes numérotées.",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"fetchkit\",\n  \"version\": \"2.0.0\",\n  \"exports\": { \".\": \"./dist/index.js\" },\n  \"devDependencies\": { \"astro\": \"^5.0.0\", \"@astrojs/starlight\": \"^0.34.0\" }\n}"
+        },
+        {
+          "path": "astro.config.mjs",
+          "content": "import { defineConfig } from 'astro/config';\nimport starlight from '@astrojs/starlight';\nexport default defineConfig({ integrations: [starlight({ title: 'fetchkit' })] });"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "frontmatter-title",
+          "description": "Titre dans le front matter",
+          "type": "regex",
+          "value": "^title:"
+        },
+        {
+          "id": "no-body-h1",
+          "description": "Pas de H1 dans le corps",
+          "type": "not_contains",
+          "value": "\n# "
+        },
+        {
+          "id": "caution-aside",
+          "description": "Aside Starlight :::caution",
+          "type": "contains",
+          "value": ":::caution"
+        },
+        {
+          "id": "no-warning-aside",
+          "description": "Pas de :::warning, absent de Starlight",
+          "type": "not_contains",
+          "value": ":::warning"
+        }
+      ],
+      "id": 15
     }
   ]
 }
