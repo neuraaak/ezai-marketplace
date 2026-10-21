@@ -53,7 +53,7 @@ is dispatched: subagents cannot ask the user.
 The `mode` answer decides what follows. **Write directly** → invoke
 `ezai-docs-writer` via the Skill tool and stop; it asks only what this step did
 not. **Full audit** or **Targeted audit** → run the pipeline and pass the
-answers to the DETECTION subagent, which records them in `00-context.md`.
+answers to the DETECTION subagent, which records them in `00-context.json`.
 
 ## Pipeline
 
@@ -64,13 +64,13 @@ Before dispatching any stage, read these two reference files in order:
 
 The stages in order:
 
-1. **DETECTION** — dispatch a subagent. Blocking: every later stage reads `00-context.md`. If the subagent returns an empty or malformed artifact (missing required fields), stop and tell the user which fields are absent — do not proceed to AUDIT with incomplete context.
-2. **AUDIT** — dispatch a subagent. Reads `00-context.md` + `ezai-docs-writer` refs. Produces `01-audit.md`.
-3. **PLANNING** — enter plan mode yourself. Read `00-context.md` + `01-audit.md`. Write `02-plan.md`. Present the plan to the user. **Wait for approval before continuing.**
-4. **GENERATION** — dispatch a subagent. Reads `00-context.md` + `02-plan.md`. Invokes `ezai-docs-writer` per TODO. Produces `03-changes.md`.
-5. **VALIDATION** — dispatch a subagent. Reads `01-audit.md` + `03-changes.md`. Produces `04-validation.md`. Present the summary to the user.
+1. **DETECTION** — dispatch a subagent. Blocking: every later stage reads `00-context.json`. Every artifact is validated against its schema before the next stage reads it (see *Artifact validation* in `pipeline.md`) — AUDIT never starts on an invalid context.
+2. **AUDIT** — dispatch a subagent. Reads `00-context.json` + `ezai-docs-writer` refs. Produces `01-audit.json`.
+3. **PLANNING** — enter plan mode yourself. Read `00-context.json` + `01-audit.json`. Write `02-plan.json` with `approved: false`. Present the plan to the user. **Wait for approval before continuing**, then set `approved: true`.
+4. **GENERATION** — dispatch a subagent. Reads `00-context.json` + `02-plan.json`. Invokes `ezai-docs-writer` per TODO. Produces `03-changes.json`.
+5. **VALIDATION** — dispatch a subagent. Reads `01-audit.json` + `03-changes.json`. Produces `04-validation.json`. Present the summary to the user.
 
-If `04-validation.md` contains OPEN or REGRESSED findings, surface the summary to the user with:
+If `04-validation.json` contains OPEN or REGRESSED findings, surface the summary to the user with:
 
 - the count of OPEN / REGRESSED findings
 - the IDs and titles of each affected finding

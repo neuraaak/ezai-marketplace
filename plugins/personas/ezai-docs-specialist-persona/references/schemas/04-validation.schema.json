@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-docs-specialist-persona/04-validation.schema.json",
+  "title": "VALIDATION — status of every finding",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["VALIDATION"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "fixed": {
+          "type": "integer"
+        },
+        "open": {
+          "type": "integer"
+        },
+        "regressed": {
+          "type": "integer"
+        }
+      },
+      "required": ["fixed", "open", "regressed"],
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-NNN"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["FIXED", "OPEN", "REGRESSED"]
+          },
+          "note": {
+            "type": ["string", "null"],
+            "description": "Optional one-line observation, else null"
+          }
+        },
+        "required": ["id", "title", "status", "note"],
+        "additionalProperties": false
+      },
+      "description": "One entry per finding of 01-audit.json"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "New issues seen during VALIDATION that are not in 01-audit.json — out of scope, reported only"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "summary", "findings", "observations"],
+  "additionalProperties": false
+}

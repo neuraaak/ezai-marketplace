@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-docs-specialist-persona/00-context.schema.json",
+  "title": "DETECTION — docs context",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["DETECTION"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "user_scope": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["full", "targeted"]
+        },
+        "focus": {
+          "type": "string",
+          "enum": ["structure", "coherence", "both"]
+        },
+        "section": {
+          "type": "string",
+          "description": "'whole site' or a path under docs/"
+        }
+      },
+      "required": ["mode", "focus", "section"],
+      "additionalProperties": false
+    },
+    "profile": {
+      "type": "string",
+      "enum": ["diataxis", "product", "hybrid"]
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Top-level folder under docs/"
+          },
+          "profile": {
+            "type": "string",
+            "enum": ["diataxis", "product"]
+          }
+        },
+        "required": ["path", "profile"],
+        "additionalProperties": false
+      },
+      "description": "Hybrid sites only; empty otherwise"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["python", "javascript", "php"]
+    },
+    "docs_tooling": {
+      "type": "string",
+      "enum": ["mkdocs", "vitepress", "docusaurus", "starlight", "other", "none"]
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["github", "gitlab"]
+    },
+    "docs_writer_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Files under ezai-docs-writer/references/ that AUDIT and GENERATION must load"
+    }
+  },
+  "required": [
+    "stage",
+    "date",
+    "inputs_read",
+    "user_scope",
+    "profile",
+    "zones",
+    "language",
+    "docs_tooling",
+    "platform",
+    "docs_writer_refs"
+  ],
+  "additionalProperties": false
+}
