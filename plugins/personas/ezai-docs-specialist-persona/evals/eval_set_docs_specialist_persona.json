@@ -178,10 +178,16 @@
     {
       "id": 7,
       "capability": "docs-apply",
-      "prompt": "Mon site Sphinx sur GitLab a des badges qui viennent d'un ancien template. Remplace-les par les bons.",
-      "expected_output": "Pipeline déclenché : DETECTION détecte Sphinx + GitLab. AUDIT flagge les badges périmés du template comme majeur. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
+      "prompt": "Mon site Docusaurus sur GitLab a des badges qui viennent d'un ancien template. Remplace-les par les bons.",
+      "expected_output": "Pipeline déclenché : DETECTION détecte Docusaurus + GitLab. AUDIT flagge les badges périmés du template comme majeur. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
       "files": [],
       "assertions": [
+        {
+          "id": "docusaurus-detected",
+          "description": "Docusaurus détecté comme outil de doc",
+          "type": "regex",
+          "value": "[Dd]ocusaurus"
+        },
         {
           "id": "gitlab-detected",
           "description": "GitLab détecté dans le contexte",
