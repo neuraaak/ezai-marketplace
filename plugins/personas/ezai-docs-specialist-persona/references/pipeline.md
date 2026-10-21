@@ -23,10 +23,11 @@ Finding IDs are stable across stages: `01-NNN`. PLANNING and VALIDATION cross-re
 
 The orchestrator validates each artifact before the next stage reads it.
 
-1. **Constrain when possible.** When the harness can constrain a subagent's output to a JSON schema (structured outputs — e.g. `codex exec --output-schema`), pass the stage's schema: the output is then valid by construction.
-2. **Otherwise check it.** The subagent writes the file following the schema; the orchestrator checks that it parses as JSON, that every required field is present, that there is no extra field, and that every enum value is allowed.
-3. **Cross-reference IDs.** Every ID is `01-NNN`; every `02-plan.json` ID exists in `01-audit.json`; every `03-changes.json` ID exists in the plan; `04-validation.json` lists every audit finding exactly once.
-4. **On failure**, re-dispatch the stage once with the list of errors. A second failure stops the pipeline: tell the user which stage failed and which fields or IDs are wrong.
+1. **Hand the schema over.** Subagents do not load this persona and cannot read its `references/schemas/`: paste the stage's schema into the dispatch prompt.
+2. **Constrain when possible.** When the harness can constrain a subagent's output to a JSON schema (structured outputs — e.g. `codex exec --output-schema`), pass the stage's schema. The constraint applies to the subagent's final answer, not to a file it writes: the subagent returns the artifact as its answer, valid by construction, and the orchestrator writes it to `.docs-audit/`.
+3. **Otherwise check it.** The subagent writes the file following the schema; the orchestrator checks that it parses as JSON, that every required field is present, that there is no extra field, and that every enum value is allowed.
+4. **Cross-reference IDs.** Every ID is `01-NNN`; every `02-plan.json` ID exists in `01-audit.json`; every `03-changes.json` ID exists in the plan; `04-validation.json` lists every audit finding exactly once.
+5. **On failure**, re-dispatch the stage once with the list of errors. A second failure stops the pipeline: tell the user which stage failed and which fields or IDs are wrong.
 
 ---
 
