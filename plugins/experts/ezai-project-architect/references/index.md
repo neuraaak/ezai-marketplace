@@ -4,9 +4,10 @@ Two routing axes: **common** (always loaded) and **language**. See `languages/in
 
 ## Common (`common/`)
 
-| File                     | Load when…              | Contents                                                         |
-| :----------------------- | :---------------------- | :--------------------------------------------------------------- |
-| `common/architecture.md` | Every architecture task | Composition, Ports & Adapters, Repository, feature-based modules |
+| File                     | Load when…                       | Contents                                                          |
+| :----------------------- | :------------------------------- | :---------------------------------------------------------------- |
+| `common/architecture.md` | Every architecture task          | Composition, Ports & Adapters, Repository, feature-based modules  |
+| `common/scoping.md`      | Scope step, before anything else | Ordered scoping questions, when to ask each, recommended defaults |
 
 ## Languages (`languages/`)
 

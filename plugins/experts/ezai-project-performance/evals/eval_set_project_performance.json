@@ -200,6 +200,32 @@
           "value": "opcache.jit"
         }
       ]
+    },
+    {
+      "prompt": "Mon appli est lente, tu peux l'optimiser ?",
+      "expected_output": "Aucun code optimisé : l'agent pose en un seul appel les questions de cadrage restantes (Evidence, Workload, Goal), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Ee]vidence|[Mm]esur|[Pp]rofil|[Ww]orkload|[Gg]oal|[Oo]bjectif)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-code",
+          "description": "Ne propose pas de code avant la réponse",
+          "type": "not_contains",
+          "value": "```"
+        }
+      ],
+      "id": 8
     }
   ]
 }

@@ -41,7 +41,7 @@ Each finding uses:
 
 Severity: `bloquant` (breaks contract) · `majeur` (degrades quality) · `mineur` (polish).
 
-When `code-review` runs as the orchestrated pipeline (see `review-pipeline.md`), each finding carries a stable ID `01-<DOMAIN>-NNN` (DOMAIN ∈ ARCH | QUAL | PERF | CONF) so PLANNING and VALIDATION can cross-reference it. In the inline path the ID prefix may be omitted.
+When `code-review` runs as the orchestrated pipeline (see `review-pipeline.md`), each finding carries a stable ID `01-<DOMAIN>-NNN` (DOMAIN ∈ ARCH | QUAL | PERF | CONF) so PLANNING and VALIDATION can cross-reference it, and the findings are written as JSON following `schemas/01-review.schema.json`. In the inline path the ID prefix may be omitted.
 
 Close with a **Summary** — N bloquant / N majeur / N mineur, overall verdict (1–2 sentences).
 

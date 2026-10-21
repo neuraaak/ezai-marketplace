@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-senior-dev-persona/01-review.schema.json",
+  "title": "REVIEW — findings of one domain (one file per domain: 01-review-<DOMAIN>.json)",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["REVIEW"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["ARCH", "QUAL", "PERF", "CONF"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-<DOMAIN>-NNN, DOMAIN in ARCH | QUAL | PERF | CONF"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bloquant", "majeur", "mineur"],
+            "description": "bloquant breaks the contract, majeur degrades quality, mineur is polish"
+          },
+          "title": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string",
+            "description": "One sentence"
+          },
+          "where": {
+            "type": "string",
+            "description": "file:line"
+          },
+          "fix": {
+            "type": "string",
+            "description": "One sentence"
+          }
+        },
+        "required": ["id", "severity", "title", "what", "where", "fix"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "domain", "findings"],
+  "additionalProperties": false
+}

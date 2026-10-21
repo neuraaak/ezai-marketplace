@@ -57,6 +57,8 @@ Use the Skill tool to load the relevant sub-skill(s):
 
 Load **all four** when the task spans more than one architecture layer or when the user requests a full code review. Otherwise load only the sub-skill(s) matching the table.
 
+Each sub-skill runs its own Scope step, minus the questions the persona's Scope step already asked.
+
 If a sub-skill cannot be loaded: state which one is unavailable, proceed using the baseline standards in this file, and flag any area where the missing sub-skill would normally apply.
 
 ### Step 4 — Implement or review

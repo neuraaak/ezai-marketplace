@@ -120,6 +120,32 @@
           "value": "attendu|expected|normal|comportement|voulu"
         }
       ]
+    },
+    {
+      "prompt": "Mets en place la CI de mon projet.",
+      "expected_output": "Aucun YAML généré : l'agent pose en un seul appel les questions de cadrage restantes (Task, Platform, Delivery), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Pp]latform|[Pp]lateforme|[Dd]elivery|[Ll]ivr|[Tt]ask)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-yaml",
+          "description": "Ne génère pas de workflow avant la réponse",
+          "type": "not_contains",
+          "value": "runs-on:"
+        }
+      ],
+      "id": 4
     }
   ]
 }

@@ -22,7 +22,7 @@ For any Python library, the canonical documentation stack is **MkDocs + Material
 
 Declare these as a `docs` extra (or dependency group) in `pyproject.toml` so CI installs them with `uv sync --extra docs`.
 
-Reach for **Sphinx** only when the project needs reStructuredText, the full `autodoc`/`intersphinx` ecosystem, or PDF/LaTeX output. For everything else, MkDocs + Material is lighter and the Diátaxis templates in `common/quadrants-templates.md` assume it.
+Reach for **Sphinx** only when the project needs reStructuredText, the full `autodoc`/`intersphinx` ecosystem, or PDF/LaTeX output. For everything else, MkDocs + Material is lighter and the page templates in `profiles/` assume it.
 
 ---
 

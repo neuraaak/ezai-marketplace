@@ -34,20 +34,38 @@ only the general default; context-specific overrides live in the user's rules.
 | `docstring-normalization` | Google (Python) / JSDoc (JS/TS) / PHPDoc (PHP) canonical docstring style |
 | `multi-language-routing`  | Auto-detect language from extension, route to style file                 |
 
+## Scope
+
+Before loading any other reference, settle the scope with the user.
+
+1. Read `references/common/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
+
+**Under a persona.** Skip this step when the skill runs in a subagent of a persona pipeline: the persona settled the scope before dispatch and wrote it to the pipeline's `00-context.json`. When a persona hands the task over inline, run this step but drop every question the persona already asked.
+
 ## Workflow
 
-### 1. Orient — detect language and confirm support
+### 1. Scope — settle the scope with the user
+
+Run the Scope step above.
+
+### 2. Orient — detect language and confirm support
 
 - Identify the target file's language from its extension (`.py`, `.ts`, `.js`, etc.).
 - Read `references/index.md` then `references/languages/index.md` to confirm the language is supported.
 - If unsupported: stop with "No style layout found for `<language>` in references/languages/. Please add a style-layout.instructions.md file."
 
-### 2. Load — read the style contract
+### 3. Load — read the style contract
 
 - Load `references/languages/<language>/style-layout.instructions.md`.
 - Identify the specific separator markers, import grouping rules, and docstring style that apply.
 
-### 3. Apply — structural edits only
+### 4. Apply — structural edits only
 
 - **Section separators:** Add/replace main section headers (IMPORTS, CONSTANTS, CLASSES, FUNCTIONS). Omit sections with no corresponding code. Replace non-canonical separators; never duplicate.
 - **Imports:** Reorder into stdlib → third-party → local, alphabetically within each group.
@@ -60,7 +78,7 @@ only the general default; context-specific overrides live in the user's rules.
 - **No logic:** Never modify business logic, variable names, or function signatures.
 - **No shell:** Do not invoke ruff, eslint, prettier, or any external formatter.
 - **English:** All section headers and comments must be in English.
-- **Tools:** Read, Write, Edit, Glob, Grep only.
+- **Tools:** Read, Write, Edit, Glob, Grep, plus the harness's question tool for the Scope step.
 
 ## Output format
 

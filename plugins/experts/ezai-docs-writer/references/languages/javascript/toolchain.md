@@ -20,7 +20,7 @@ For any JS/TS library, the canonical documentation stack is **VitePress + TypeDo
 
 Declare these in `devDependencies` and drive them through `package.json` scripts (`docs:dev`, `docs:build`, `docs:preview`) so CI installs them with `pnpm install --frozen-lockfile`.
 
-Reach for **Docusaurus** only when the project needs React-based MDX components, a built-in blog/versioned-docs UX, or a richer plugin ecosystem. For everything else, VitePress is lighter and the Diátaxis templates in `common/quadrants-templates.md` assume it.
+Reach for **Docusaurus** only when the project needs React-based MDX components, a built-in blog/versioned-docs UX, or a richer plugin ecosystem. For everything else, VitePress is lighter and the page templates in `profiles/` assume it.
 
 Reach for **Starlight (Astro)** when the project needs **first-class i18n** (built-in, multi-locale routing) or **multi-framework component embedding** (React, Vue, Svelte inline via Astro Islands) — it is also accessibility-first (WCAG 2.1 AA out of the box). Pick it over VitePress only when one of those is a hard requirement; otherwise the Vue-centric VitePress stack stays the default. Starlight pairs with the same TypeDoc → `typedoc-plugin-markdown` API-generation step.
 
@@ -75,7 +75,7 @@ export default defineVersionedConfig(
     themeConfig: {
       search: { provider: 'local' }, // client-side full-text search, no external service
 
-      // Top navbar — one entry per Diátaxis section.
+      // Top navbar — one entry per section of the site's profile (Diátaxis shown here).
       nav: [
         { text: 'Getting Started', link: '/getting-started' },
         { text: 'Guides', link: '/guides/' },

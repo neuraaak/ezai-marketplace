@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-senior-dev-persona/00-context.schema.json",
+  "title": "DETECTION — review context",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["DETECTION"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "user_scope": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "Scope answer, or the default applied"
+        },
+        "domains": {
+          "type": "string",
+          "description": "Scope answer, or the default applied"
+        }
+      },
+      "required": ["target", "domains"],
+      "additionalProperties": false
+    },
+    "language": {
+      "type": "string",
+      "enum": ["python", "javascript", "typescript"]
+    },
+    "review_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Files or modules under review"
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "enum": ["architect", "quality", "performance", "config"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["selected", "skipped"]
+          },
+          "reason": {
+            "type": "string",
+            "description": "One line; 'user scope' when the Scope answer excluded it"
+          }
+        },
+        "required": ["domain", "status", "reason"],
+        "additionalProperties": false
+      },
+      "description": "Exactly one entry per domain"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "user_scope", "language", "review_scope", "domains"],
+  "additionalProperties": false
+}

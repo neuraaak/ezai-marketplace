@@ -12,7 +12,7 @@ For the canonical config file (`docs/.vitepress/config.mts`), the recommended st
 
 VitePress has two navigation surfaces, both under `themeConfig`:
 
-- **`nav`** — the top navbar; one entry per top-level section, mirroring Diátaxis (Getting Started → CLI Reference → Skills → Guides).
+- **`nav`** — the top navbar; one entry per top-level section, mirroring the navigation structure of the site's profile (`profiles/<profile>/templates.md`) — e.g. Getting Started → CLI Reference → Skills → Guides under Diátaxis, Get started → Guides → Troubleshooting → Release notes under the product profile.
 - **`sidebar`** — the left tree. Use the **array form** for a single global sidebar, or the **object form** (keyed by path prefix, e.g. `/guides/`) for per-section sidebars.
 
 Rules:

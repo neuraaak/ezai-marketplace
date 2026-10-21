@@ -1,6 +1,6 @@
 # JavaScript/TypeScript Documentation Standards (JSDoc/TSDoc + VitePress)
 
-Load this file together with `common/standards.md` (the language-agnostic rules: Diátaxis, emoji set, admonition semantics, anti-patterns). This file holds only the JS/TS specifics: JSDoc/TSDoc syntax, the TypeScript type rule, and VitePress admonition syntax.
+Load this file together with `common/standards.md` (the language-agnostic rules: emoji set, admonition semantics) and with the documentation profile's `structure.md` (page structure, anti-patterns). This file holds only the JS/TS specifics: JSDoc/TSDoc syntax, the TypeScript type rule, and VitePress admonition syntax.
 
 **Docstring rule:** JSDoc (Google-style) for all public functions, classes, and types. In TypeScript, prefer signature types over JSDoc `{type}` annotations — let the type system be the authority.
 
@@ -79,19 +79,21 @@ Collapsible — use for information that is true but not critical to the flow.
 :::
 ```
 
+On a Docusaurus or Starlight site, use the syntax in `docusaurus.md` or `starlight.md` instead.
+
 VitePress containers: `tip`, `info`, `warning`, `danger`, `details`. Map the universal types from `common/standards.md` onto these (`note` → `info`, `example` → a fenced code block, `abstract` → lead paragraph).
 
 ---
 
 ## Page structure
 
-Diátaxis nav structure and page templates apply identically to JS/TS projects — load `common/quadrants-templates.md`; every template is language-agnostic, only replace Python code snippets with TypeScript/JavaScript equivalents.
+The navigation structure and page templates of the site's profile apply identically to JS/TS projects — load `profiles/<profile>/templates.md`; every template is language-agnostic, only replace Python code snippets with TypeScript/JavaScript equivalents.
 
 ---
 
 ## JS/TS-specific anti-patterns
 
-The Diátaxis anti-patterns live in `common/standards.md`. These are language-specific:
+The profile anti-patterns live in `profiles/<profile>/structure.md`. These are language-specific:
 
 | Anti-pattern                             | Problem                         | Fix                                          |
 | :--------------------------------------- | :------------------------------ | :------------------------------------------- |

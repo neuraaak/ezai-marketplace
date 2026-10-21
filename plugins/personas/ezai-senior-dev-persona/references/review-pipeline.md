@@ -19,54 +19,53 @@ absent).
 
 ```text
 .senior-review/
-  00-context.md     written by DETECTION,   read by REVIEW + PLANNING + APPLY
-  01-review.md      written by REVIEW,       read by PLANNING + VALIDATION
-  02-plan.md        written by PLANNING,     read by APPLY
-  03-changes.md     written by APPLY,        read by VALIDATION
-  04-validation.md  written by VALIDATION,   presented to user
+  00-context.json           written by DETECTION,  read by REVIEW + PLANNING + APPLY
+  01-review-<DOMAIN>.json   written by REVIEW,     read by PLANNING + VALIDATION (one file per domain)
+  02-plan.json              written by PLANNING,   read by APPLY
+  03-changes.json           written by APPLY,      read by VALIDATION
+  04-validation.json        written by VALIDATION, presented to user
 ```
+
+Every artifact is JSON and has a schema in `references/schemas/` (`01-review-<DOMAIN>.json` files share `01-review.schema.json`). The schemas use the subset that structured outputs accept: every field required, no extra field, closed enums.
 
 Finding IDs are stable across stages: `01-<DOMAIN>-NNN` where DOMAIN ∈
 `ARCH | QUAL | PERF | CONF`. PLANNING and VALIDATION cross-reference by this ID.
+
+## Artifact validation
+
+The orchestrator validates each artifact before the next stage reads it.
+
+1. **Hand the schema over.** Subagents do not load this persona and cannot read its `references/schemas/`: paste the stage's schema into the dispatch prompt.
+2. **Constrain when possible.** When the harness can constrain a subagent's output to a JSON schema (structured outputs — e.g. `codex exec --output-schema`), pass the stage's schema. The constraint applies to the subagent's final answer, not to a file it writes: the subagent returns the artifact as its answer, valid by construction, and the orchestrator writes it to `.senior-review/`.
+3. **Otherwise check it.** The subagent writes the file following the schema; the orchestrator checks that it parses as JSON, that every required field is present, that there is no extra field, and that every enum value is allowed.
+4. **Cross-reference IDs.** Every ID is `01-<DOMAIN>-NNN` and matches its file's domain; every `02-plan.json` ID exists in a review file; every `03-changes.json` ID exists in the plan; `04-validation.json` lists every review finding exactly once.
+   Structured outputs cannot express array counts, so also check that `00-context.json` lists each of the four domains exactly once, and that the `summary` counts of `04-validation.json` match its findings' statuses.
+5. **On failure**, re-dispatch the stage once with the list of errors. A second failure stops the pipeline: tell the user which stage failed and which fields or IDs are wrong.
 
 ---
 
 ## Stage 0 — DETECTION
 
 **Who:** Dedicated subagent (read-only).
-**Inputs:** Reviewed code scope (target files/modules), `pyproject.toml`,
-`package.json`, file extensions.
-**Output:** `.senior-review/00-context.md`
+**Inputs:** The persona's Scope answers, reviewed code scope (target
+files/modules), `pyproject.toml`, `package.json`, file extensions.
+**Output:** `.senior-review/00-context.json` (`schemas/00-context.schema.json`)
 
 ### Role
 
 1. **Language** — Python or JavaScript/TypeScript, from `pyproject.toml` /
    `package.json` / extensions.
-2. **Review scope** — the exact files/modules under review.
+2. **Review scope** — the exact files/modules under review, bounded by the
+   `target` answer of the Scope step.
 3. **Domain selection** — pick the relevant domains among `architect`,
    `quality`, `performance`, `config`. Do **not** launch all four by reflex: a
    domain that does not apply must be listed as `skipped` with a one-line
-   reason (e.g. no async/concurrent code ⇒ skip `performance`).
+   reason (e.g. no async/concurrent code ⇒ skip `performance`). When the
+   `domains` answer restricts the review, keep only those domains and mark the
+   others `skipped` with the reason `user scope`.
 
-If the artifact is empty or malformed (missing required fields), stop and tell
-the user which fields are absent — do not proceed to REVIEW with incomplete
-context.
-
-### 00-context.md schema
-
-```markdown
-## DETECTION — YYYY-MM-DD
-Inputs read: <files/scope read>
-Artifact produced: .senior-review/00-context.md
-
-- language: python | javascript | typescript
-- review-scope: <files/modules under review>
-- domains:
-    - architect:   selected (reason: …) | skipped (reason: …)
-    - quality:     selected (reason: …) | skipped (reason: …)
-    - performance: selected (reason: …) | skipped (reason: …)
-    - config:      selected (reason: …) | skipped (reason: …)
-```
+`domains` lists all four domains, each `selected` or `skipped` with its reason.
+REVIEW never starts on an artifact that failed validation.
 
 ---
 
@@ -74,10 +73,11 @@ Artifact produced: .senior-review/00-context.md
 
 **Who:** One dedicated subagent per selected domain (read-only), dispatched
 **in series** (one at a time).
-**Inputs:** `00-context.md` + the reviewed code + the domain's project
+**Inputs:** `00-context.json` + the reviewed code + the domain's project
 sub-skill (loaded by the subagent via the Skill tool).
-**Output:** each subagent appends **its own section** to
-`.senior-review/01-review.md`.
+**Output:** each subagent writes **its own file**,
+`.senior-review/01-review-<DOMAIN>.json` (`schemas/01-review.schema.json`). One
+file per domain: no subagent ever edits another's output.
 
 Domain → sub-skill mapping:
 
@@ -88,69 +88,25 @@ Domain → sub-skill mapping:
 | PERF        | `ezai-project-performance` |
 | CONF        | `ezai-project-config`      |
 
-Each finding uses the `code-review` format from `report-format.md`, with a
-stable ID:
-
-```text
-[01-<DOMAIN>-NNN] [SEVERITY] <short title>
-  What:  <one sentence>
-  Where: <file:line>
-  Fix:   <one sentence>
-```
+Each finding carries a stable ID, a severity, a title, and the `what` / `where`
+(`file:line`) / `fix` fields of the `code-review` format in `report-format.md`.
 
 Severity: `bloquant` (breaks contract) · `majeur` (degrades quality) ·
 `mineur` (polish).
-
-### 01-review.md schema
-
-```markdown
-## REVIEW — YYYY-MM-DD
-Inputs read: 00-context.md, <reviewed code>
-Artifact produced: .senior-review/01-review.md
-
-### Architecture (ARCH)
-[01-ARCH-001] [majeur] …
-  What: …
-  Where: …
-  Fix: …
-
-### Quality (QUAL)
-[01-QUAL-001] [bloquant] …
-  …
-
-### Performance (PERF)
-<section present only if domain selected>
-
-### Config (CONF)
-<section present only if domain selected>
-```
 
 ---
 
 ## Stage 2 — PLANNING *(load `report-format.md` before starting)*
 
 **Who:** Main orchestrator, entering plan mode.
-**Inputs:** `00-context.md` + `01-review.md`.
-**Output:** `.senior-review/02-plan.md`.
+**Inputs:** `00-context.json` + every `01-review-<DOMAIN>.json`.
+**Output:** `.senior-review/02-plan.json` (`schemas/02-plan.schema.json`).
 
 The orchestrator consolidates every domain finding into one prioritized fix plan
-(bloquant → majeur → mineur), presents it to the user, and **waits for
-approval**. This is the human gate — no patch runs before approval.
-
-### 02-plan.md schema
-
-```markdown
-## PLANNING — YYYY-MM-DD
-Inputs read: 00-context.md, 01-review.md
-Artifact produced: .senior-review/02-plan.md
-
-### TODOs — bloquant
-- [ ] [01-<DOMAIN>-NNN] <short title> — <file> — <one-line action>
-### TODOs — majeur
-- [ ] [01-<DOMAIN>-NNN] <short title> — <file> — <one-line action>
-### TODOs — mineur
-- [ ] [01-<DOMAIN>-NNN] <short title> — <file> — <one-line action>
-```
+(bloquant → majeur → mineur), writes it with `approved: false`, presents it to
+the user as a readable list, and **waits for approval**. This is the human gate:
+on approval the orchestrator sets `approved: true`. APPLY never runs on a plan
+whose `approved` is `false`.
 
 Each TODO carries the finding ID so VALIDATION can cross-reference.
 
@@ -159,66 +115,33 @@ Each TODO carries the finding ID so VALIDATION can cross-reference.
 ## Stage 3 — APPLY
 
 **Who:** A **single** dedicated subagent (write).
-**Inputs:** `00-context.md` + `02-plan.md`.
-**Output:** real file patches + `.senior-review/03-changes.md`.
+**Inputs:** `00-context.json` + `02-plan.json`.
+**Output:** real file patches + `.senior-review/03-changes.json` (`schemas/03-changes.schema.json`).
 
 The APPLY subagent executes the approved plan **in series, file by file**. It
 loads inline whichever project sub-skills the fixes require, to respect the
 standards. A single agent ⇒ no write collisions.
 
 Degraded mode: if a fix fails or cannot be applied, mark it `SKIPPED` /
-`FAILED` and add it to a top-level `## Blockers` section, then continue with the
-remaining TODOs. This lets VALIDATION distinguish "not fixed because skipped"
-from "fix failed".
-
-### 03-changes.md schema
-
-```markdown
-## APPLY — YYYY-MM-DD
-Inputs read: 00-context.md, 02-plan.md
-Artifact produced: .senior-review/03-changes.md
-
-- [01-<DOMAIN>-NNN] <short title> → DONE | SKIPPED | FAILED
-  File: <path>
-  Why: <one-line rationale if non-obvious>
-
-## Blockers
-- [01-<DOMAIN>-NNN] <short title> — <reason skipped/failed>
-```
+`FAILED` and add it to `blockers`, then continue with the remaining TODOs. This
+lets VALIDATION distinguish "not fixed because skipped" from "fix failed".
 
 ---
 
 ## Stage 4 — VALIDATION
 
 **Who:** Dedicated subagent (read-only).
-**Inputs:** `01-review.md` + `03-changes.md` + updated code.
-**Output:** `.senior-review/04-validation.md`.
+**Inputs:** every `01-review-<DOMAIN>.json` + `03-changes.json` + updated code.
+**Output:** `.senior-review/04-validation.json` (`schemas/04-validation.schema.json`).
 
-Re-reads the code and cross-references every finding from `01-review.md` (by ID)
-against `03-changes.md`. Status: `FIXED` | `OPEN` | `REGRESSED`.
-
-### 04-validation.md schema
-
-```markdown
-## VALIDATION — YYYY-MM-DD
-Inputs read: 01-review.md, 03-changes.md, code
-Artifact produced: .senior-review/04-validation.md
-
-### Summary
-- Fixed: N
-- Open: N
-- Regressed: N
-
-### Per-finding status
-- [01-<DOMAIN>-NNN] <short title> → FIXED | OPEN | REGRESSED
-  Note: <optional one-line observation>
-```
+Re-reads the code and cross-references every review finding (by ID)
+against `03-changes.json`. Status: `FIXED` | `OPEN` | `REGRESSED`.
 
 ---
 
 ## Bounded re-loop
 
-If `04-validation.md` contains `OPEN` or `REGRESSED` findings, the orchestrator
+If `04-validation.json` contains `OPEN` or `REGRESSED` findings, the orchestrator
 surfaces the summary to the user — count of OPEN/REGRESSED, the IDs and titles,
 and a one-line diagnosis each — then offers **one** re-loop back to PLANNING.
 Present it as: « Voulez-vous corriger ces N points restants, ou considérer la

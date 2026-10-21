@@ -1,6 +1,6 @@
 # PHP Documentation Standards (PHPDoc + phpDocumentor/Doctum)
 
-Load this file together with `common/standards.md` (the language-agnostic rules: Diátaxis, emoji set, admonition semantics, anti-patterns). This file holds only the PHP specifics: PHPDoc tag syntax, the PHP 8 attribute rule, and where prose admonitions come from.
+Load this file together with `common/standards.md` (the language-agnostic rules: emoji set, admonition semantics) and with the documentation profile's `structure.md` (page structure, anti-patterns). This file holds only the PHP specifics: PHPDoc tag syntax, the PHP 8 attribute rule, and where prose admonitions come from.
 
 **Docstring rule:** PHPDoc blocks (`/** … */`) on every public class, method, function, and property. Omit `@param`/`@return` types only when the native PHP type declaration already states them and the doc adds nothing — otherwise PHPDoc is the carrier of the documentation prose, not just the type.
 

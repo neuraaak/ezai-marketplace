@@ -39,16 +39,34 @@ only the general default; context-specific overrides live in the user's rules.
 | `logging`    | Structured logging with correlation IDs                   |
 | `review`     | Quality/security review of existing code                  |
 
+## Scope
+
+Before loading any other reference, settle the scope with the user.
+
+1. Read `references/common/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
+
+**Under a persona.** Skip this step when the skill runs in a subagent of a persona pipeline: the persona settled the scope before dispatch and wrote it to the pipeline's `00-context.json`. When a persona hands the task over inline, run this step but drop every question the persona already asked.
+
 ## Workflow
 
-### 1. Orient
+### 1. Scope — settle the scope with the user
+
+Run the Scope step above.
+
+### 2. Orient
 
 - Detect the project language (`pyproject.toml` → Python, `package.json` →
   JS/TS, `composer.json` → PHP). For mixed repos, both languages apply.
-- Identify the task type from the table above. If ambiguous, ask before
-  generating.
+- Identify the task type from the table above, using the `task` answer from
+  the Scope step.
 
-### 2. Load references
+### 3. Load references
 
 Read `references/index.md` — it is the root router. Quick cheat sheet:
 
@@ -79,7 +97,7 @@ never instead of it. Cascade is `common → language → framework`.
 If no framework is detected, or the detected one has no delta file, stop at the
 language file — do not invent framework-specific tests or config.
 
-### 3. Apply
+### 4. Apply
 
 Generate the requested artifact. Self-check against the **Success criteria**
 section of the loaded language file before outputting.

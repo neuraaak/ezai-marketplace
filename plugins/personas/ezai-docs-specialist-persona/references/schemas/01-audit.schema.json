@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-docs-specialist-persona/01-audit.schema.json",
+  "title": "AUDIT — findings",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["AUDIT"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": ["structure", "coherence"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["run", "skipped"]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why it was skipped (e.g. 'user scope'), else null"
+          }
+        },
+        "required": ["section", "status", "reason"],
+        "additionalProperties": false
+      },
+      "description": "Exactly one entry per section"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-NNN"
+          },
+          "section": {
+            "type": "string",
+            "enum": ["structure", "coherence"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bloquant", "majeur", "mineur"],
+            "description": "bloquant breaks the contract, majeur degrades quality, mineur is polish"
+          },
+          "title": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string",
+            "description": "One sentence"
+          },
+          "where": {
+            "type": "string",
+            "description": "File path or section"
+          },
+          "fix": {
+            "type": "string",
+            "description": "One sentence"
+          }
+        },
+        "required": ["id", "section", "severity", "title", "what", "where", "fix"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "sections", "findings"],
+  "additionalProperties": false
+}

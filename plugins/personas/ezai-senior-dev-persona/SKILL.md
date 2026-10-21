@@ -42,9 +42,32 @@ rules.
 
 Before starting, identify which capability applies to the user's request. If the request is about documentation writing or formatting only, route to `ezai-docs-writer` or `ezai-code-formatter` and stop.
 
+## Scope
+
+Run this step in the main agent, after the scope gate and before any subagent
+is dispatched: subagents cannot ask the user.
+
+**Skip it** when the request already names targeted work — implement,
+refactor, debug, or decide on a precise target. Mode B loads the matching
+expert, and the expert scopes the task itself.
+
+Otherwise:
+
+1. Read `references/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+The `mode` answer picks the execution mode: **Review** → Mode A, and the
+answers go to the DETECTION subagent, which records them in `00-context.json`.
+**Targeted work** → Mode B, where each expert loaded inline asks only what this
+step did not.
+
 ## Execution
 
-Two modes, branching on the capability identified at the scope gate.
+Two modes, branching on the capability identified at the scope gate and the
+`mode` answer of the Scope step.
 
 ### Mode A — orchestrated review (capability = `code-review`)
 

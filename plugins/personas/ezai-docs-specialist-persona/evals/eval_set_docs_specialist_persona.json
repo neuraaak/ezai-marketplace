@@ -5,14 +5,14 @@
       "id": 1,
       "capability": "docs-audit",
       "prompt": "Audite et remets à niveau le site de docs de ce projet Python avec MkDocs. Le repo est sur GitHub.",
-      "expected_output": "Pipeline déclenché : sous-agent DETECTION produit 00-context.md (language:python, platform:github), sous-agent AUDIT produit 01-audit.md avec findings classifiés bloquant/majeur/mineur en sections A et B, agent principal rédige 02-plan.md et attend validation humaine avant de continuer.",
+      "expected_output": "Pipeline déclenché : sous-agent DETECTION produit 00-context.json (language:python, platform:github), sous-agent AUDIT produit 01-audit.json avec findings classifiés bloquant/majeur/mineur en sections A et B, agent principal rédige 02-plan.json et attend validation humaine avant de continuer.",
       "files": [],
       "assertions": [
         {
           "id": "detection-artifact",
-          "description": "Artefact 00-context.md mentionné",
+          "description": "Artefact 00-context.json mentionné",
           "type": "contains",
-          "value": "00-context.md"
+          "value": "00-context.json"
         },
         {
           "id": "language-python",
@@ -55,9 +55,9 @@
         },
         {
           "id": "no-pipeline-artifact",
-          "description": "Pas d'artefact 00-context.md produit",
+          "description": "Pas d'artefact 00-context.json produit",
           "type": "not_contains",
-          "value": "00-context.md"
+          "value": "00-context.json"
         }
       ]
     },
@@ -65,7 +65,7 @@
       "id": 3,
       "capability": "docs-upgrade-plan",
       "prompt": "Mon site VitePress a l'air incomplet. Y a-t-il des sections manquantes ? Corrige ce qui ne va pas.",
-      "expected_output": "Pipeline complet (5 étapes) : DETECTION détecte JS/VitePress, AUDIT identifie les quadrants Diátaxis absents et les incohérences de badges, PLANNING produit un plan priorisé présenté à l'utilisateur, après approbation GENERATION invoque ezai-docs-writer pour chaque TODO, VALIDATION croise 01-audit.md et 03-changes.md et rapporte le statut par finding.",
+      "expected_output": "Pipeline complet (5 étapes) : DETECTION détecte JS/VitePress, AUDIT identifie les quadrants Diátaxis absents et les incohérences de badges, PLANNING produit un plan priorisé présenté à l'utilisateur, après approbation GENERATION invoque ezai-docs-writer pour chaque TODO, VALIDATION croise 01-audit.json et 03-changes.json et rapporte le statut par finding.",
       "files": [],
       "assertions": [
         {
@@ -104,7 +104,7 @@
       "id": 4,
       "capability": "docs-audit",
       "prompt": "Le projet n'a pas de dossier docs/, juste un README.md à la racine. Fais un audit.",
-      "expected_output": "DETECTION détecte l'absence de docs tooling et de dossier docs/. 00-context.md indique docs-tooling:none. AUDIT traite le README comme seul document disponible et flagge l'absence de structure Diátaxis comme bloquant. PLANNING présente un plan minimal avant de continuer — le pipeline ne s'arrête pas à DETECTION.",
+      "expected_output": "DETECTION détecte l'absence de docs tooling et de dossier docs/. 00-context.json indique docs-tooling:none. AUDIT traite le README comme seul document disponible et flagge l'absence de structure Diátaxis comme bloquant. PLANNING présente un plan minimal avant de continuer — le pipeline ne s'arrête pas à DETECTION.",
       "files": [],
       "assertions": [
         {
@@ -152,7 +152,7 @@
       "id": 6,
       "capability": "docs-upgrade-plan",
       "prompt": "Fais un audit complet de la doc, mais je veux juste voir les findings — pas de correctifs pour l'instant.",
-      "expected_output": "Pipeline partiel : DETECTION + AUDIT + PLANNING exécutés. Le plan 02-plan.md est présenté à l'utilisateur. Comme l'utilisateur n'approuve pas les correctifs, GENERATION n'est pas lancé. L'orchestrateur attend une décision explicite avant d'aller plus loin.",
+      "expected_output": "Pipeline partiel : DETECTION + AUDIT + PLANNING exécutés. Le plan 02-plan.json est présenté à l'utilisateur. Comme l'utilisateur n'approuve pas les correctifs, GENERATION n'est pas lancé. L'orchestrateur attend une décision explicite avant d'aller plus loin.",
       "files": [],
       "assertions": [
         {
@@ -178,10 +178,16 @@
     {
       "id": 7,
       "capability": "docs-apply",
-      "prompt": "Mon site Sphinx sur GitLab a des badges qui viennent d'un ancien template. Remplace-les par les bons.",
-      "expected_output": "Pipeline déclenché : DETECTION détecte Sphinx + GitLab. AUDIT flagge les badges périmés du template comme majeur. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
+      "prompt": "Mon site Docusaurus sur GitLab a des badges qui viennent d'un ancien template. Remplace-les par les bons.",
+      "expected_output": "Pipeline déclenché : DETECTION détecte Docusaurus + GitLab. AUDIT flagge les badges périmés du template comme majeur. GENERATION invoque ezai-docs-writer pour corriger les badges. Pipeline complet en 5 étapes.",
       "files": [],
       "assertions": [
+        {
+          "id": "docusaurus-detected",
+          "description": "Docusaurus détecté comme outil de doc",
+          "type": "regex",
+          "value": "[Dd]ocusaurus"
+        },
         {
           "id": "gitlab-detected",
           "description": "GitLab détecté dans le contexte",
@@ -207,6 +213,32 @@
           "value": "VALIDATION"
         }
       ]
+    },
+    {
+      "prompt": "Ma doc a besoin d'un coup de propre.",
+      "expected_output": "Ni audit ni page : la persona pose en un seul appel sa question de cadrage (Mode), option recommandée en premier, puis attend la réponse avant tout dispatch.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Mm]ode|[Aa]udit|[Tt]raitement)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-pipeline",
+          "description": "Ne lance pas le pipeline avant la réponse",
+          "type": "not_contains",
+          "value": ".docs-audit/"
+        }
+      ],
+      "id": 8
     }
   ]
 }
