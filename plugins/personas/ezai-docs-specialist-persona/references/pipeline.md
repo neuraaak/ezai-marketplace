@@ -28,7 +28,8 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 1. **Language** — Python or JavaScript/TypeScript? Detected from `pyproject.toml` / `package.json`.
 2. **Docs tooling** — MkDocs / VitePress / Sphinx / none? Detected from config file presence.
 3. **Versioning platform** — GitHub or GitLab? Detected from `.github/` or `.gitlab-ci.yml`.
-4. **ezai-docs-writer reference files to load** — the exact list of files from `ezai-docs-writer/references/` that AUDIT and GENERATION must load for this project. Start at `ezai-docs-writer/references/index.md`, then follow it into `languages/index.md` (per-language files) and `forge/index.md` (badge registries).
+4. **Documentation profile and zones** — Diátaxis, Product, or a hybrid site with one profile per zone. Detected with the signals and zone rules in `ezai-docs-writer/references/profiles/index.md`.
+5. **ezai-docs-writer reference files to load** — the exact list of files from `ezai-docs-writer/references/` that AUDIT and GENERATION must load for this project. Start at `ezai-docs-writer/references/index.md`, then follow it into `languages/index.md` (per-language files), `forge/index.md` (badge registries) and `profiles/index.md` (one `structure.md` per profile in use).
 
 ### 00-context.md schema
 
@@ -38,12 +39,14 @@ Inputs read: pyproject.toml, package.json, mkdocs.yml, docs/.vitepress/config.*,
 Artifact produced: .docs-audit/00-context.md
 
 - user-scope: mode=<full | targeted>, focus=<structure | coherence | both>, section=<whole site | path>
+- profile: diataxis | product | hybrid
+- zones: <hybrid only — one line per top-level folder: path → profile>
 - language: python | javascript
 - docs-tooling: mkdocs | vitepress | sphinx | none
 - platform: github | gitlab
 - docs-writer-refs:
     - references/common/standards.md
-    - references/profiles/diataxis/structure.md
+    - references/profiles/<profile>/structure.md   # one per profile in use
     - references/languages/<lang>/standards.md
     - references/forge/<platform>/badge-registry.md
     - references/languages/<lang>/badge-registry.md
@@ -58,17 +61,17 @@ Artifact produced: .docs-audit/00-context.md
 **Inputs:** `.docs-audit/00-context.md` + the `ezai-docs-writer` reference files listed in `docs-writer-refs` + full `docs/` tree.
 **Output:** `.docs-audit/01-audit.md`
 
-The AUDIT stage merges what would otherwise be two separate passes (Diátaxis structure + contextual coherence) into one single read of the docs tree. Two sections, one subagent, one cold-start.
+The AUDIT stage merges what would otherwise be two separate passes (profile structure + contextual coherence) into one single read of the docs tree. Two sections, one subagent, one cold-start.
 
 Honor `user-scope` from `00-context.md`: read only the `section` in scope, and run only Section A (`focus=structure`) or Section B (`focus=coherence`) when the audit is targeted. A section left out is listed as `skipped (reason: user scope)`.
 
-### Section A — Diátaxis structure
+### Section A — Profile structure
 
-Load `ezai-docs-writer/references/profiles/diataxis/structure.md` and `ezai-docs-writer/references/profiles/diataxis/templates.md`.
+For each zone (the whole site when there is no zone), load the `structure.md` and `templates.md` of its profile from `ezai-docs-writer/references/profiles/<profile>/`.
 
 - List the actual `docs/` tree.
-- Diff against the canonical Diátaxis layout (Tutorial, How-To, Reference, Explanation, Examples, Changelog).
-- Flag: absent quadrant sections, pages that mix two quadrants, `api/index.md` merged with auto-dump.
+- Diff each zone against its profile's navigation structure in `templates.md` (Diátaxis: Tutorial, How-To, Reference, Explanation, Examples, Changelog; Product: Get started, Tasks, Concepts, Reference, Troubleshooting, FAQ, Release notes, and the admin zone when the product is self-hosted).
+- Flag: absent sections of the profile, pages that mix two page types, and the anti-patterns listed in the profile's `structure.md` (e.g. `api/index.md` merged with auto-dump under Diátaxis, architecture exposed in the product user zone).
 - Classify each finding with a severity level (see `report-format.md`).
 
 ### Section B — Contextual coherence

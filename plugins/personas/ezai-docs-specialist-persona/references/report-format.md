@@ -16,8 +16,8 @@ Used in `01-audit.md` and carried through `04-validation.md`.
 
 | Level        | When to use                                                                                                                                                                                                |
 | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **bloquant** | Breaks the docs contract: a Diátaxis quadrant entirely absent, `api/index.md` merged with auto-dump, placeholder text shipped in prose, wrong docs tooling detected.                                       |
-| **majeur**   | Significant scope or coherence break that degrades quality without breaking the contract: a page mixing two Diátaxis quadrants, a stray badge left over from a template, broken internal cross-references. |
+| **bloquant** | Breaks the docs contract: a section required by the zone's profile entirely absent (a Diátaxis quadrant, a product Get started or Tasks section), `api/index.md` merged with auto-dump, placeholder text shipped in prose, wrong docs tooling detected.                                       |
+| **majeur**   | Significant scope or coherence break that degrades quality without breaking the contract: a page mixing two page types of its profile, a stray badge left over from a template, broken internal cross-references. |
 | **mineur**   | Polish: minor wording issues, a missing optional badge, a heading that could be clearer.                                                                                                                   |
 
 ## Findings section

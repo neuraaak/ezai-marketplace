@@ -11,7 +11,7 @@ A question whose condition depends on another answer is asked only when the requ
 **Ask when** the request does not say how deep to go ("full audit", "check the badges", "add a page" already answer it).
 **Question:** How should the documentation be handled?
 
-- `Full audit (Recommended)` — Whole site: Diátaxis structure and coherence, then a plan to approve.
+- `Full audit (Recommended)` — Whole site: profile structure and coherence, then a plan to approve.
 - `Targeted audit` — One axis or one section of the site, then a plan to approve.
 - `Write directly` — No audit: hand the pages to write over to `ezai-docs-writer`.
 
@@ -20,7 +20,7 @@ A question whose condition depends on another answer is asked only when the requ
 **Ask when** the mode is Targeted audit and the request does not name the axis.
 **Question:** Which axis should the audit check?
 
-- `Structure gaps (Recommended)` — Missing Diátaxis quadrants and pages that mix two of them.
+- `Structure gaps (Recommended)` — Missing sections of the documentation profile and pages that mix two page types.
 - `Coherence` — Badges, project name, placeholder text and leftovers from a template.
 
 ## 3. `section` — header `Section`
