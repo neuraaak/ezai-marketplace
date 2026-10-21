@@ -38,20 +38,20 @@
       "id": 2,
       "capability": "code-review",
       "prompt": "Code review de ce module auth.py — vérifie tout : architecture, typing, sécurité, testabilité. Le projet est en Python 3.12.",
-      "expected_output": "Pipeline orchestré déclenché : DETECTION produit 00-context.md (language python, scope auth.py, domaines sélectionnés dynamiquement), REVIEW dispatche un subagent par domaine retenu en série produisant 01-review.md avec findings ID 01-<DOMAIN>-NNN, PLANNING consolide en 02-plan.md et attend l'approbation humaine avant tout patch.",
+      "expected_output": "Pipeline orchestré déclenché : DETECTION produit 00-context.json (language python, scope auth.py, domaines sélectionnés dynamiquement), REVIEW dispatche un subagent par domaine retenu en série produisant 01-review-<DOMAIN>.json avec findings ID 01-<DOMAIN>-NNN, PLANNING consolide en 02-plan.json et attend l'approbation humaine avant tout patch.",
       "files": [],
       "assertions": [
         {
           "id": "detection-artifact",
-          "description": "Artefact 00-context.md produit par DETECTION",
+          "description": "Artefact 00-context.json produit par DETECTION",
           "type": "contains",
-          "value": "00-context.md"
+          "value": "00-context.json"
         },
         {
           "id": "review-artifact",
-          "description": "Artefact 01-review.md produit par REVIEW",
+          "description": "Artefact 01-review-<DOMAIN>.json produit par REVIEW",
           "type": "contains",
-          "value": "01-review.md"
+          "value": "01-review-"
         },
         {
           "id": "finding-id-convention",
@@ -109,9 +109,9 @@
       "assertions": [
         {
           "id": "detection-artifact",
-          "description": "DETECTION produit 00-context.md",
+          "description": "DETECTION produit 00-context.json",
           "type": "contains",
-          "value": "00-context.md"
+          "value": "00-context.json"
         },
         {
           "id": "dynamic-skip",
@@ -144,7 +144,7 @@
           "id": "no-orchestration-artifact",
           "description": "Aucun artefact de pipeline orchestré (mode inline)",
           "type": "not_contains",
-          "value": "00-context.md"
+          "value": "00-context.json"
         },
         {
           "id": "no-review-folder",

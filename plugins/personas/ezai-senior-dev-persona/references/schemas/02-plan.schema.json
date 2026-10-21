@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-senior-dev-persona/02-plan.schema.json",
+  "title": "PLANNING — fix plan",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["PLANNING"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "approved": {
+      "type": "boolean",
+      "description": "false when written; set to true only after the user approves the plan"
+    },
+    "todos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-<DOMAIN>-NNN, DOMAIN in ARCH | QUAL | PERF | CONF"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bloquant", "majeur", "mineur"],
+            "description": "bloquant breaks the contract, majeur degrades quality, mineur is polish"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "description": "One line"
+          }
+        },
+        "required": ["id", "severity", "title", "file", "action"],
+        "additionalProperties": false
+      },
+      "description": "Ordered bloquant, then majeur, then mineur"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "approved", "todos"],
+  "additionalProperties": false
+}

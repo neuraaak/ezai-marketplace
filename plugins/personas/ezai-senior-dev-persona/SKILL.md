@@ -60,7 +60,7 @@ Otherwise:
 5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
 
 The `mode` answer picks the execution mode: **Review** → Mode A, and the
-answers go to the DETECTION subagent, which records them in `00-context.md`.
+answers go to the DETECTION subagent, which records them in `00-context.json`.
 **Targeted work** → Mode B, where each expert loaded inline asks only what this
 step did not.
 

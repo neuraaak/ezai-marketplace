@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-senior-dev-persona/03-changes.schema.json",
+  "title": "APPLY — changes made",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["APPLY"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-<DOMAIN>-NNN, DOMAIN in ARCH | QUAL | PERF | CONF"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["DONE", "SKIPPED", "FAILED"]
+          },
+          "file": {
+            "type": "string"
+          },
+          "why": {
+            "type": ["string", "null"],
+            "description": "One-line rationale when non-obvious, else null"
+          }
+        },
+        "required": ["id", "title", "status", "file", "why"],
+        "additionalProperties": false
+      },
+      "description": "One entry per TODO of the approved plan"
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-<DOMAIN>-NNN, DOMAIN in ARCH | QUAL | PERF | CONF"
+          },
+          "title": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "title", "reason"],
+        "additionalProperties": false
+      },
+      "description": "Every SKIPPED or FAILED change"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "changes", "blockers"],
+  "additionalProperties": false
+}
