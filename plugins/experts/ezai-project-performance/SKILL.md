@@ -13,7 +13,7 @@ description: >
   "performance bottleneck", "out of memory", "speed this up".
 ---
 
-Concurrency and performance optimization. Follows a 3-step workflow: identify the workload type, load the matching language file, then apply the model with complete code.
+Concurrency and performance optimization. Follows a 4-step workflow: scope the request with the user, identify the workload type, load the matching language file, then apply the model with complete code.
 
 ## Local rules precedence
 
@@ -35,11 +35,24 @@ rules.
 | `python-optimization-patterns`   | `__slots__`, `lru_cache`, NumPy, uvloop for Python performance                       |
 | `semaphore-concurrency-limiting` | Limit concurrent operations with semaphores to prevent resource exhaustion           |
 
+## Scope
+
+Before loading any other reference, settle the scope with the user.
+
+1. Read `references/common/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
+
 ## Workflow
 
-1. **Identify** — workload type (I/O / CPU / mixed) + detected language(s) in the project
-2. **Load** — the language file below + `references/common/performance.md` (cross-cutting principles)
-3. **Apply** — propose the matching model with complete code + success criteria
+1. **Scope** — settle the scope with the user (see above)
+2. **Identify** — workload type (I/O / CPU / mixed) + detected language(s) in the project
+3. **Load** — the language file below + `references/common/performance.md` (cross-cutting principles)
+4. **Apply** — propose the matching model with complete code + success criteria
 
 ## Language routing
 
