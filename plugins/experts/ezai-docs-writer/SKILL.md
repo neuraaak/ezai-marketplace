@@ -55,7 +55,7 @@ Before loading any other reference, settle the scope with the user.
 
 Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
 
-**Under a persona.** Skip this step when the skill runs in a subagent of a persona pipeline: the persona settled the scope before dispatch and wrote it to the pipeline's `00-context.md`. When a persona hands the task over inline, run this step but drop every question the persona already asked.
+**Under a persona.** Skip this step when the skill runs in a subagent of a persona pipeline: the persona settled the scope before dispatch and wrote it to the pipeline's `00-context.json`. When a persona hands the task over inline, run this step but drop every question the persona already asked.
 
 ## Workflow
 
@@ -67,7 +67,7 @@ Run the Scope step above.
 
 - Detect the project language (`pyproject.toml` → Python, `package.json` → JS/TS, `composer.json` → PHP) and the doc config (`mkdocs.yml`, `docs/.vitepress/config.*`, `docusaurus.config.*`, `astro.config.*` importing `@astrojs/starlight`, `phpdoc.dist.xml`, `doctum.php`). If no config found, proceed from directory structure and flag that nav validation is unavailable.
 - Detect the documentation language (French or English) from existing `.md` files or explicit instruction. Default to English.
-- Detect the documentation profile — Diátaxis or Product — and, on a hybrid site, the zone of the target page, using the signals in `references/profiles/index.md`. When a persona pipeline passes the profile and zones (from its `00-context.md`), use them instead of detecting again.
+- Detect the documentation profile — Diátaxis or Product — and, on a hybrid site, the zone of the target page, using the signals in `references/profiles/index.md`. When a persona pipeline passes the profile and zones (from its `00-context.json`), use them instead of detecting again.
 
 ### 3. Load references
 
