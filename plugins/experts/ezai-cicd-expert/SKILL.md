@@ -27,9 +27,9 @@ rules.
 
 | Key                      | Description                                                                                                                                                                                            |
 | :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `write-github-actions`   | Generate a complete .github/workflows/\*.yml from detected toolchain                                                                                                                                   |
+| `write-github-actions`   | Generate a complete .github/workflows/*.yml from detected toolchain                                                                                                                                    |
 | `write-gitlab-ci`        | Generate a complete .gitlab-ci.yml from detected toolchain                                                                                                                                             |
-| `naming-contract`        | Apply the frozen workflow/job/step name tables (`common/naming.md`); audit an existing pipeline for synonyms                                                                                           |
+| `naming-contract`        | Apply the frozen workflow/job/step name tables (`common/naming.md`); audit an existing pipeline for synonyms                                                                            |
 | `audit-pipeline`         | Audit an existing pipeline: security → correctness → speed → style                                                                                                                                     |
 | `debug-ci-failure`       | Diagnose a failing job from logs; request debug logs if needed                                                                                                                                         |
 | `python-ci-pipeline`     | Python jobs: uv/poetry/pdm, ruff/mypy/ty, pytest, OIDC PyPI trusted publishing                                                                                                                         |
@@ -71,7 +71,7 @@ Ask once. Never open a second round of questions, and skip this step entirely wh
    - the **job key** and **job `name:`** for every job, including the matrix suffix;
    - the **step verb** for every step that needs a `name:` at all.
 
-   If a role you need is not in a table, say so and ask — do not invent a name, do not paraphrase an existing one (`quality`, never `lint-and-format`). On GitLab, map through the table in `naming.md` → _GitLab CI mapping_ and use the five fixed stages.
+   If a role you need is not in a table, say so and ask — do not invent a name, do not paraphrase an existing one (`quality`, never `lint-and-format`). On GitLab, map through the table in `naming.md` → *GitLab CI mapping* and use the five fixed stages.
 
 6. **Classify and execute:**
    - **Write** — generate a new pipeline from the resolved toolchain.

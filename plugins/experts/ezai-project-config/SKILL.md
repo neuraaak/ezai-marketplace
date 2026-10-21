@@ -69,7 +69,7 @@ For monorepos spanning both languages, load both files and apply each to its res
 
 ## Framework routing
 
-Framework files are **deltas**: load them _in addition to_ the language file, never instead of it. Cascade is `common → language → framework`.
+Framework files are **deltas**: load them *in addition to* the language file, never instead of it. Cascade is `common → language → framework`.
 
 | Framework | Detection signal                                                        | File                                                  |
 | :-------- | :---------------------------------------------------------------------- | :---------------------------------------------------- |
