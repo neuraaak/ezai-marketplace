@@ -3,6 +3,7 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   assertSafeRelPath,
+  runInstall,
   linkToPlatforms,
   collectRuntimeFiles,
   RUNTIME_INCLUDE,
@@ -78,6 +79,52 @@ describe('collectRuntimeFiles', () => {
 
   it('expose une whitelist runtime minimale', () => {
     expect(RUNTIME_INCLUDE).toEqual(['SKILL.md', 'references']);
+  });
+});
+
+// --- runInstall ---
+
+describe('runInstall', () => {
+  let tmpDir;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ezai-install-test-'));
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    jest.restoreAllMocks();
+  });
+
+  it("échoue sans toucher à l'install existante si le plugin est absent du paquet", async () => {
+    const existing = path.join(tmpDir, '.agents', 'skills', 'ezai-ghost', 'SKILL.md');
+    fs.mkdirSync(path.dirname(existing), { recursive: true });
+    fs.writeFileSync(existing, '# ancienne version');
+    const catalogue = {
+      fetchCatalogue: async () => ({
+        plugins: [{ name: 'ezai-ghost', source: './plugins/experts/ezai-ghost' }],
+      }),
+    };
+
+    await expect(
+      runInstall('ezai-ghost', { dest: tmpDir, _platformDirs: [] }, catalogue)
+    ).rejects.toThrow('absent du paquet local');
+    expect(fs.readFileSync(existing, 'utf8')).toBe('# ancienne version');
+  });
+
+  it('installe un plugin présent dans le paquet', async () => {
+    jest.spyOn(console, 'info').mockImplementation(() => {});
+    const catalogue = {
+      fetchCatalogue: async () => ({
+        plugins: [{ name: 'ezai-docs-writer', source: './plugins/experts/ezai-docs-writer' }],
+      }),
+    };
+
+    await runInstall('ezai-docs-writer', { dest: tmpDir, _platformDirs: [] }, catalogue);
+
+    const skillFile = path.join(tmpDir, '.agents', 'skills', 'ezai-docs-writer', 'SKILL.md');
+    expect(fs.existsSync(skillFile)).toBe(true);
   });
 });
 

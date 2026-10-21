@@ -20,13 +20,15 @@ Instructions for AI coding agents (Codex, Claude Code, Gemini CLI, Copilot, etc.
 bin/ezai.js                        CLI entry point (Commander.js)
 src/
   catalogue.js                     Loads .claude-plugin/marketplace.json
+  platforms.js                     Platform directories, --dest and --claude|--gemini|--copilot resolution
   commands/
     install.js                     ezai install [plugin] [--dest] [--claude|--gemini|--copilot]
     uninstall.js                   ezai uninstall [skill]
+    purge.js                       ezai purge — removes ezai- skills no longer in the catalogue
     list.js                        ezai list
     search.js                      ezai search <term>
     info.js                        ezai info <plugin>
-plugins/<name>/
+plugins/{experts,personas}/<name>/
   .claude-plugin/plugin.json       Plugin metadata
   SKILL.md                         Skill content (always at plugin root)
   references/<lang>/*.md           Language-specific references (loaded on demand)
@@ -85,13 +87,13 @@ pnpm test:coverage   # Jest with coverage report (≥70 % lines required)
 - **Husky** runs `build-index` and `lint-staged` before each commit.
 - `lint-staged` formats `.js` with Prettier + ESLint, formats `.json/.md/.yml/.yaml` with Prettier.
 - **GitHub Actions** (`.github/workflows/`): Node 24.16.0, pnpm 11 — see `.github/workflows/README.md`. The `prepare` script skips husky when `CI=true`.
-- All 48 Jest tests must pass before opening a PR.
+- All Jest tests must pass before opening a PR.
 
 ---
 
 ## What NOT to do
 
 - Do not modify `.gitignore` to include `docs/superpowers/` — specs and plans are intentionally local-only.
-- Do not edit the installed copy (`~/.claude/skills/<name>/`) directly; always edit `plugins/<name>/SKILL.md` first.
+- Do not edit the installed copy (`~/.claude/skills/<name>/`) directly; always edit `plugins/{experts,personas}/<name>/SKILL.md` first.
 - Do not over-architect: the design is intentionally simple (Git repo + JSON catalogue + Node.js CLI).
 - Do not add features, fallbacks, or abstractions beyond the scope of the current task.
