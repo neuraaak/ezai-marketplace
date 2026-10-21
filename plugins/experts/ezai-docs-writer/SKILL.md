@@ -68,7 +68,7 @@ Run the Scope step above.
 Read `references/index.md` — it is the root router. Follow it to load only what the task needs (two or three files is typical). Quick cheat sheet:
 
 - **Any writing task** → `languages/<lang>/standards.md` + `common/standards.md`
-- **Generating a page** → add `common/quadrants-templates.md`
+- **Generating a page** → add `profiles/diataxis/structure.md` + `profiles/diataxis/templates.md`
 - **README** → add `common/readme.md`
 - **Toolchain / config** → `languages/<lang>/toolchain.md`
 - **Deploy / plugins** → `languages/<lang>/plugins-deploy.md`
@@ -76,7 +76,7 @@ Read `references/index.md` — it is the root router. Follow it to load only wha
 
 ### 4. Classify and generate
 
-Assign exactly one Diátaxis type (Tutorial / How-To / Reference / Explanation / Examples). If the request spans two quadrants equally, use the `quadrant` answer from the Scope step. Apply the matching page template, write content, and self-check against the success criteria in `common/standards.md`.
+Assign exactly one Diátaxis type (Tutorial / How-To / Reference / Explanation / Examples). If the request spans two quadrants equally, use the `quadrant` answer from the Scope step. Apply the matching page template, write content, and self-check against the success criteria in `profiles/diataxis/structure.md` and `common/standards.md`.
 
 ## Output format
 

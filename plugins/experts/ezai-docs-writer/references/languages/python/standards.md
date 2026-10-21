@@ -1,6 +1,6 @@
 # Python Documentation Standards (Google-style + MkDocs)
 
-Load this file together with `common/standards.md` (the language-agnostic rules: Diátaxis, emoji set, admonition semantics, anti-patterns). This file holds only the Python/MkDocs specifics: Google-style docstring syntax, MkDocs admonition and annotation syntax, and mkdocstrings behaviour.
+Load this file together with `common/standards.md` (the language-agnostic rules: emoji set, admonition semantics) and with the documentation profile's `structure.md` (page structure, anti-patterns). This file holds only the Python/MkDocs specifics: Google-style docstring syntax, MkDocs admonition and annotation syntax, and mkdocstrings behaviour.
 
 **Docstring rule:** Google-style exclusively; omit types in the docstring body — mkdocstrings pulls them from the signature.
 

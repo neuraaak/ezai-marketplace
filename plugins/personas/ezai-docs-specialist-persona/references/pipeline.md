@@ -43,6 +43,7 @@ Artifact produced: .docs-audit/00-context.md
 - platform: github | gitlab
 - docs-writer-refs:
     - references/common/standards.md
+    - references/profiles/diataxis/structure.md
     - references/languages/<lang>/standards.md
     - references/forge/<platform>/badge-registry.md
     - references/languages/<lang>/badge-registry.md
@@ -63,7 +64,7 @@ Honor `user-scope` from `00-context.md`: read only the `section` in scope, and r
 
 ### Section A — Diátaxis structure
 
-Load `ezai-docs-writer/references/common/quadrants-templates.md`.
+Load `ezai-docs-writer/references/profiles/diataxis/structure.md` and `ezai-docs-writer/references/profiles/diataxis/templates.md`.
 
 - List the actual `docs/` tree.
 - Diff against the canonical Diátaxis layout (Tutorial, How-To, Reference, Explanation, Examples, Changelog).

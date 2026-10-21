@@ -21,7 +21,7 @@ Pick the **API generator** by project posture:
 - **phpDocumentor** — existing projects, PHPDoc/PSR-5 conformance, when HTML/XML/RST/Markdown output or Composer/PHAR/Docker integration matters. Output theme is dated but the parser is the reference.
 - **Doctum** — new projects that want fast incremental builds (diff cache), a PHP (not XML) config, and **built-in Git branch/tag multi-versioning** without an external tool. API-only, Symfony-community adoption.
 
-Add **VitePress** for prose only when the project needs guides/tutorials beyond the API dump — the API generator handles the reference, VitePress owns the narrative pages. The Diátaxis templates in `common/quadrants-templates.md` assume a Markdown prose tool (VitePress or MkDocs Material).
+Add **VitePress** for prose only when the project needs guides/tutorials beyond the API dump — the API generator handles the reference, VitePress owns the narrative pages. The Diátaxis templates in `profiles/diataxis/templates.md` assume a Markdown prose tool (VitePress or MkDocs Material).
 
 Reach for **MkDocs Material** instead of VitePress for prose if the team already standardized on it elsewhere — both are interchangeable at the prose layer.
 

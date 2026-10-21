@@ -34,7 +34,7 @@ Stack: VitePress or Docusaurus + TypeDoc + JSDoc/TSDoc + Diátaxis framework.
 - `languages/javascript/plugins-deploy.md` — wiring VitePress nav/sidebar, API reference, versioning, deploying to GitHub Pages
 - `languages/javascript/badge-registry.md` — emitting a badge block (npm version + tool badges); pair with the forge registry in `forge/`
 
-For page templates, use `common/quadrants-templates.md` — replace Python snippets with TypeScript/JavaScript equivalents.
+For page templates, use `profiles/diataxis/templates.md` — replace Python snippets with TypeScript/JavaScript equivalents.
 
 ---
 
@@ -47,7 +47,7 @@ Stack: phpDocumentor or Doctum (API reference) + VitePress for prose + Diátaxis
 - `languages/php/plugins-deploy.md` — running phpDocumentor/Doctum, multi-version, deploying the API + prose site to GitHub Pages
 - `languages/php/badge-registry.md` — emitting a badge block (Packagist version + tool badges); pair with the forge registry in `forge/`
 
-PHP API generators render the reference only — prose pages reuse the VitePress prose layer from `common/quadrants-templates.md` (replace snippets with PHP equivalents).
+PHP API generators render the reference only — prose pages reuse the VitePress prose layer from `profiles/diataxis/templates.md` (replace snippets with PHP equivalents).
 
 ---
 
