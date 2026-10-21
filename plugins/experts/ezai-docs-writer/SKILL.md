@@ -38,14 +38,30 @@ context-specific overrides live in the user's rules.
 | `explanation` | Explanation page (Diátaxis — conceptual)     |
 | `examples`    | Minimal runnable snippet page                |
 
+## Scope
+
+Before loading any other reference, settle the scope with the user.
+
+1. Read `references/common/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+Ask once. Never open a second round of questions, and skip this step entirely when nothing remains to ask.
+
 ## Workflow
 
-### 1. Orient
+### 1. Scope — settle the scope with the user
+
+Run the Scope step above.
+
+### 2. Orient
 
 - Detect the project language (`pyproject.toml` → Python, `package.json` → JS/TS, `composer.json` → PHP) and the doc config (`mkdocs.yml`, `docs/.vitepress/config.*`, `conf.py`, `docusaurus.config.js`, `phpdoc.dist.xml`, `doctum.php`). If no config found, proceed from directory structure and flag that nav validation is unavailable.
 - Detect the documentation language (French or English) from existing `.md` files or explicit instruction. Default to English.
 
-### 2. Load references
+### 3. Load references
 
 Read `references/index.md` — it is the root router. Follow it to load only what the task needs (two or three files is typical). Quick cheat sheet:
 
@@ -56,9 +72,9 @@ Read `references/index.md` — it is the root router. Follow it to load only wha
 - **Deploy / plugins** → `languages/<lang>/plugins-deploy.md`
 - **Badge block** → `forge/<host>/badge-registry.md` + `languages/<lang>/badge-registry.md`
 
-### 3. Classify and generate
+### 4. Classify and generate
 
-Assign exactly one Diátaxis type (Tutorial / How-To / Reference / Explanation / Examples). If the request spans two quadrants equally, prefer the type matching the user's stated goal; if still ambiguous, ask before generating. Apply the matching page template, write content, and self-check against the success criteria in `common/standards.md`.
+Assign exactly one Diátaxis type (Tutorial / How-To / Reference / Explanation / Examples). If the request spans two quadrants equally, use the `quadrant` answer from the Scope step. Apply the matching page template, write content, and self-check against the success criteria in `common/standards.md`.
 
 ## Output format
 

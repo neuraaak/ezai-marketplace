@@ -22,6 +22,7 @@ written from this `references/` root.
 - `common/standards.md` — language-agnostic doc standards: Diátaxis rules, emoji set, admonition semantics, anti-patterns (always pair with the language `standards.md`)
 - `common/quadrants-templates.md` — Diátaxis quadrants & page templates (any language)
 - `common/readme.md` — generating a `README.md`
+- `common/scoping.md` — Scope step, before anything else: ordered scoping questions and recommended defaults
 
 For everything language- or forge-specific, defer to `languages/index.md` and
 `forge/index.md`.

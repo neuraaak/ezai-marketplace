@@ -296,6 +296,32 @@
           "value": "import|require"
         }
       ]
+    },
+    {
+      "prompt": "Écris de la doc pour la gestion du cache de ma librairie.",
+      "expected_output": "Aucune page générée : l'agent pose en un seul appel les questions de cadrage restantes (Page type, Audience, Target), options recommandées en premier, puis attend la réponse.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Pp]age type|[Tt]ype de page|[Aa]udience|[Ll]ecteur|[Tt]arget)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-page",
+          "description": "Ne produit pas de page avant la réponse",
+          "type": "not_contains",
+          "value": "<thinking>"
+        }
+      ],
+      "id": 9
     }
   ]
 }
