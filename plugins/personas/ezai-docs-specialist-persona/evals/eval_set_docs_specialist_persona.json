@@ -207,6 +207,32 @@
           "value": "VALIDATION"
         }
       ]
+    },
+    {
+      "prompt": "Ma doc a besoin d'un coup de propre.",
+      "expected_output": "Ni audit ni page : la persona pose en un seul appel sa question de cadrage (Mode), option recommandée en premier, puis attend la réponse avant tout dispatch.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Mm]ode|[Aa]udit|[Tt]raitement)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-pipeline",
+          "description": "Ne lance pas le pipeline avant la réponse",
+          "type": "not_contains",
+          "value": ".docs-audit/"
+        }
+      ],
+      "id": 8
     }
   ]
 }

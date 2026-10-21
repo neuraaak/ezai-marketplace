@@ -38,6 +38,22 @@ user's rules.
 
 Before starting the pipeline, confirm the task is an audit or upgrade of an existing documentation site. If the user wants a single page, docstring, or badge block written, invoke `ezai-docs-writer` directly via the Skill tool and stop — do not run the pipeline.
 
+## Scope
+
+Run this step in the main agent, after the scope gate and before any subagent
+is dispatched: subagents cannot ask the user.
+
+1. Read `references/scoping.md` and walk its questions in order.
+2. Drop every question the request or the repository already answers.
+3. Ask the first three remaining questions in **one** call to the harness's question tool: `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini CLI, Copilot CLI). If none is available, ask them as a numbered list of multiple-choice questions and wait for the answer.
+4. Keep the `header`, the option order and the `(Recommended)` suffix as written: at most 3 options, recommended first, no hand-written "Other". Phrase the question and the options in the user's language.
+5. For every question left unasked, apply its recommended option and list these assumptions at the top of the response.
+
+The `mode` answer decides what follows. **Write directly** → invoke
+`ezai-docs-writer` via the Skill tool and stop; it asks only what this step did
+not. **Full audit** or **Targeted audit** → run the pipeline and pass the
+answers to the DETECTION subagent, which records them in `00-context.md`.
+
 ## Pipeline
 
 Before dispatching any stage, read these two reference files in order:

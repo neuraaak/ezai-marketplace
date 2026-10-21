@@ -20,7 +20,7 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 ## Stage 0 — DETECTION
 
 **Who:** Dedicated subagent (read-only).
-**Inputs:** Project root — file extensions, `pyproject.toml`, `package.json`, `mkdocs.yml`, `docs/.vitepress/config.*`, `.github/`, `.gitlab-ci.yml`.
+**Inputs:** The persona's Scope answers, project root — file extensions, `pyproject.toml`, `package.json`, `mkdocs.yml`, `docs/.vitepress/config.*`, `.github/`, `.gitlab-ci.yml`.
 **Output:** `.docs-audit/00-context.md`
 
 ### Questions to answer
@@ -37,6 +37,7 @@ All artifacts live in `.docs-audit/` at the root of the audited project. Names a
 Inputs read: pyproject.toml, package.json, mkdocs.yml, docs/.vitepress/config.*, .github/, .gitlab-ci.yml
 Artifact produced: .docs-audit/00-context.md
 
+- user-scope: mode=<full | targeted>, focus=<structure | coherence | both>, section=<whole site | path>
 - language: python | javascript
 - docs-tooling: mkdocs | vitepress | sphinx | none
 - platform: github | gitlab
@@ -57,6 +58,8 @@ Artifact produced: .docs-audit/00-context.md
 **Output:** `.docs-audit/01-audit.md`
 
 The AUDIT stage merges what would otherwise be two separate passes (Diátaxis structure + contextual coherence) into one single read of the docs tree. Two sections, one subagent, one cold-start.
+
+Honor `user-scope` from `00-context.md`: read only the `section` in scope, and run only Section A (`focus=structure`) or Section B (`focus=coherence`) when the audit is targeted. A section left out is listed as `skipped (reason: user scope)`.
 
 ### Section A — Diátaxis structure
 
