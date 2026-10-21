@@ -322,6 +322,156 @@
         }
       ],
       "id": 9
+    },
+    {
+      "capability": "product-page",
+      "prompt": "Écris la page de doc qui explique à nos utilisateurs comment inviter un membre dans leur espace de travail. Dans l'appli, c'est Paramètres › Membres › Inviter.",
+      "expected_output": "Page Task du profil produit : titre verbe + objet, prérequis (rôle requis), étapes numérotées avec les libellés exacts de l'interface en gras, résultat visible, lien vers le dépannage. Aucun code ni détail d'architecture.",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"teamflow-app\",\n  \"private\": true,\n  \"dependencies\": { \"react\": \"^19.0.0\" },\n  \"devDependencies\": { \"vite\": \"^7.0.0\", \"vitepress\": \"^1.6.0\" }\n}"
+        },
+        {
+          "path": "docs/.vitepress/config.mts",
+          "content": "export default { title: 'Teamflow', themeConfig: { nav: [{ text: 'Guides', link: '/tasks/' }] } }"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "numbered-steps",
+          "description": "Étapes numérotées présentes",
+          "type": "regex",
+          "value": "^\\d+\\."
+        },
+        {
+          "id": "ui-wording",
+          "description": "Libellés de l'interface en gras, à l'identique",
+          "type": "regex",
+          "value": "\\*\\*(Paramètres|Membres|Inviter)\\*\\*"
+        },
+        {
+          "id": "no-code",
+          "description": "Aucun bloc de code dans une page utilisateur",
+          "type": "not_contains",
+          "value": "```"
+        },
+        {
+          "id": "no-architecture",
+          "description": "Aucun détail d'architecture",
+          "type": "not_contains",
+          "value": "architecture"
+        }
+      ],
+      "id": 10
+    },
+    {
+      "capability": "product-page",
+      "prompt": "Ajoute une entrée de dépannage : certains utilisateurs ne reçoivent pas l'e-mail de réinitialisation du mot de passe.",
+      "expected_output": "Entrée Troubleshooting : H2 formulé comme le symptôme vu par l'utilisateur, puis symptôme, cause et correctif en étapes.",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"teamflow-app\",\n  \"private\": true,\n  \"dependencies\": { \"react\": \"^19.0.0\" },\n  \"devDependencies\": { \"vite\": \"^7.0.0\", \"vitepress\": \"^1.6.0\" }\n}"
+        },
+        {
+          "path": "docs/.vitepress/config.mts",
+          "content": "export default { title: 'Teamflow', themeConfig: { nav: [{ text: 'Guides', link: '/tasks/' }] } }"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "symptom",
+          "description": "Le symptôme est décrit",
+          "type": "regex",
+          "value": "[Ss]ympt[oô]m"
+        },
+        {
+          "id": "cause",
+          "description": "La cause est donnée",
+          "type": "contains",
+          "value": "Cause"
+        },
+        {
+          "id": "fix",
+          "description": "Un correctif est proposé",
+          "type": "regex",
+          "value": "Fix|Solution|Correctif"
+        }
+      ],
+      "id": 11
+    },
+    {
+      "capability": "release-notes",
+      "prompt": "Rédige les release notes de la 2.4.0 à partir de ces commits :\nfeat(members): bulk invite from settings\nfix(export): keep accented characters in CSV exports\nrefactor(core): split store module\nchore(deps): bump vite to 7.1\nperf(search): debounce search input",
+      "expected_output": "Release notes orientées utilisateur, groupées Nouveautés / Améliorations / Corrections, sans les commits internes (refactor, chore).",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"teamflow-app\",\n  \"private\": true,\n  \"dependencies\": { \"react\": \"^19.0.0\" },\n  \"devDependencies\": { \"vite\": \"^7.0.0\", \"vitepress\": \"^1.6.0\" }\n}"
+        },
+        {
+          "path": "docs/.vitepress/config.mts",
+          "content": "export default { title: 'Teamflow', themeConfig: { nav: [{ text: 'Guides', link: '/tasks/' }] } }"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "new-section",
+          "description": "Section des nouveautés",
+          "type": "regex",
+          "value": "New|Nouveaut"
+        },
+        {
+          "id": "fixed-section",
+          "description": "Section des corrections",
+          "type": "regex",
+          "value": "Fixed|Correction|Corrig"
+        },
+        {
+          "id": "no-refactor",
+          "description": "Le refactor interne n'apparaît pas",
+          "type": "not_contains",
+          "value": "refactor"
+        },
+        {
+          "id": "no-chore",
+          "description": "La mise à jour de dépendance n'apparaît pas",
+          "type": "not_contains",
+          "value": "chore"
+        }
+      ],
+      "id": 12
+    },
+    {
+      "capability": "product-page",
+      "prompt": "Écris la doc de démarrage.",
+      "expected_output": "Le repo contient une application et un SDK publié : l'agent pose la question de profil (ou propose les deux zones), option recommandée en premier, avant d'écrire.",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"name\": \"teamflow-app\",\n  \"private\": true,\n  \"dependencies\": { \"react\": \"^19.0.0\" },\n  \"devDependencies\": { \"vite\": \"^7.0.0\", \"vitepress\": \"^1.6.0\" }\n}"
+        },
+        {
+          "path": "packages/sdk/package.json",
+          "content": "{\n  \"name\": \"@teamflow/sdk\",\n  \"version\": \"1.2.0\",\n  \"exports\": { \".\": \"./dist/index.js\" }\n}"
+        }
+      ],
+      "assertions": [
+        {
+          "id": "asks-profile",
+          "description": "Pose la question du profil ou des zones",
+          "type": "regex",
+          "value": "[Pp]rofil|[Zz]one|[Dd]eveloper docs|[Pp]roduct docs"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        }
+      ],
+      "id": 13
     }
   ]
 }
