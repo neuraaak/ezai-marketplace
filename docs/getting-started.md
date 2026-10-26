@@ -4,7 +4,7 @@ Install ezai-marketplace and run your first skill installation in under two minu
 
 ## 🔧 Prerequisites
 
-- Node.js >= 24.16.0 ([nodejs.org](https://nodejs.org))
+- Node.js >= 24.22.1 ([nodejs.org](https://nodejs.org))
 - One or more AI platforms installed: Claude Code, Gemini CLI, or Copilot
 
 ## 📝 Step 1 — Install the CLI

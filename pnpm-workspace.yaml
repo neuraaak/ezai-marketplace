@@ -1,3 +1,9 @@
+engineStrict: true
+pmOnFail: error
+saveExact: true
+strictPeerDependencies: false
+autoInstallPeers: true
+
 allowBuilds:
   es5-ext: true
   esbuild: true

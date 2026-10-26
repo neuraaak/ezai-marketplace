@@ -71,7 +71,7 @@ runtime registry fetch, and the catalogue is local by default (`EZAI_CATALOGUE_U
 overrides the remote _listing_, not installation). So once you have the package by any
 means, `ezai install` works fully offline.
 
-**Requirements:** Node.js >= 24.16.0 (contributors also need pnpm >= 11).
+**Requirements:** Node.js >= 24.22.1 (contributors also need pnpm >= 11).
 
 ## 🚀 Quick Start
 
