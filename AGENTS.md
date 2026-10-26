@@ -9,7 +9,7 @@ Instructions for AI coding agents (Codex, Claude Code, Gemini CLI, Copilot, etc.
 `ezai-marketplace` is a curated CLI for installing AI skills (Markdown files) into Claude Code, Gemini CLI, and GitHub Copilot. Skills are copied to `~/.agents/skills/<name>/` and symlinked into each platform's skills directory.
 
 - **Package name:** `ezai-marketplace` — published on npm, used as `npx ezai-marketplace` or `ezai`
-- **Node.js ≥ 24.16.0, pnpm ≥ 11** (see `engines` in `package.json`)
+- **Node.js ≥ 24.22.1, pnpm ≥ 11** (see `engines` in `package.json`)
 - **License:** MIT
 
 ---
@@ -86,7 +86,7 @@ pnpm test:coverage   # Jest with coverage report (≥70 % lines required)
 
 - **Husky** runs `build-index` and `lint-staged` before each commit.
 - `lint-staged` formats `.js` with Prettier + ESLint, formats `.json/.md/.yml/.yaml` with Prettier.
-- **GitHub Actions** (`.github/workflows/`): Node 24.16.0, pnpm 11 — see `.github/workflows/README.md`. The `prepare` script skips husky when `CI=true`.
+- **GitHub Actions** (`.github/workflows/`): Node 24.22.1, pnpm 11 — see `.github/workflows/README.md`. The `prepare` script skips husky when `CI=true`.
 - All Jest tests must pass before opening a PR.
 
 ---
