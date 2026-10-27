@@ -2,13 +2,16 @@
 
 ## Concurrency model selection
 
-| Workload                        | Python 3.11–3.13       | Python 3.14+ (GIL-less) |
-| :------------------------------ | :--------------------- | :---------------------- |
-| I/O intensive (HTTP, DB, files) | `asyncio` + `uvloop`   | `asyncio` + `uvloop`    |
-| CPU-bound                       | `multiprocessing.Pool` | `threading.Thread` ✅    |
-| Mixed I/O + CPU                 | `asyncio` + executor   | `asyncio` + `threading` |
+| Workload                        | Default build (GIL)    | Free-threaded build (3.14+, `python3.14t`) |
+| :------------------------------ | :--------------------- | :----------------------------------------- |
+| I/O intensive (HTTP, DB, files) | `asyncio` + `uvloop`   | `asyncio` + `uvloop`                       |
+| CPU-bound                       | `multiprocessing.Pool` | `threading.Thread` ✅                       |
+| Mixed I/O + CPU                 | `asyncio` + executor   | `asyncio` + `threading`                    |
 
-Python 3.14+ removes the GIL — `threading` becomes the right tool for CPU-bound work.
+The free-threaded build is officially supported since 3.14 (PEP 779) but is **not** the default:
+it ships as a separate `python3.14t` binary and must be installed explicitly. Only there does
+`threading` become the right tool for CPU-bound work — and only once every C extension in the
+dependency tree is GIL-safe. Single-threaded code runs 5–10 % slower on that build.
 
 ## Asyncio — concurrent I/O
 

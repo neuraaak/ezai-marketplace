@@ -12,7 +12,7 @@ Route to the correct language subdirectory. For tasks spanning both languages, l
 
 ## What each file owns
 
-- **`python/performance.md`** — asyncio, uvloop, threading (3.14+ GIL-less), multiprocessing, generators, model selection table.
+- **`python/performance.md`** — asyncio, uvloop, threading (free-threaded `3.14t` build), multiprocessing, generators, model selection table.
 - **`javascript/performance.md`** — async/await, AbortController, Worker Threads, Promise.allSettled, async iterables, build perf (Vite/esbuild).
 - **`php/performance.md`** — PHP-FPM vs ReactPHP/Fibers, generators, OPcache + JIT, APCu/Redis, preloading, profiling (Blackfire/Xdebug).
 
