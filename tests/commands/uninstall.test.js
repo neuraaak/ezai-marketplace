@@ -7,6 +7,15 @@ const {
   resolvePlatforms,
 } = require('../../src/commands/uninstall');
 
+const originalAllowedRoot = process.env.EZAI_ALLOWED_DEST_ROOT;
+beforeAll(() => {
+  process.env.EZAI_ALLOWED_DEST_ROOT = os.tmpdir();
+});
+afterAll(() => {
+  if (originalAllowedRoot === undefined) delete process.env.EZAI_ALLOWED_DEST_ROOT;
+  else process.env.EZAI_ALLOWED_DEST_ROOT = originalAllowedRoot;
+});
+
 // --- helpers ---
 
 function makeSkill(agentsSkillsDir, skillName, files = ['SKILL.md']) {

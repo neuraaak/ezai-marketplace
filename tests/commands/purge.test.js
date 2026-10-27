@@ -3,6 +3,15 @@ const os = require('node:os');
 const path = require('node:path');
 const { runPurge, collectManagedSkills } = require('../../src/commands/purge');
 
+const originalAllowedRoot = process.env.EZAI_ALLOWED_DEST_ROOT;
+beforeAll(() => {
+  process.env.EZAI_ALLOWED_DEST_ROOT = os.tmpdir();
+});
+afterAll(() => {
+  if (originalAllowedRoot === undefined) delete process.env.EZAI_ALLOWED_DEST_ROOT;
+  else process.env.EZAI_ALLOWED_DEST_ROOT = originalAllowedRoot;
+});
+
 // --- collectManagedSkills ---
 
 describe('collectManagedSkills', () => {
