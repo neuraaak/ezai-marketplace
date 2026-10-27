@@ -1,6 +1,6 @@
 # Available skills
 
-All skills are installed to `~/.agents/skills/<name>/` and symlinked into each platform directory.
+All skills are installed to `~/.agents/skills/<name>/`, which Codex, Gemini CLI, and Copilot CLI can discover directly. ezai also creates links in existing Claude Code, Gemini CLI, and Copilot platform directories.
 
 ## 📋 Catalogue
 
@@ -16,23 +16,8 @@ All skills are installed to `~/.agents/skills/<name>/` and symlinked into each p
 | `ezai-project-performance`     | development | Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.                                                                                                        |
 | `ezai-project-quality`         | development | Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.                                                                                                                         |
 
-## 🔧 Install a skill
+## ➡️ Next steps
 
-```bash
-# Install a single skill to all platforms
-ezai install ezai-code-formatter
-
-# Install to Claude Code only
-ezai install ezai-code-formatter --claude
-```
-
-## 🔍 Search skills
-
-```bash
-# Filter by keyword
-ezai search formatter
-ezai search quality
-
-# View full details for a skill
-ezai info ezai-project-architect
-```
+- [CLI Reference](../cli/) — the `install`, `search` and `info` commands
+- [Find a skill before installing](../user/tasks/find-a-skill.md) — search and inspect the catalogue
+- [Install skills](../user/tasks/install-skills.md) — install everything, or one skill by name

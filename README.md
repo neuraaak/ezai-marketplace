@@ -2,14 +2,15 @@
 
 [![npm version](https://img.shields.io/npm/v/ezai-marketplace?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/package/ezai-marketplace)
 [![node versions](https://img.shields.io/node/v/ezai-marketplace?style=flat&logo=nodedotjs&logoColor=white)](https://www.npmjs.com/package/ezai-marketplace)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/Neuraaak/ezai-marketplace/blob/main/LICENSE)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=readme&logoColor=white)](https://Neuraaak.github.io/ezai-marketplace/)
+[![CI](https://img.shields.io/github/actions/workflow/status/neuraaak/ezai-marketplace/01-ci.yml?style=flat&label=ci&logo=githubactions&logoColor=white)](https://github.com/neuraaak/ezai-marketplace/actions/workflows/01-ci.yml)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=materialformkdocs&logoColor=white)](https://neuraaak.github.io/ezai-marketplace/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/neuraaak/ezai-marketplace/blob/main/LICENSE)
 [![package manager](https://img.shields.io/badge/package%20manager-pnpm-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![linter](https://img.shields.io/badge/linter-eslint-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 
-**ezai-marketplace** is a CLI that installs curated AI skills into Claude Code, Gemini CLI, and Copilot from a single command.
+**ezai-marketplace** is a CLI that installs curated AI skills for Codex, Claude Code, Gemini CLI, and Copilot from a single command.
 
 ## 📦 Installation
 
@@ -30,10 +31,10 @@ npm install -g ezai-marketplace
 
 ```bash
 # Pin a tag (recommended)
-npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.2.1"
+npm install -g "git+https://github.com/neuraaak/ezai-marketplace.git#v1.6.3"
 
 # Short form (latest default branch)
-npm install -g github:Neuraaak/ezai-marketplace
+npm install -g github:neuraaak/ezai-marketplace
 ```
 
 > If a restricted environment blocks the `prepare` hook, append `--ignore-scripts`.
@@ -41,7 +42,7 @@ npm install -g github:Neuraaak/ezai-marketplace
 ### Clone + link
 
 ```bash
-git clone https://github.com/Neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
+git clone https://github.com/neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
 ```
 
 ### Run from a clone (no install)
@@ -82,31 +83,33 @@ ezai install
 # Install a single skill
 ezai install ezai-code-formatter
 
-# Install only to Claude Code
+# Create only the Claude Code platform links
 ezai install --claude
 ```
 
-Skills are copied to `~/.agents/skills/<name>/` and symlinked into each platform's skills directory automatically. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
+Skills are copied to `~/.agents/skills/<name>/`, where Codex discovers them directly. When their directories exist, Claude Code receives links in `~/.claude/skills/`; Gemini CLI and Copilot CLI can also discover the shared store directly, and ezai creates links in their platform directories when selected. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
 
 ## 🎯 Key Features
 
-- ✅ **One command, all platforms** — installs and symlinks to Claude Code, Gemini CLI, and Copilot in one shot
+- ✅ **One command, all platforms** — installs for Codex and creates links for Claude Code, Gemini CLI, and Copilot in one shot
 - ✅ **Atomic control** — install or uninstall individual skills by name
-- ✅ **Platform flags** — deploy only to the platforms you use (`--claude`, `--gemini`, `--copilot`)
+- ✅ **Platform flags** — select which platform links to create (`--claude`, `--gemini`, `--copilot`); shared skills remain discoverable
 - ✅ **Safe uninstall** — only removes skills known to the marketplace; third-party tools are never touched
 - ✅ **Offline-first** — catalogue is bundled with the package, no network required
 - ✅ **Windows-compatible** — uses directory junctions when symlinks are unavailable
 
 ## 📚 Documentation
 
-Complete documentation is available at **[Neuraaak.github.io/ezai-marketplace](https://Neuraaak.github.io/ezai-marketplace/)**
+Complete documentation is available at **[neuraaak.github.io/ezai-marketplace](https://neuraaak.github.io/ezai-marketplace/)**
 
-| Section                                                                             | Description                                       |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------- |
-| **[Getting Started](https://Neuraaak.github.io/ezai-marketplace/getting-started/)** | Installation, basic usage, and first steps        |
-| **[CLI Reference](https://Neuraaak.github.io/ezai-marketplace/cli/)**               | All commands, options, and flags                  |
-| **[Available Skills](https://Neuraaak.github.io/ezai-marketplace/skills/)**         | Catalogue of skills with descriptions             |
-| **[User Guides](https://Neuraaak.github.io/ezai-marketplace/guides/)**              | Configuration, platform setup, and advanced usage |
+| Section                                                                             | Audience     | Description                                       |
+| ----------------------------------------------------------------------------------- | ------------ | ------------------------------------------------- |
+| **[User Guide](https://neuraaak.github.io/ezai-marketplace/user/)**                 | End users    | Get started, task guides, troubleshooting, FAQ    |
+| **[Release Notes](https://neuraaak.github.io/ezai-marketplace/user/release-notes)** | End users    | What changed in each version, and what to redo    |
+| **[Getting Started](https://neuraaak.github.io/ezai-marketplace/getting-started/)** | Contributors | Every installation route, including from a clone  |
+| **[CLI Reference](https://neuraaak.github.io/ezai-marketplace/cli/)**               | Contributors | All commands, options, and flags                  |
+| **[Available Skills](https://neuraaak.github.io/ezai-marketplace/skills/)**         | Contributors | Catalogue of skills with descriptions             |
+| **[Concepts](https://neuraaak.github.io/ezai-marketplace/concepts/)**               | Contributors | How installation works, and the design trade-offs |
 
 ## 🧪 Testing
 
@@ -122,7 +125,7 @@ npm run lint
 
 ```bash
 # Clone the repository
-git clone https://github.com/Neuraaak/ezai-marketplace.git
+git clone https://github.com/neuraaak/ezai-marketplace.git
 cd ezai-marketplace
 
 # Install dependencies (also sets up git hooks via husky)
@@ -146,88 +149,45 @@ The `prepare` script configures a `pre-commit` hook that rebuilds `marketplace.j
 
 ## 💻 CLI Usage
 
-### `ezai list`
+| Command                  | What it does                                          |
+| :----------------------- | :---------------------------------------------------- |
+| `ezai list`              | Lists every skill in the catalogue                    |
+| `ezai search <term>`     | Filters skills by name, category, or description      |
+| `ezai info <skill>`      | Shows one skill's metadata and capabilities           |
+| `ezai install [skill]`   | Installs every skill, or one by name                  |
+| `ezai uninstall [skill]` | Removes every marketplace skill, or one by name       |
+| `ezai purge`             | Drops stale `ezai-` skills no longer in the catalogue |
 
 ```bash
-ezai list
-```
-
-### `ezai search <term>`
-
-```bash
-ezai search formatter
-ezai search development
-```
-
-### `ezai info <skill>`
-
-```bash
-ezai info ezai-code-formatter
-```
-
-### `ezai install [skill]`
-
-```bash
-# Install all skills to all platforms
+# Install everything, then install one skill for Gemini CLI and Copilot only
 ezai install
-
-# Install a specific skill
-ezai install ezai-project-quality
-
-# Install only to Claude Code
-ezai install --claude
-
-# Install a skill to Gemini CLI and Copilot only
 ezai install ezai-docs-writer --gemini --copilot
 ```
+
+`install` and `uninstall` take the same options:
 
 | Option          | Description                                                       |
 | :-------------- | :---------------------------------------------------------------- |
 | `--dest <path>` | Override the base destination directory (default: home directory) |
-| `--claude`      | Deploy symlinks to `~/.claude/skills/` only                       |
-| `--gemini`      | Deploy symlinks to `~/.gemini/skills/` only                       |
-| `--copilot`     | Deploy symlinks to `~/.copilot/skills/` only                      |
+| `--claude`      | Select the links in `~/.claude/skills/`                           |
+| `--gemini`      | Select the links in `~/.gemini/skills/`                           |
+| `--copilot`     | Select the links in `~/.copilot/skills/`                          |
 
-`--dest` must point inside your home or current working directory. For a shared
-directory elsewhere, set `EZAI_ALLOWED_DEST_ROOT` to its absolute path before
-running `install`, `purge`, or `uninstall`.
+Three things are worth knowing before you use them:
 
-When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
+- A platform flag selects **which links are created or removed** — it is not exclusive
+  access. Skills always land in the shared `~/.agents/skills/` store, which Codex reads
+  directly and the other agents can read too. With no flag, links go to every platform
+  directory that already exists.
+- `uninstall` deletes the skill files from `~/.agents/skills/` **even with a platform
+  flag**, so links in the unselected directories may be left broken. Skills absent from
+  the catalogue are never touched.
+- `--dest` must point inside your home or current working directory. For a shared
+  directory elsewhere, set `EZAI_ALLOWED_DEST_ROOT` to its absolute path first.
 
-### `ezai purge`
-
-Drops **stale** `ezai-` skills installed locally but no longer in the catalogue
-(typically orphans left after a skill is renamed or removed upstream). Skills
-still in the catalogue are untouched, and no reinstall is performed — run it after
-upgrading the package to clean up.
-
-```bash
-# Drop every stale skill, then refresh
-ezai purge
-ezai install
-```
-
-### `ezai uninstall [skill]`
-
-```bash
-# Remove all marketplace skills
-ezai uninstall
-
-# Remove a specific skill
-ezai uninstall ezai-code-formatter
-
-# Remove only the Claude Code symlink (keep the skill files)
-ezai uninstall ezai-code-formatter --claude
-```
-
-| Option          | Description                                           |
-| :-------------- | :---------------------------------------------------- |
-| `--dest <path>` | Override the base directory (default: home directory) |
-| `--claude`      | Remove symlinks from `~/.claude/skills/` only         |
-| `--gemini`      | Remove symlinks from `~/.gemini/skills/` only         |
-| `--copilot`     | Remove symlinks from `~/.copilot/skills/` only        |
-
-Skills not present in the marketplace catalogue are never touched, regardless of what is found in `~/.agents/skills/`.
+Full command reference, flag by flag, in the
+**[CLI Reference](https://neuraaak.github.io/ezai-marketplace/cli/)**; step-by-step
+recipes in the **[User Guide](https://neuraaak.github.io/ezai-marketplace/user/tasks/)**.
 
 ## 📦 Dependencies
 
@@ -246,10 +206,10 @@ MIT — see [LICENSE](LICENSE).
 
 ## 🔗 Links
 
-- **Repository**: [github.com/Neuraaak/ezai-marketplace](https://github.com/Neuraaak/ezai-marketplace)
+- **Repository**: [github.com/neuraaak/ezai-marketplace](https://github.com/neuraaak/ezai-marketplace)
 - **npm**: [npmjs.com/package/ezai-marketplace](https://www.npmjs.com/package/ezai-marketplace)
-- **Docs**: [Neuraaak.github.io/ezai-marketplace](https://Neuraaak.github.io/ezai-marketplace/)
-- **Issues**: [github.com/Neuraaak/ezai-marketplace/issues](https://github.com/Neuraaak/ezai-marketplace/issues)
+- **Docs**: [neuraaak.github.io/ezai-marketplace](https://neuraaak.github.io/ezai-marketplace/)
+- **Issues**: [github.com/neuraaak/ezai-marketplace/issues](https://github.com/neuraaak/ezai-marketplace/issues)
 
 ---
 

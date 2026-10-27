@@ -1,6 +1,6 @@
 # CLI reference
 
-`ezai` — install and manage AI skills across Claude Code, Gemini CLI, and Copilot.
+`ezai` — install and manage AI skills for Codex, Claude Code, Gemini CLI, and Copilot.
 
 ## 💻 Usage
 
@@ -28,8 +28,8 @@ ezai [OPTIONS] COMMAND [ARGS]...
 
 For commands with `--dest`, the directory must be inside your home or current
 working directory. To target a shared directory elsewhere, set
-`EZAI_ALLOWED_DEST_ROOT` to an absolute trusted path; see the
-[custom directory guide](../guides/#how-to-use-a-custom-install-directory).
+`EZAI_ALLOWED_DEST_ROOT` to an absolute trusted path; see
+[Install to a shared directory](../user/tasks/install-to-a-shared-directory.md).
 
 ---
 
@@ -80,7 +80,7 @@ ezai info ezai-docs-writer
 
 ## `ezai install [skill]`
 
-Copies skill files to `~/.agents/skills/<name>/` and creates symlinks (or directory junctions on Windows) in each detected platform directory.
+Copies skill files to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, and Copilot CLI can discover them directly. It also creates links (or directory junctions on Windows) in selected platform directories that exist.
 
 ```bash
 ezai install [skill] [OPTIONS]
@@ -98,6 +98,7 @@ When `[skill]` is omitted, all catalogue skills are installed.
 | `--copilot`     | Deploy symlinks to `~/.copilot/skills/` only                      |
 
 When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
+Platform flags select links, not exclusive access to the shared skill files.
 
 ### 🧪 Examples
 
@@ -108,10 +109,10 @@ ezai install
 # Install a single skill
 ezai install ezai-project-quality
 
-# Install to Claude Code only
+# Create only the Claude Code platform links
 ezai install --claude
 
-# Install a skill to Gemini CLI and Copilot only
+# Create links only for Gemini CLI and Copilot
 ezai install ezai-docs-writer --gemini --copilot
 
 # Use a shared base directory outside your home and current project
@@ -124,12 +125,12 @@ EZAI_ALLOWED_DEST_ROOT=/opt/ai-tools ezai install --dest /opt/ai-tools
 
 Deletes **stale** `ezai-` skills: those installed in `~/.agents/skills/` (or
 linked in a platform directory) whose name is **no longer in the current
-catalogue** — typically left behind when a skill is renamed or removed upstream.
-Skills still in the catalogue are left untouched, and no reinstall is performed.
+catalogue**. Skills still in the catalogue are left untouched, and no reinstall
+is performed.
 
-Run it after upgrading the `ezai-marketplace` package to drop orphaned skills.
-For example, if `ezai-persona-senior-dev` was renamed to `ezai-senior-dev-persona`,
-`purge` removes the old one while `install` provides the new one.
+Stale shared skill files are always removed; platform flags select which links
+are removed. For why stale skills exist, see
+[How skill installation works](../concepts/how-skills-work.md).
 
 ```bash
 ezai purge [OPTIONS]
@@ -140,9 +141,9 @@ ezai purge [OPTIONS]
 | Option          | Description                                           |
 | :-------------- | :---------------------------------------------------- |
 | `--dest <path>` | Override the base directory (default: home directory) |
-| `--claude`      | Target `~/.claude/skills/` only                       |
-| `--gemini`      | Target `~/.gemini/skills/` only                       |
-| `--copilot`     | Target `~/.copilot/skills/` only                      |
+| `--claude`      | Select links in `~/.claude/skills/`                   |
+| `--gemini`      | Select links in `~/.gemini/skills/`                   |
+| `--copilot`     | Select links in `~/.copilot/skills/`                  |
 
 ### 🧪 Examples
 
@@ -158,7 +159,7 @@ ezai install
 
 ## `ezai uninstall [skill]`
 
-Removes marketplace-managed skills from `~/.agents/skills/` and their platform symlinks. Skills not present in the catalogue are never touched.
+Removes marketplace-managed skills from `~/.agents/skills/` and their selected platform links. Skills not present in the catalogue are never touched. Other platform links may become broken because the shared skill files are removed.
 
 ```bash
 ezai uninstall [skill] [OPTIONS]
@@ -171,9 +172,9 @@ When `[skill]` is omitted, all catalogue skills are removed.
 | Option          | Description                                           |
 | :-------------- | :---------------------------------------------------- |
 | `--dest <path>` | Override the base directory (default: home directory) |
-| `--claude`      | Remove symlinks from `~/.claude/skills/` only         |
-| `--gemini`      | Remove symlinks from `~/.gemini/skills/` only         |
-| `--copilot`     | Remove symlinks from `~/.copilot/skills/` only        |
+| `--claude`      | Select links in `~/.claude/skills/`                   |
+| `--gemini`      | Select links in `~/.gemini/skills/`                   |
+| `--copilot`     | Select links in `~/.copilot/skills/`                  |
 
 ### 🧪 Examples
 
@@ -184,6 +185,6 @@ ezai uninstall
 # Remove a single skill
 ezai uninstall ezai-code-formatter
 
-# Remove only the Claude Code symlink, keep skill files
+# Remove the shared skill files and the Claude Code link
 ezai uninstall ezai-code-formatter --claude
 ```

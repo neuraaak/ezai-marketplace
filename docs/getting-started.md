@@ -5,7 +5,7 @@ Install ezai-marketplace and run your first skill installation in under two minu
 ## 🔧 Prerequisites
 
 - Node.js >= 24.22.1 ([nodejs.org](https://nodejs.org))
-- One or more AI platforms installed: Claude Code, Gemini CLI, or Copilot
+- One or more AI platforms installed: Codex, Claude Code, Gemini CLI, or Copilot
 
 ## 📝 Step 1 — Install the CLI
 
@@ -22,10 +22,10 @@ npm install -g ezai-marketplace
 
 ```bash
 # Pin a tag (recommended)
-npm install -g "git+https://github.com/Neuraaak/ezai-marketplace.git#v1.2.1"
+npm install -g "git+https://github.com/neuraaak/ezai-marketplace.git#v1.6.3"
 
 # Short form
-npm install -g github:Neuraaak/ezai-marketplace
+npm install -g github:neuraaak/ezai-marketplace
 ```
 
 If a restricted environment blocks the `prepare` hook, append `--ignore-scripts`.
@@ -33,7 +33,7 @@ If a restricted environment blocks the `prepare` hook, append `--ignore-scripts`
 **Clone + link** (work from a local checkout):
 
 ```bash
-git clone https://github.com/Neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
+git clone https://github.com/neuraaak/ezai-marketplace.git && cd ezai-marketplace && npm install && npm link
 ```
 
 **Run from a clone** (no install at all):
@@ -75,26 +75,32 @@ You should see a table listing all skills in the catalogue with their category a
 ezai install
 ```
 
-ezai detects which platform directories exist on your machine (`~/.claude/skills/`, `~/.gemini/skills/`, `~/.copilot/skills/`) and deploys symlinks to each one automatically.
+ezai installs skills in `~/.agents/skills/`, where Codex discovers them directly. It also detects existing platform directories (`~/.claude/skills/`, `~/.gemini/skills/`, `~/.copilot/skills/`) and deploys symlinks to each one automatically.
 
 You should see one line of output per platform directory where skills were deployed.
 
 ## 📝 Step 4 — Verify the installation
 
-Check that skills are visible to Claude Code:
+Check the shared store used by Codex and other compatible harnesses:
+
+```bash
+ls ~/.agents/skills/
+```
+
+If Claude Code is installed, check its platform links too:
 
 ```bash
 ls ~/.claude/skills/
 ```
 
-You should see one directory per installed skill.
+You should see one directory per installed skill in the shared store and, when applicable, in the Claude Code directory.
 
 ## ✅ What you built
 
-You installed the ezai-marketplace CLI and deployed all curated AI skills to every AI platform detected on your machine. Skills are stored once in `~/.agents/skills/` and symlinked into each platform directory.
+You installed the ezai-marketplace CLI and stored the curated skills in `~/.agents/skills/` for Codex and other compatible harnesses. Existing Claude Code, Gemini CLI, and Copilot directories also received links.
 
 ## ➡️ Next steps
 
 - [CLI Reference](./cli/) — explore all commands and flags
 - [Available Skills](./skills/) — learn what each skill does
-- [Guides](./guides/) — configure platforms individually or set a custom install path
+- [User guide](./user/) — task guides, troubleshooting and FAQ for people using the skills

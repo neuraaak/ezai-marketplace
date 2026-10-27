@@ -2,14 +2,15 @@
 
 [![npm version](https://img.shields.io/npm/v/ezai-marketplace?style=flat&logo=npm&logoColor=white)](https://www.npmjs.com/package/ezai-marketplace)
 [![node versions](https://img.shields.io/node/v/ezai-marketplace?style=flat&logo=nodedotjs&logoColor=white)](https://www.npmjs.com/package/ezai-marketplace)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/Neuraaak/ezai-marketplace/blob/main/LICENSE)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=readme&logoColor=white)](https://Neuraaak.github.io/ezai-marketplace/)
+[![CI](https://img.shields.io/github/actions/workflow/status/neuraaak/ezai-marketplace/01-ci.yml?style=flat&label=ci&logo=githubactions&logoColor=white)](https://github.com/neuraaak/ezai-marketplace/actions/workflows/01-ci.yml)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=materialformkdocs&logoColor=white)](https://neuraaak.github.io/ezai-marketplace/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/neuraaak/ezai-marketplace/blob/main/LICENSE)
 [![package manager](https://img.shields.io/badge/package%20manager-pnpm-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![linter](https://img.shields.io/badge/linter-eslint-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 
-**ezai-marketplace** — CLI to install curated AI skills into Claude Code, Gemini CLI, and Copilot from a single command.
+**ezai-marketplace** — CLI to install curated AI skills for Codex, Claude Code, Gemini CLI, and Copilot from a single command.
 
 ## 🚀 Quick start
 
@@ -25,7 +26,7 @@ ezai install ezai-code-formatter
 
 ## ✨ Key features
 
-- One command deploys to Claude Code, Gemini CLI, and Copilot simultaneously
+- One command installs skills for Codex and links them to Claude Code, Gemini CLI, and Copilot
 - Install or uninstall individual skills by name
 - Safe uninstall — third-party tools are never touched
 - Offline-first — catalogue is bundled, no network required
@@ -33,15 +34,27 @@ ezai install ezai-code-formatter
 
 ## 📚 Documentation
 
-| Section                                  | Description                                       |
-| ---------------------------------------- | ------------------------------------------------- |
-| **[Getting Started](./getting-started)** | Installation, first run, and platform setup       |
-| **[CLI Reference](./cli/)**              | All commands, options, and flags                  |
-| **[Available Skills](./skills/)**        | Catalogue of skills with descriptions             |
-| **[User Guides](./guides/)**             | Configuration, platform setup, and advanced usage |
-| **[Examples](./examples/)**              | Copy-paste CLI scenarios for common operations    |
-| **[Concepts](./concepts/)**              | Design rationale and architecture explanations    |
-| **[Changelog](./changelog)**             | Version history and notable changes               |
+The site has two zones. Pick the one that matches why you are here.
+
+### User guide — for people using the skills
+
+| Page                                          | Audience  | Description                                             |
+| --------------------------------------------- | --------- | ------------------------------------------------------- |
+| **[Get started](./user/get-started)**         | End users | Install the CLI and run your first installation         |
+| **[Guides](./user/tasks/)**                   | End users | One page per thing you can do with `ezai`               |
+| **[Troubleshooting](./user/troubleshooting)** | End users | Symptoms, causes and fixes for the errors `ezai` prints |
+| **[FAQ](./user/faq)**                         | End users | Short answers to recurring questions                    |
+| **[Release notes](./user/release-notes)**     | End users | What changed for you in each version                    |
+
+### Developer reference — for contributors and integrators
+
+| Page                                     | Audience     | Description                                      |
+| ---------------------------------------- | ------------ | ------------------------------------------------ |
+| **[Getting Started](./getting-started)** | Contributors | Every installation route, including from a clone |
+| **[CLI Reference](./cli/)**              | Contributors | All commands, options, and flags                 |
+| **[Available Skills](./skills/)**        | Contributors | Catalogue of skills with descriptions            |
+| **[Concepts](./concepts/)**              | Contributors | Design rationale and architecture explanations   |
+| **[Changelog](./changelog)**             | Contributors | Version history and notable changes              |
 
 ## 📋 Requirements
 
@@ -49,4 +62,4 @@ ezai install ezai-code-formatter
 
 ## ⚖️ License
 
-MIT — see [LICENSE](https://github.com/Neuraaak/ezai-marketplace/blob/main/LICENSE).
+MIT — see [LICENSE](https://github.com/neuraaak/ezai-marketplace/blob/main/LICENSE).
