@@ -14,7 +14,7 @@ Laravel overrides the base autoload mapping (`src/` → `app/`):
 ```json
 {
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "laravel/framework": "^12.0"
     },
     "require-dev": {
@@ -154,7 +154,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist
 
 # ---- Runtime stage ----
-FROM php:8.3-fpm-alpine AS runtime
+FROM php:8.4-fpm-alpine AS runtime
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 RUN docker-php-ext-install pdo_pgsql opcache
