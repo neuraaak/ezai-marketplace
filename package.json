@@ -1,7 +1,7 @@
 {
   "name": "ezai-marketplace",
   "version": "1.6.3",
-  "description": "CLI to install AI skills from the ezai marketplace into Claude Code, Gemini CLI, and Copilot",
+  "description": "CLI to install AI skills for Codex, Claude Code, Gemini CLI, and Copilot",
   "packageManager": "pnpm@11.22.0",
   "keywords": [
     "ai",

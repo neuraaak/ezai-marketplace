@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 const { Command } = require('commander');
 const catalogue = require('../src/catalogue');
@@ -24,7 +23,7 @@ function addTargetOptions(command, destHelp, platformVerb) {
 
 program
   .name('ezai')
-  .description('CLI du marketplace de skills IA ezai')
+  .description('Installer des skills partagés avec Codex, Claude Code, Gemini CLI et Copilot')
   .version(require('../package.json').version);
 
 program
@@ -47,19 +46,19 @@ addTargetOptions(
   'Répertoire de destination (défaut : répertoire home)',
   'Déployer les symlinks vers'
 )
-  .description('Installer un plugin (ou tous si aucun nom fourni) dans .agents/')
+  .description('Installer dans .agents/skills/ (Codex et autres) et créer les liens sélectionnés')
   .action((plugin, options) => runInstall(plugin, options, catalogue));
 
-addTargetOptions(program.command('purge'), BASE_DIR_HELP, 'Cibler uniquement')
-  .description('Supprimer les skills ezai obsolètes (absents du catalogue actuel)')
+addTargetOptions(program.command('purge'), BASE_DIR_HELP, 'Sélectionner les liens dans')
+  .description('Supprimer les skills obsolètes du stockage partagé et leurs liens sélectionnés')
   .action((options) => runPurge(options, catalogue));
 
 addTargetOptions(
   program.command('uninstall [skill]'),
   BASE_DIR_HELP,
-  'Supprimer uniquement les symlinks'
+  'Sélectionner les liens à supprimer dans'
 )
-  .description('Désinstaller un skill (ou tous si aucun nom fourni)')
+  .description('Supprimer du stockage partagé un skill (ou tous) et ses liens sélectionnés')
   .action((skill, options) => runUninstall(skill, options, catalogue));
 
 program.parseAsync().catch((err) => {

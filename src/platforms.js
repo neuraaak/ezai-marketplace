@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
+// Codex, Gemini CLI et Copilot CLI découvrent ~/.agents/skills/ ; Claude Code utilise son lien.
 const DEFAULT_PLATFORMS = [
   { name: 'Claude Code', dir: path.join(os.homedir(), '.claude') },
   { name: 'Gemini CLI', dir: path.join(os.homedir(), '.gemini') },
@@ -72,4 +73,8 @@ function resolvePlatforms(options = {}) {
   });
 }
 
-module.exports = { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms };
+module.exports = {
+  DEFAULT_PLATFORMS,
+  resolveAgentsSkillsDir,
+  resolvePlatforms,
+};
