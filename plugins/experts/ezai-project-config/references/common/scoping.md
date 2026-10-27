@@ -45,7 +45,7 @@ Options are listed recommended first, as `label` — `description`. Never add an
 **Ask when** the project is a library and `requires-python` / `engines` / `require.php` is absent.
 **Question:** Which minimum runtime version must be supported?
 
-- `Skill default (Recommended)` — Python 3.13, Node 24 or PHP 8.3, matching the language reference.
+- `Skill default (Recommended)` — Python 3.13, Node 24 or PHP 8.4, matching the language reference.
 - `Older version` — Support an older runtime; the user gives it via the free-form answer.
 
 ## 6. `typecheck` — header `Typecheck`

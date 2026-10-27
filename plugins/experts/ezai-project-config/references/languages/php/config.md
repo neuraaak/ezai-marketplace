@@ -7,7 +7,7 @@
 - **MIGRATION**: `Rector` (`rector/rector`) for automated AST migrations (PHP version or framework upgrades). Run `--dry-run` in CI to catch missed migrations; apply only in dedicated MRs, never auto-applied in the pipeline.
 - **TYPES**: `declare(strict_types=1)` at the top of **every** PHP file — no exceptions.
 - **CENTRAL**: all project metadata in `composer.json`. Tool config in dedicated files (`phpstan.neon`, `.php-cs-fixer.php`).
-- **VERSION**: PHP 8.3+ minimum. Pin in `.php-version` and in `composer.json` → `require.php`.
+- **VERSION**: PHP 8.4+ minimum. Pin in `.php-version` and in `composer.json` → `require.php`.
 - **LOCKFILE**: `composer.lock` committed. CI must run `composer install --frozen-lockfile` (Composer 2.2+: `COMPOSER_MIRROR_PATH_REPOS=1 composer install`).
 
 ## Environment
@@ -24,7 +24,7 @@ composer run test                 # PHPUnit
 ## `.php-version`
 
 ```text
-8.3
+8.4
 ```
 
 Commit this file to pin the PHP version used by tooling and runtime environments.
@@ -38,7 +38,7 @@ Commit this file to pin the PHP version used by tooling and runtime environments
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "symfony/dotenv": "^7.2"
     },
     "require-dev": {
@@ -101,7 +101,7 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS'                   => true,     // PSR-12 successor — the current standard
-        '@PHP83Migration'           => true,     // PHP 8.3 migration rules
+        '@PHP84Migration'           => true,     // PHP 8.4 migration rules
         'declare_strict_types'      => true,     // enforce declare(strict_types=1)
         'array_syntax'              => ['syntax' => 'short'],
         'ordered_imports'           => ['sort_algorithm' => 'alpha'],
@@ -140,7 +140,7 @@ return (new PhpCsFixer\Config())
 </phpunit>
 ```
 
-## Core syntax (PHP 8.3+)
+## Core syntax (PHP 8.4+)
 
 ```php
 <?php
@@ -188,11 +188,36 @@ $user = new UserDto(id: 1, email: new EmailAddress('foo@bar.com'));
 // First-class callables (8.1+)
 $lengths = array_map(strlen(...), $strings);
 
+// Property hooks (8.4+) — logic on a property, no getX()/setX() boilerplate
+class Temperature
+{
+    public float $celsius {
+        get => $this->kelvin - 273.15;
+        set => $this->kelvin = $value + 273.15;
+    }
+
+    private float $kelvin = 273.15;
+}
+
+// Asymmetric visibility (8.4+) — public read, internal write: replaces a readonly
+// property that still needs a controlled mutation path
+class Order
+{
+    public private(set) Status $status = Status::Pending;
+
+    public function confirm(): void
+    {
+        $this->status = Status::Active;
+    }
+}
+
 // Fibers (8.1+) — for cooperative multitasking (use a library like ReactPHP/Revolt)
 ```
 
 - `declare(strict_types=1)` in **every** file — no exception
 - `readonly` classes for immutable Value Objects (8.2+)
+- Property hooks (8.4+) over `getX()`/`setX()` pairs; `readonly` still wins when no write path exists at all
+- Asymmetric visibility (`public private(set)`, 8.4+) when a property is read everywhere but written only in-class
 - Backed enums (`enum Foo: string`) instead of class constants
 - Constructor property promotion for DTOs and simple classes
 - Named arguments for clarity on multi-param calls
@@ -209,7 +234,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist
 
 # ---- Runtime stage ----
-FROM php:8.3-fpm-alpine AS runtime
+FROM php:8.4-fpm-alpine AS runtime
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Install system extensions — only what the app actually needs
@@ -271,7 +296,7 @@ $apiKey      = env('API_KEY');
 - `declare(strict_types=1)` at the top of every PHP file.
 - `composer.lock` committed; CI uses `--frozen-lockfile` or equivalent.
 - PHPStan at level 8 minimum, zero errors.
-- PHP-CS-Fixer configured with `@PER-CS` + `@PHP83Migration` + `declare_strict_types`.
-- Multi-stage Docker image: `composer` build stage + `php:8.3-fpm-alpine` runtime, non-root user.
+- PHP-CS-Fixer configured with `@PER-CS` + `@PHP84Migration` + `declare_strict_types`.
+- Multi-stage Docker image: `composer` build stage + `php:8.4-fpm-alpine` runtime, non-root user.
 - Secrets only from environment variables — never hardcoded.
 - `enum` used for finite state (not class constants), `readonly` classes for Value Objects.

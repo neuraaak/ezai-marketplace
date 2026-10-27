@@ -9,11 +9,13 @@ These principles apply regardless of language. Load alongside the matching langu
 - **Observability**: OpenTelemetry for tracing, metrics, and structured logs. JSON output.
 - **Health checks**: define `HEALTHCHECK` in Docker for orchestration awareness.
 - **Never `latest`** in Docker — pin exact tags.
+- **Automated dependency updates**: Renovate (`renovate.json`) or Dependabot (`.github/dependabot.yml`) opens the lockfile bumps as PRs, gated by the existing test suite. Group dev-tooling bumps into one PR; keep runtime deps separate so a regression is attributable.
 
 ## Secret & environment-variable management
 
 - **Never secrets in the repo**: no API keys, tokens, or passwords in cleartext in code or config files.
 - `.env` local only — always in `.gitignore`.
+- **`.env.example` committed**: every required key, no value. It is the only documentation of what the app needs to boot, and the reference a reviewer diffs against when a variable is added.
 - In CI/CD: inject via the platform's secrets (GitHub Actions secrets, Vault, etc.).
 - Validate env vars at startup — fail fast if a required variable is missing.
 

@@ -7,7 +7,7 @@ These principles apply regardless of language. Load alongside the matching langu
 - **Profile first**: never optimize without profiling data. Measure, then act.
 - **Match the model to the workload**:
     - I/O-bound → async event loop (asyncio, JS async/await)
-    - CPU-bound → threads (Python 3.14+ GIL-less, JS Worker Threads) or multiprocessing (Python <3.14 or isolation required)
+    - CPU-bound → threads (JS Worker Threads, or Python on the free-threaded `3.14t` build) or multiprocessing (default Python build, or isolation required)
     - Mixed → async + executor/worker
 - **Stream, don't buffer**: process large datasets as generators/async iterables — never load everything into memory.
 - **Cancellation**: always provide a cancellation mechanism for long-running async operations.

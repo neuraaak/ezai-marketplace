@@ -12,7 +12,7 @@ Lint / format-check / type-check / security-scan are independent and gate the re
 
 ## PHP-specific concerns
 
-- **Version matrix:** test the project's supported PHP range (the `php` constraint floor in `composer.json` up to current stable, e.g. `["8.2", "8.3"]`).
+- **Version matrix:** test the project's supported PHP range (the `php` constraint floor in `composer.json` up to current stable, e.g. `["8.4", "8.5"]`).
 - **Runner prefix:** PHP tools run via Composer scripts (`composer lint`, `composer test`) or directly (`vendor/bin/phpstan`, `vendor/bin/phpunit`). The registry commands omit the prefix; add it based on detection.
 - **Frozen installs:** the install command must respect the lockfile — `composer install --no-interaction --prefer-dist` with a committed `composer.lock`. Never use `composer update` in CI.
 - **PHP extensions:** declare required extensions in `composer.json` under `require` (`ext-pdo`, `ext-mbstring`). If extensions beyond the runner default are needed, add them via `sudo apt-get install php-<ext>` or a `shivammathur/setup-php` option.
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@<sha>
       - uses: shivammathur/setup-php@<sha>
         with:
-          php-version: "8.3"
+          php-version: "8.4"
           extensions: mbstring, pdo
           coverage: none
       - run: composer install --no-interaction --prefer-dist
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
-      matrix: { php: ["8.2", "8.3"] }
+      matrix: { php: ["8.4", "8.5"] }
     steps:
       - uses: actions/checkout@<sha>
       - uses: shivammathur/setup-php@<sha>

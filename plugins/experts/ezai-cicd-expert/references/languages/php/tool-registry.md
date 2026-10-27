@@ -23,7 +23,7 @@ Never hard-code a fixed stack. A Laravel + Pest + Psalm project must yield a Lar
 ## PHP setup (runner)
 
 - shivammathur/setup-php — GitHub Actions · `uses: shivammathur/setup-php@v2` with `php-version`, `extensions`, `coverage`
-- GitLab Docker image — `.gitlab-ci.yml` · `image: php:8.3-cli` + `apt-get install` for extensions
+- GitLab Docker image — `.gitlab-ci.yml` · `image: php:8.4-cli` + `apt-get install` for extensions
 
 ## Lint
 
