@@ -70,7 +70,8 @@ publish and the deploy.
 ```bash
 # 01-ci
 pnpm lint
-pnpm exec prettier --check .
+pnpm format:check
+pnpm lint:security
 pnpm build-index && git diff --exit-code .claude-plugin/marketplace.json
 pnpm audit --audit-level high --prod
 pnpm test:coverage

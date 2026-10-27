@@ -93,6 +93,9 @@ jobs:
         run: pnpm lint
 
       - if: github.event_name == 'workflow_dispatch'
+        run: pnpm lint:security
+
+      - if: github.event_name == 'workflow_dispatch'
         run: pnpm test:coverage
 
       # Replays the full publish path (manifest, files, registry validation)

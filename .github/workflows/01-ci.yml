@@ -7,7 +7,7 @@ name: 01 · CI
 # release gate via workflow_call from 02-tag-sync.yml (which fires on every push to
 # main). This keeps exactly one CI run per change — no double-runs.
 on:
-  pull_request: # no paths filter: prettier/build-index cover the whole tree
+  pull_request: # no paths filter: biome/build-index cover the whole tree
   workflow_call: # called by 02-tag-sync.yml as the release gate
   workflow_dispatch:
 
@@ -43,10 +43,12 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm # cache hit from install job — no network download
       - run: pnpm install --frozen-lockfile
-      # eslint-plugin-security runs inside this step: for JS the SAST *is* the
-      # linter, so there is no separate command to give the security job.
       - run: pnpm lint
       - run: pnpm format:check
+      # eslint-plugin-security is the JS SAST: Biome has no equivalent for its
+      # pattern rules, so ESLint survives for this one command, and the security
+      # job has no separate scanner to run.
+      - run: pnpm lint:security
       - name: Verify catalogue is up to date
         run: |
           pnpm build-index
