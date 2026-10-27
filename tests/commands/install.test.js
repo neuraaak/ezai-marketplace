@@ -135,6 +135,22 @@ describe('runInstall', () => {
     const skillFile = path.join(tmpDir, '.agents', 'skills', 'ezai-docs-writer', 'SKILL.md');
     expect(fs.existsSync(skillFile)).toBe(true);
   });
+
+  it('rejette un nom de plugin qui sort du dossier des skills', async () => {
+    const outside = path.join(tmpDir, '.agents', 'important.txt');
+    fs.mkdirSync(path.dirname(outside), { recursive: true });
+    fs.writeFileSync(outside, 'à conserver');
+    const catalogue = {
+      fetchCatalogue: async () => ({
+        plugins: [{ name: '../important.txt', source: './plugins/experts/ezai-docs-writer' }],
+      }),
+    };
+
+    await expect(runInstall(null, { dest: tmpDir, _platformDirs: [] }, catalogue)).rejects.toThrow(
+      'nom de plugin invalide'
+    );
+    expect(fs.readFileSync(outside, 'utf8')).toBe('à conserver');
+  });
 });
 
 // --- linkToPlatforms ---
