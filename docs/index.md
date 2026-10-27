@@ -10,7 +10,7 @@
 [![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 
-**ezai-marketplace** — CLI to install curated AI skills for Codex, Claude Code, Gemini CLI, and Copilot from a single command.
+**ezai-marketplace** — CLI to install curated AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code from a single command.
 
 ## 🚀 Quick start
 
@@ -26,7 +26,7 @@ ezai install ezai-code-formatter
 
 ## ✨ Key features
 
-- One command installs skills for Codex, Gemini CLI, and Copilot, and links them into Claude Code
+- One command installs skills for Codex, Gemini CLI, Copilot, Vibe, and Kimi Code, and links them into Claude Code
 - Install or uninstall individual skills by name
 - Safe uninstall — third-party tools are never touched
 - Offline-first — catalogue is bundled, no network required

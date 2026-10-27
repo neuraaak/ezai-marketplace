@@ -6,7 +6,7 @@ available to the AI agents you already use.
 ## 🔧 Prerequisites
 
 - Node.js 24.22.1 or later ([nodejs.org](https://nodejs.org))
-- At least one agent installed: Codex, Claude Code, Gemini CLI or Copilot CLI
+- At least one agent installed: Codex, Claude Code, Gemini CLI, Copilot CLI, Vibe or Kimi Code
 
 ::: tip No Node.js on Windows?
 Skip to [Set up on Windows](./tasks/set-up-on-windows.md), which uses a bundled batch
@@ -64,8 +64,8 @@ script instead.
 
 ## ✅ Result
 
-`~/.agents/skills/` holds one directory per skill. Codex, Gemini CLI and Copilot CLI read
-that directory directly. For Claude Code, which reads only its own directory, `ezai`
+`~/.agents/skills/` holds one directory per skill. Codex, Gemini CLI, Copilot CLI, Vibe and
+Kimi Code read that directory directly. For Claude Code, which reads only its own directory, `ezai`
 created a link in `~/.claude/skills/` if that directory already
 existed on your machine, for example `~/.claude/skills/`.
 

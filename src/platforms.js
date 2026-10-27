@@ -2,8 +2,9 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-// Codex, Gemini CLI et Copilot CLI découvrent ~/.agents/skills/ nativement : leur lien
-// n'apporte rien. Claude Code ne lit que ~/.claude/skills/, d'où le seul lien à créer.
+// Codex, Gemini CLI, Copilot CLI, Vibe et Kimi Code découvrent ~/.agents/skills/
+// nativement : leur lien n'apporte rien. Claude Code ne lit que ~/.claude/skills/,
+// d'où le seul lien à créer.
 const DEFAULT_PLATFORMS = [{ name: 'Claude Code', dir: path.join(os.homedir(), '.claude') }];
 
 // `--dest` vient de la ligne de commande et sert de racine à des rmSync/mkdirSync :

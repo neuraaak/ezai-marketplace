@@ -9,8 +9,8 @@ REM  install.bat "" <dest>  -> tous les plugins, destination personnalisee
 REM
 REM Decouverte par walk de plugins\experts\* et plugins\personas\* (le nom du
 REM dossier = nom du plugin). Seuls SKILL.md + references\ sont copies, dans
-REM Par defaut, ~\.agents\skills\<nom> est lu par Codex, Gemini et Copilot ;
-REM des junctions sont aussi creees vers ~\.claude, ~\.gemini et ~\.copilot.
+REM Par defaut, ~\.agents\skills\<nom> est lu par Codex, Gemini CLI, Copilot CLI,
+REM Vibe et Kimi Code ; seul Claude Code a besoin d'une junction vers ~\.claude.
 REM Avec un DEST personnalise, la decouverte directe depend du chemin choisi.
 
 set "PLUGIN_NAME=%~1"
@@ -78,7 +78,7 @@ exit /b 0
 REM ---------------------------------------------------------------------------
 REM :link_platforms <nom> <source-junction>
 :link_platforms
-for %%D in (".claude" ".gemini" ".copilot") do call :link_one "%%~D" "%~1" "%~2"
+for %%D in (".claude") do call :link_one "%%~D" "%~1" "%~2"
 exit /b 0
 
 REM ---------------------------------------------------------------------------

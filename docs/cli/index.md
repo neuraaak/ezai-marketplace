@@ -1,6 +1,6 @@
 # CLI reference
 
-`ezai` — install and manage AI skills for Codex, Claude Code, Gemini CLI, and Copilot.
+`ezai` — install and manage AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code.
 
 ## 💻 Usage
 
@@ -80,7 +80,7 @@ ezai info ezai-docs-writer
 
 ## `ezai install [skill]`
 
-Copies skill files to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, and Copilot CLI can discover them directly. It also creates links (or directory junctions on Windows) in selected platform directories that exist.
+Copies skill files to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, Copilot CLI, Vibe, and Kimi Code discover them directly. It also creates a link (or a directory junction on Windows) in `~/.claude/skills/` when that directory exists, because Claude Code reads only its own.
 
 ```bash
 ezai install [skill] [OPTIONS]
@@ -96,7 +96,7 @@ When `[skill]` is omitted, all catalogue skills are installed.
 | `--claude`      | Deploy symlinks to `~/.claude/skills/` only                       |
 | `--no-links`    | Write the shared store only, create no link at all                |
 
-Claude Code is the only platform ezai links into: Codex, Gemini CLI and Copilot CLI read
+Claude Code is the only platform ezai links into: Codex, Gemini CLI, Copilot CLI, Vibe and Kimi Code read
 `~/.agents/skills/` natively and need no link. The link is created when `~/.claude/` exists,
 whether or not `--claude` is passed.
 

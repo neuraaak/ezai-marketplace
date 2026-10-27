@@ -40,8 +40,13 @@ No administrator rights are needed either way.
 
 ## ✅ Result
 
-The skills are installed in `%USERPROFILE%\.agents\skills\` and junctions are created in
-the `.claude`, `.gemini` and `.copilot` directories that exist under your profile.
+The skills are installed in `%USERPROFILE%\.agents\skills\`, and a junction is created in
+`.claude\skills\` when that directory exists. The other agents read the shared store
+directly and get no junction.
+
+With the three-argument form, both the store and the junction are placed under `<dest>`,
+not under your profile — unlike `ezai install`, which always links under your home
+directory.
 
 Windows cannot create symbolic links without elevated rights, so `ezai` uses directory
 junctions instead, automatically and with no configuration. The agents cannot tell the

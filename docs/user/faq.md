@@ -7,12 +7,13 @@ a link pointing at it.
 
 ## Why is there no `--codex` flag?
 
-Codex reads `~/.agents/skills/` by itself, so there is nothing to link. Neither Gemini CLI
-nor Copilot CLI has a flag either, for the same reason — both read that directory too.
-The only flag is `--claude`, for the one harness that reads only its own directory.
+Codex reads `~/.agents/skills/` by itself, so there is nothing to link. Gemini CLI, Copilot
+CLI, Vibe and Kimi Code have no flag either, for the same reason — all of them read that
+directory too. The only flag is `--claude`, for the one agent that reads only its own
+directory.
 
 A flag named after Codex would also be misleading: writing the shared store and no link
-serves Codex, Gemini CLI and Copilot CLI alike. If that is what you want, ask for it
+serves every one of them alike. If that is what you want, ask for it
 directly:
 
 ```bash
@@ -21,9 +22,9 @@ ezai install --no-links
 
 ## Does `ezai install --claude` keep the skill away from my other agents?
 
-No. The shared files in `~/.agents/skills/` are written on every run, and Codex, Gemini CLI
-and Copilot CLI read that directory directly. The flag only chooses whether the Claude Code
-link is created.
+No. The shared files in `~/.agents/skills/` are written on every run, and Codex, Gemini CLI,
+Copilot CLI, Vibe and Kimi Code read that directory directly. The flag only chooses whether
+the Claude Code link is created.
 See [Choose whether a platform link is created](./tasks/choose-platform-links.md).
 
 ## Can I remove a skill for one agent and keep it for another?

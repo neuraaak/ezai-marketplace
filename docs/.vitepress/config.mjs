@@ -7,7 +7,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineVersionedConfig(
   {
     title: 'ezai-marketplace',
-    description: 'CLI to install AI skills for Codex, Claude Code, Gemini CLI, and Copilot',
+    description:
+      'CLI to install AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code',
     lang: 'en-US',
     base: '/ezai-marketplace/',
 
@@ -29,7 +30,7 @@ export default defineVersionedConfig(
 
     // Version-switcher dropdown — the VitePress analogue of mike. latestVersion must equal package.json version.
     versioning: {
-      latestVersion: '1.6.3',
+      latestVersion: '1.8.0',
     },
 
     themeConfig: {

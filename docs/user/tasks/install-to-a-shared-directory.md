@@ -39,10 +39,11 @@ The skills are installed into `<dest>/.agents/skills/<skill-name>/`.
 The Claude Code link is **not** moved: it is still created under your home directory, in
 `~/.claude/skills/`, pointing at the new location.
 
-Codex finds a custom store automatically only when `<dest>` is the directory you are
-working in or one of its ancestors. An unrelated path such as `/opt/shared/ai-tools` is
-outside the places Codex looks, so for Codex you need the store in its default home
-location.
+An agent finds a custom store automatically only when `<dest>` is the directory you are
+working in or one of its ancestors: Codex, Vibe and Kimi Code also look for a
+project-scope `.agents/skills/` next to your code, which is what a store under `<dest>`
+becomes. An unrelated path such as `/opt/shared/ai-tools` is outside the places any of
+them look, so there the store has to stay in its default home location.
 
 ::: warning `--dest` is deliberately restricted
 `ezai` deletes and recreates directories under `--dest`, so a typo must not be able to

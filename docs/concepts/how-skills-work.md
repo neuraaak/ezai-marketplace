@@ -6,14 +6,21 @@ ezai-marketplace stores each skill once in a shared directory and creates platfo
 
 The supported local harnesses discover skills in these personal directories:
 
-| Harness     | Direct discovery                            | Platform directory used by ezai |
-| :---------- | :------------------------------------------ | :------------------------------ |
-| Codex       | `~/.agents/skills/`                         | None needed                     |
-| Claude Code | `~/.claude/skills/`                         | `~/.claude/skills/`             |
-| Gemini CLI  | `~/.agents/skills/` or `~/.gemini/skills/`  | None needed                     |
-| Copilot CLI | `~/.agents/skills/` or `~/.copilot/skills/` | None needed                     |
+| Harness     | Direct discovery                              | Platform directory used by ezai |
+| :---------- | :-------------------------------------------- | :------------------------------ |
+| Codex       | `~/.agents/skills/`                           | None needed                     |
+| Claude Code | `~/.claude/skills/`                           | `~/.claude/skills/`             |
+| Gemini CLI  | `~/.agents/skills/` or `~/.gemini/skills/`    | None needed                     |
+| Copilot CLI | `~/.agents/skills/` or `~/.copilot/skills/`   | None needed                     |
+| Vibe        | `~/.agents/skills/` or `~/.vibe/skills/`      | None needed                     |
+| Kimi Code   | `~/.agents/skills/` or `~/.kimi-code/skills/` | None needed                     |
 
-These locations are documented by [OpenAI](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/skills), [Gemini CLI](https://geminicli.com/docs/cli/skills/), and [GitHub Copilot](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference). Cloud sessions do not necessarily read skills stored on your machine.
+These locations are documented by [OpenAI](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/skills), [Gemini CLI](https://geminicli.com/docs/cli/skills/), [GitHub Copilot](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference), [Mistral Vibe](https://docs.mistral.ai/vibe/code/cli/skills), and [Kimi Code](https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html). Cloud sessions do not necessarily read skills stored on your machine.
+
+`~/.agents/skills/` is a shared convention rather than one tool's directory, and support for it arrived at different times in each CLI. Two consequences are worth knowing:
+
+- **An older release may not read it.** Kimi Code is the renamed `kimi-cli`, whose own documentation listed `~/.kimi/skills/` and `~/.claude/skills/` instead. If an agent does not offer a skill, check that it is a version that documents `~/.agents/skills/`.
+- **Vibe gates project-scope skills behind trusted folders.** `ezai` writes the user scope, which Mistral's documentation does not describe as gated, so this should not affect an `ezai install` — but a `.agents/skills/` directory inside a project does trigger the trust prompt on first run.
 
 A naive approach would copy skill files into each directory. That works for an initial install, but updating a skill would require re-copying it to every platform separately with no guarantee the copies stay in sync.
 
@@ -60,7 +67,7 @@ On Windows, directory junctions replace symlinks automatically — no administra
 
 ## 🔗 Relationship to platform flags
 
-Claude Code is the only harness ezai links into, because it is the only one that does not read the shared store. `--claude` selects that link during `install`, `uninstall` and `purge`, and `install --no-links` skips it. There is no flag for Codex, Gemini CLI or Copilot CLI: all three discover `.agents/skills/` directly, so a link would add nothing. No flag makes a skill exclusive to a harness — `install` always writes the shared store.
+Claude Code is the only harness ezai links into, because it is the only one that does not read the shared store. `--claude` selects that link during `install`, `uninstall` and `purge`, and `install --no-links` skips it. There is no flag for Codex, Gemini CLI, Copilot CLI, Vibe or Kimi Code: all of them discover `.agents/skills/` directly, so a link would add nothing. No flag makes a skill exclusive to a harness — `install` always writes the shared store.
 
 Direct discovery above assumes the default home directory. With `--dest`, the shared store moves to `<dest>/.agents/skills/`; Codex sees it automatically only when that directory lies on its repository discovery path. Platform links remain under the user's home directory.
 

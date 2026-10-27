@@ -21,7 +21,9 @@ function addTargetOptions(command, destHelp, platformVerb) {
 
 program
   .name('ezai')
-  .description('Installer des skills partagés avec Codex, Claude Code, Gemini CLI et Copilot')
+  .description(
+    'Installer des skills partagés avec Codex, Claude Code, Gemini CLI, Copilot, Vibe et Kimi Code'
+  )
   .version(require('../package.json').version);
 
 program

@@ -1,13 +1,18 @@
 {
   "name": "ezai-marketplace",
-  "version": "1.7.0",
-  "description": "CLI to install AI skills for Codex, Claude Code, Gemini CLI, and Copilot",
+  "version": "1.8.0",
+  "description": "CLI to install AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code",
   "packageManager": "pnpm@11.22.0",
   "keywords": [
     "ai",
     "skills",
+    "marketplace",
+    "codex",
     "claude",
-    "marketplace"
+    "gemini",
+    "copilot",
+    "vibe",
+    "kimi"
   ],
   "author": {
     "name": "Florian Salort",

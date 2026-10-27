@@ -10,7 +10,7 @@
 [![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 
-**ezai-marketplace** is a CLI that installs curated AI skills for Codex, Claude Code, Gemini CLI, and Copilot from a single command.
+**ezai-marketplace** is a CLI that installs curated AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code from a single command.
 
 ## 📦 Installation
 
@@ -87,11 +87,11 @@ ezai install ezai-code-formatter
 ezai install --claude
 ```
 
-Skills are copied to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, and Copilot CLI discover them directly. Claude Code reads only its own directory, so ezai links the skills into `~/.claude/skills/` when it exists. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
+Skills are copied to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, Copilot CLI, Vibe, and Kimi Code discover them directly. Claude Code reads only its own directory, so ezai links the skills into `~/.claude/skills/` when it exists. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
 
 ## 🎯 Key Features
 
-- ✅ **One command, all platforms** — installs for Codex, Gemini CLI, and Copilot, and links into Claude Code in one shot
+- ✅ **One command, all platforms** — installs for Codex, Gemini CLI, Copilot, Vibe, and Kimi Code, and links into Claude Code in one shot
 - ✅ **Atomic control** — install or uninstall individual skills by name
 - ✅ **One link to create** — only Claude Code needs one; `--no-links` skips it and leaves the shared store
 - ✅ **Safe uninstall** — only removes skills known to the marketplace; third-party tools are never touched
@@ -176,8 +176,8 @@ all; it is rejected together with `--claude`.
 
 Three things are worth knowing before you use them:
 
-- Claude Code is the only harness ezai links into — Codex, Gemini CLI and Copilot CLI read
-  the shared `~/.agents/skills/` store natively, so they need no link. `--claude` names that
+- Claude Code is the only harness ezai links into — Codex, Gemini CLI, Copilot CLI, Vibe and
+  Kimi Code read the shared `~/.agents/skills/` store natively, so they need no link. `--claude` names that
   one link explicitly; the default already creates it when `~/.claude/` exists.
 - `uninstall` deletes the skill files from `~/.agents/skills/` **even with a platform
   flag**, so links in the unselected directories may be left broken. Skills absent from

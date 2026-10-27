@@ -5,7 +5,7 @@ Install ezai-marketplace and run your first skill installation in under two minu
 ## 🔧 Prerequisites
 
 - Node.js >= 24.22.1 ([nodejs.org](https://nodejs.org))
-- One or more AI platforms installed: Codex, Claude Code, Gemini CLI, or Copilot
+- One or more AI platforms installed: Codex, Claude Code, Gemini CLI, Copilot, Vibe, or Kimi Code
 
 ## 📝 Step 1 — Install the CLI
 
@@ -75,7 +75,7 @@ You should see a table listing all skills in the catalogue with their category a
 ezai install
 ```
 
-ezai installs skills in `~/.agents/skills/`, where Codex, Gemini CLI, and Copilot CLI discover them directly. It also deploys a symlink to `~/.claude/skills/` when that directory exists, because Claude Code reads only its own.
+ezai installs skills in `~/.agents/skills/`, where Codex, Gemini CLI, Copilot CLI, Vibe, and Kimi Code discover them directly. It also deploys a symlink to `~/.claude/skills/` when that directory exists, because Claude Code reads only its own.
 
 You should see one line of output per platform directory where skills were deployed.
 

@@ -1,6 +1,6 @@
 # Available skills
 
-All skills are installed to `~/.agents/skills/<name>/`, which Codex, Gemini CLI, and Copilot CLI discover directly. ezai also creates a link in an existing Claude Code directory, the one harness that reads only its own.
+All skills are installed to `~/.agents/skills/<name>/`, which Codex, Gemini CLI, Copilot CLI, Vibe, and Kimi Code discover directly. ezai also creates a link in an existing Claude Code directory, the one harness that reads only its own.
 
 ## 📋 Catalogue
 

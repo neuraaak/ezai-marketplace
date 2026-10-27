@@ -24,8 +24,8 @@ on a skill you already have replaces it with the current version.
 
 ## ✅ Result
 
-The skill files are copied to `~/.agents/skills/<skill-name>/`, which Codex, Gemini CLI
-and Copilot CLI read directly. `ezai` then creates a link in `~/.claude/skills/` when that
+The skill files are copied to `~/.agents/skills/<skill-name>/`, which Codex, Gemini CLI,
+Copilot CLI, Vibe and Kimi Code read directly. `ezai` then creates a link in `~/.claude/skills/` when that
 directory already exists, so Claude Code finds the skill too.
 
 One line is printed per copied file, then one line per link, then a summary naming the

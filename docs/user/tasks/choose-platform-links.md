@@ -40,8 +40,8 @@ store that the other agents read by themselves.
 One line is printed per link created. A platform directory that does not exist on your
 machine is skipped silently — `ezai` never creates `~/.claude/` for you.
 
-There is no flag for Codex, Gemini CLI or Copilot CLI: all three read `~/.agents/skills/`
-natively, so they need no link. `--no-links` is the only way to install without touching
+There is no flag for Codex, Gemini CLI, Copilot CLI, Vibe or Kimi Code: all of them read
+`~/.agents/skills/` natively, so they need no link. `--no-links` is the only way to install without touching
 `~/.claude/skills/`.
 
 ## 📚 What a link does and does not control
@@ -51,14 +51,16 @@ third:
 
 1. **The shared store is always written.** `ezai install` copies the skill files into
    `~/.agents/skills/` on every run, whatever flags you pass.
-2. **Most agents read that store by themselves.** Codex, Gemini CLI and Copilot CLI
-   discover `~/.agents/skills/` natively, so they find a skill with no link at all.
+2. **Most agents read that store by themselves.** Codex, Gemini CLI, Copilot CLI, Vibe and
+   Kimi Code discover `~/.agents/skills/` natively, so they find a skill with no link at
+   all.
 3. **The link covers the one agent that cannot.** Claude Code reads only
    `~/.claude/skills/`, so its link is the single one `ezai` has to create.
 
 ::: warning `--no-links` is not a way to hide a skill
 `ezai install --no-links` does not keep the skill away from your agents. It writes the same
-shared files, which Codex, Gemini CLI and Copilot CLI still discover. It only skips the
+shared files, which Codex, Gemini CLI, Copilot CLI, Vibe and Kimi Code still discover. It
+only skips the
 Claude Code link.
 :::
 

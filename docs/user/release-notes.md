@@ -7,6 +7,46 @@ User-visible changes, newest version first. Upgrade with
 For the full commit-level history, see the
 [developer changelog](../changelog.md).
 
+## 1.8.0 — 2026-10-27
+
+### New
+
+- Vibe and Kimi Code are supported. Both read the shared `~/.agents/skills/` store
+  directly, so an `ezai install` you have already run covers them: there is nothing new to
+  type and no new flag. See
+  [How skill installation works](../concepts/how-skills-work.md) for the directory each
+  agent reads, and for the version caveat — support for the shared store arrived at
+  different times in each CLI.
+
+### Fixed
+
+- The documentation version switcher offers 1.8.0. It had stayed at 1.6.3 through two
+  releases.
+
+## 1.7.0 — 2026-10-27
+
+::: warning Action may be required
+The `--gemini` and `--copilot` flags are removed. A command that passes one now fails with
+`error: unknown option`. Drop the flag: a plain `ezai install` already covers both agents.
+:::
+
+### Changed
+
+- `ezai` no longer creates links in `~/.gemini/skills/` or `~/.copilot/skills/`. Both
+  agents read the shared `~/.agents/skills/` store natively, so those links never made a
+  skill visible that was not already. Claude Code is the only agent that needs a link, and
+  the only one `ezai` still creates. Nothing becomes invisible — unless you run a release
+  of Gemini CLI or Copilot CLI old enough not to read the shared store, in which case stay
+  on 1.6.3.
+- The Windows batch wrapper `scripts\install.bat` creates a junction for Claude Code only,
+  matching the CLI.
+
+### New
+
+- `ezai install --no-links` writes the shared store and creates no link at all. It is the
+  only way to install without touching `~/.claude/skills/`, and it is rejected together
+  with `--claude`.
+
 ## 1.6.3 — 2026-10-27
 
 ::: warning Action may be required
