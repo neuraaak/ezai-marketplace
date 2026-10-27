@@ -83,6 +83,30 @@ describe('unlinkFromPlatforms', () => {
     expect(fs.existsSync(dest)).toBe(false);
   });
 
+  it('conserve un vrai dossier de plateforme portant le nom du skill', () => {
+    const platform = path.join(tmpDir, 'platform');
+    const dest = path.join(platform, 'skills', 'ezai-code-formatter');
+    fs.mkdirSync(dest, { recursive: true });
+    const file = path.join(dest, 'personnel.txt');
+    fs.writeFileSync(file, 'à conserver');
+
+    unlinkFromPlatforms(['ezai-code-formatter'], [{ name: 'P', dir: platform }]);
+
+    expect(fs.readFileSync(file, 'utf8')).toBe('à conserver');
+  });
+
+  it('rejette un nom de skill qui sort du dossier de plateforme', () => {
+    const platform = path.join(tmpDir, 'platform');
+    const outside = path.join(platform, 'important.txt');
+    fs.mkdirSync(platform);
+    fs.writeFileSync(outside, 'à conserver');
+
+    expect(() => unlinkFromPlatforms(['../important.txt'], [{ name: 'P', dir: platform }])).toThrow(
+      'nom de plugin invalide'
+    );
+    expect(fs.readFileSync(outside, 'utf8')).toBe('à conserver');
+  });
+
   it("ne lève pas d'erreur si le symlink est absent", () => {
     const platform = path.join(tmpDir, 'platform');
     fs.mkdirSync(platform);

@@ -14,6 +14,13 @@ function assertSafeRelPath(p) {
   }
 }
 
+function assertSafePluginName(name) {
+  if (typeof name !== 'string' || !/^ezai-[a-z0-9-]+$/.test(name)) {
+    throw new Error(`nom de plugin invalide : ${name}`);
+  }
+  assertSafeRelPath(name);
+}
+
 function collectFiles(dir, baseDir, result) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
@@ -84,6 +91,7 @@ function linkToPlatforms(skillNames, agentsDir, platformDirs = DEFAULT_PLATFORMS
     }
 
     for (const skillName of skillNames) {
+      assertSafePluginName(skillName);
       const src = path.resolve(path.join(agentsDir, skillName));
       const dest = path.join(skillsDir, skillName);
       try {
@@ -129,6 +137,7 @@ async function runInstall(pluginName, options, catalogue) {
   // Tout est vérifié avant la première suppression : un catalogue distant peut
   // référencer un plugin absent de ce paquet, et l'install existante doit survivre.
   const sources = targets.map((plugin) => {
+    assertSafePluginName(plugin.name);
     const pluginDir = resolvePluginDir(plugin);
     if (!fs.existsSync(path.join(pluginDir, 'SKILL.md'))) {
       console.error(`Plugin "${plugin.name}" absent du paquet local — mettez à jour ezai.`);
@@ -170,6 +179,7 @@ async function runInstall(pluginName, options, catalogue) {
 
 module.exports = {
   assertSafeRelPath,
+  assertSafePluginName,
   runInstall,
   linkToPlatforms,
   collectRuntimeFiles,
