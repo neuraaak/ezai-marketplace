@@ -10,6 +10,15 @@ const {
 } = require('../../src/commands/install');
 const { resolvePlatforms } = require('../../src/platforms');
 
+const originalAllowedRoot = process.env.EZAI_ALLOWED_DEST_ROOT;
+beforeAll(() => {
+  process.env.EZAI_ALLOWED_DEST_ROOT = os.tmpdir();
+});
+afterAll(() => {
+  if (originalAllowedRoot === undefined) delete process.env.EZAI_ALLOWED_DEST_ROOT;
+  else process.env.EZAI_ALLOWED_DEST_ROOT = originalAllowedRoot;
+});
+
 // --- assertSafeRelPath ---
 
 describe('assertSafeRelPath', () => {

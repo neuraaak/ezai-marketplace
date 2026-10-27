@@ -53,7 +53,7 @@ ezai uninstall ezai-code-formatter --claude
 ## 💡 Install to a shared directory
 
 ```bash
-ezai install --dest /opt/shared/ai-tools
+EZAI_ALLOWED_DEST_ROOT=/opt/shared/ai-tools ezai install --dest /opt/shared/ai-tools
 ```
 
 Skills are deployed to `/opt/shared/ai-tools/.agents/skills/` and symlinked into `/opt/shared/ai-tools/.claude/skills/`, `/opt/shared/ai-tools/.gemini/skills/`, and `/opt/shared/ai-tools/.copilot/skills/` as applicable.

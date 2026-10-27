@@ -188,6 +188,10 @@ ezai install ezai-docs-writer --gemini --copilot
 | `--gemini`      | Deploy symlinks to `~/.gemini/skills/` only                       |
 | `--copilot`     | Deploy symlinks to `~/.copilot/skills/` only                      |
 
+`--dest` must point inside your home or current working directory. For a shared
+directory elsewhere, set `EZAI_ALLOWED_DEST_ROOT` to its absolute path before
+running `install`, `purge`, or `uninstall`.
+
 When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
 
 ### `ezai purge`

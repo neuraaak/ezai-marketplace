@@ -22,11 +22,16 @@ ezai install --gemini --copilot
 
 ## 🔧 How to use a custom install directory
 
-Override the default home directory with `--dest`:
+By default, `--dest` accepts an existing directory inside your home directory or
+the current working directory. To use a shared directory elsewhere, explicitly
+allow its absolute path with `EZAI_ALLOWED_DEST_ROOT`:
 
 ```bash
-ezai install --dest /opt/shared/ai-tools
+EZAI_ALLOWED_DEST_ROOT=/opt/shared/ai-tools ezai install --dest /opt/shared/ai-tools
 ```
+
+The same rule applies to `uninstall` and `purge`. Symlinks that redirect the
+destination outside the allowed root are rejected.
 
 Skills are copied to `<dest>/.agents/skills/<name>/` and symlinked into `<dest>/.claude/skills/`, `<dest>/.gemini/skills/`, and `<dest>/.copilot/skills/` as applicable.
 

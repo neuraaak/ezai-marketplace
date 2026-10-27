@@ -26,6 +26,11 @@ ezai [OPTIONS] COMMAND [ARGS]...
 | `purge`     | Delete stale ezai skills absent from the catalogue    |
 | `uninstall` | Remove marketplace skills and their platform symlinks |
 
+For commands with `--dest`, the directory must be inside your home or current
+working directory. To target a shared directory elsewhere, set
+`EZAI_ALLOWED_DEST_ROOT` to an absolute trusted path; see the
+[custom directory guide](../guides/#how-to-use-a-custom-install-directory).
+
 ---
 
 ## `ezai list`
@@ -109,8 +114,8 @@ ezai install --claude
 # Install a skill to Gemini CLI and Copilot only
 ezai install ezai-docs-writer --gemini --copilot
 
-# Use a custom base directory
-ezai install --dest /opt/ai-tools
+# Use a shared base directory outside your home and current project
+EZAI_ALLOWED_DEST_ROOT=/opt/ai-tools ezai install --dest /opt/ai-tools
 ```
 
 ---
