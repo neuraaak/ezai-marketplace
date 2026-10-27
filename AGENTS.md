@@ -45,9 +45,10 @@ docs/                              VitePress documentation site
 
 ```bash
 pnpm test            # Jest — all tests must pass
-pnpm lint            # ESLint v10 flat config (eslint.config.js)
-pnpm format:check    # Prettier check
-pnpm format          # Prettier write
+pnpm lint            # Biome lint (biome.json)
+pnpm lint:security   # ESLint, eslint-plugin-security only (eslint.config.js)
+pnpm format:check    # Biome format check
+pnpm format          # Biome format write
 pnpm build-index     # Regenerate .claude-plugin/marketplace.json
 pnpm docs:dev        # VitePress dev server
 pnpm docs:build      # VitePress build (output: docs/.vitepress/dist)
@@ -85,7 +86,7 @@ pnpm test:coverage   # Jest with coverage report (≥70 % lines required)
 ## CI / pre-commit
 
 - **Husky** runs `build-index` and `lint-staged` before each commit.
-- `lint-staged` formats `.js` with Prettier + ESLint, formats `.json/.md/.yml/.yaml` with Prettier.
+- `lint-staged` runs `biome check --write` on `.js`/`.json` then `eslint` on `.js`, and `biome format --write` on `.md/.yml/.yaml`.
 - **GitHub Actions** (`.github/workflows/`): Node 24.22.1, pnpm 11 — see `.github/workflows/README.md`. The `prepare` script skips husky when `CI=true`.
 - All Jest tests must pass before opening a PR.
 

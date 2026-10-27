@@ -18,7 +18,7 @@ function today() {
 
 function buildIndex() {
   if (!fs.existsSync(PLUGINS_DIR)) {
-    console.log('Dossier plugins/ introuvable. Catalogue vide généré.');
+    console.info('Dossier plugins/ introuvable. Catalogue vide généré.');
     return {
       $schema: 'https://json.schemastore.org/claude-code-marketplace.json',
       name: 'ezai-marketplace',
@@ -140,7 +140,7 @@ function validateEvals(pluginsDir) {
 
   for (const warning of warnings) console.warn(warning);
   if (warnings.length === 0) {
-    console.log('  Evals : OK (aucune anomalie de schéma détectée)');
+    console.info('  Evals : OK (aucune anomalie de schéma détectée)');
   } else {
     console.warn(`  Evals : ${warnings.length} avertissement(s) de schéma`);
   }
@@ -148,7 +148,7 @@ function validateEvals(pluginsDir) {
 
 const catalogue = buildIndex();
 fs.writeFileSync(OUTPUT, JSON.stringify(catalogue, null, 2), 'utf8');
-console.log(`\nCatalogue régénéré : ${catalogue.plugins.length} plugin(s) indexé(s).`);
-console.log(`Fichier : ${OUTPUT}`);
+console.info(`\nCatalogue régénéré : ${catalogue.plugins.length} plugin(s) indexé(s).`);
+console.info(`Fichier : ${OUTPUT}`);
 validateEvals(PLUGINS_DIR);
-console.log();
+console.info();

@@ -6,8 +6,7 @@
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue?style=flat&logo=materialformkdocs&logoColor=white)](https://neuraaak.github.io/ezai-marketplace/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat&logo=github&logoColor=white)](https://github.com/neuraaak/ezai-marketplace/blob/main/LICENSE)
 [![package manager](https://img.shields.io/badge/package%20manager-pnpm-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![linter](https://img.shields.io/badge/linter-eslint-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
-[![formatter](https://img.shields.io/badge/formatter-prettier-F7B93E?style=flat&logo=prettier&logoColor=white)](https://prettier.io/)
+[![linter](https://img.shields.io/badge/linter-biome-60A5FA?style=flat&logo=biome&logoColor=white)](https://biomejs.dev/)
 [![test runner](https://img.shields.io/badge/test%20runner-jest-C21325?style=flat&logo=jest&logoColor=white)](https://jestjs.io/)
 
 **ezai-marketplace** is a CLI that installs curated AI skills for Codex, Claude Code, Gemini CLI, Copilot, Vibe, and Kimi Code from a single command.
@@ -191,14 +190,14 @@ recipes in the **[User Guide](https://neuraaak.github.io/ezai-marketplace/user/t
 
 ## 📦 Dependencies
 
-| Package       | Role                   | Version   |
-| :------------ | :--------------------- | :-------- |
-| `commander`   | CLI framework          | `^12.0.0` |
-| `eslint`      | Linter                 | `^10.4.0` |
-| `prettier`    | Formatter              | `^3.8.3`  |
-| `jest`        | Test runner            | `^29.0.0` |
-| `lint-staged` | Pre-commit lint runner | `^17.0.5` |
-| `husky`       | Git hooks manager      | `^9.1.7`  |
+| Package          | Role                   | Version   |
+| :--------------- | :--------------------- | :-------- |
+| `commander`      | CLI framework          | `^12.0.0` |
+| `@biomejs/biome` | Linter & formatter     | `^2.6.3`  |
+| `eslint`         | Security linter (SAST) | `^10.4.0` |
+| `jest`           | Test runner            | `^29.0.0` |
+| `lint-staged`    | Pre-commit lint runner | `^17.0.5` |
+| `husky`          | Git hooks manager      | `^9.1.7`  |
 
 ## 📝 License
 

@@ -18,8 +18,8 @@ for (const pluginDir of findPluginDirs(PLUGINS_DIR)) {
 
   meta.version = version;
   fs.writeFileSync(pluginJsonPath, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
-  console.log(`  version ${path.basename(pluginDir)} → ${version}`);
+  console.info(`  version ${path.basename(pluginDir)} → ${version}`);
   updated++;
 }
 
-if (updated > 0) console.log(`\n${updated} plugin(s) mis à jour.`);
+if (updated > 0) console.info(`\n${updated} plugin(s) mis à jour.`);
