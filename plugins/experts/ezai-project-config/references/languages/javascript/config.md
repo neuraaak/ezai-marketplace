@@ -14,7 +14,7 @@ enabled with `corepack enable`:
 
 ```json
 {
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@11.22.0",
   "engines": { "node": ">=24" }
 }
 ```
