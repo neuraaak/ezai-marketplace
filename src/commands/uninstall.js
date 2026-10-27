@@ -1,18 +1,24 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms } = require('../platforms');
+const { assertSafePluginName } = require('./install');
 
 function unlinkFromPlatforms(skillNames, platformDirs = DEFAULT_PLATFORMS) {
+  skillNames.forEach(assertSafePluginName);
   for (const platform of platformDirs) {
     const skillsDir = path.join(platform.dir, 'skills');
     for (const skillName of skillNames) {
       const dest = path.join(skillsDir, skillName);
       try {
-        if (fs.existsSync(dest)) {
-          fs.rmSync(dest, { recursive: true, force: true });
-          console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
-        }
+        fs.readlinkSync(dest);
+        fs.rmSync(dest, { recursive: true, force: true });
+        console.info(`  ✕ ${platform.name.padEnd(12)} → ${dest}`);
       } catch (err) {
+        if (err.code === 'ENOENT') continue;
+        if (err.code === 'EINVAL') {
+          console.warn(`  [warn] ${platform.name} : ${dest} est un dossier réel, non supprimé`);
+          continue;
+        }
         console.warn(
           `  [warn] ${platform.name} : impossible de supprimer le lien pour ${skillName} — ${err.message}`
         );
@@ -35,6 +41,7 @@ async function runUninstall(skillName, options, catalogue) {
       console.error('Utilisez `ezai list` pour voir les skills disponibles.');
       throw new Error(`"${skillName}" n'est pas un skill du catalogue ezai`);
     }
+    assertSafePluginName(skillName);
     const skillDir = path.join(agentsSkillsDir, skillName);
     if (!fs.existsSync(skillDir)) {
       console.error(`Skill "${skillName}" non installé dans ${agentsSkillsDir}`);
@@ -58,6 +65,8 @@ async function runUninstall(skillName, options, catalogue) {
       return;
     }
   }
+
+  targets.forEach(assertSafePluginName);
 
   const platformDirs = options._platformDirs || resolvePlatforms(options);
 
