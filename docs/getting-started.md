@@ -75,7 +75,7 @@ You should see a table listing all skills in the catalogue with their category a
 ezai install
 ```
 
-ezai installs skills in `~/.agents/skills/`, where Codex discovers them directly. It also detects existing platform directories (`~/.claude/skills/`, `~/.gemini/skills/`, `~/.copilot/skills/`) and deploys symlinks to each one automatically.
+ezai installs skills in `~/.agents/skills/`, where Codex, Gemini CLI, and Copilot CLI discover them directly. It also deploys a symlink to `~/.claude/skills/` when that directory exists, because Claude Code reads only its own.
 
 You should see one line of output per platform directory where skills were deployed.
 
@@ -97,7 +97,7 @@ You should see one directory per installed skill in the shared store and, when a
 
 ## ✅ What you built
 
-You installed the ezai-marketplace CLI and stored the curated skills in `~/.agents/skills/` for Codex and other compatible harnesses. Existing Claude Code, Gemini CLI, and Copilot directories also received links.
+You installed the ezai-marketplace CLI and stored the curated skills in `~/.agents/skills/` for Codex and other compatible harnesses. An existing Claude Code directory also received links.
 
 ## ➡️ Next steps
 

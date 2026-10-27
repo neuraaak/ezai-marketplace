@@ -25,9 +25,8 @@ on a skill you already have replaces it with the current version.
 ## ✅ Result
 
 The skill files are copied to `~/.agents/skills/<skill-name>/`, which Codex, Gemini CLI
-and Copilot CLI read directly. `ezai` then creates a link in each platform directory that
-already exists on your machine — `~/.claude/skills/`, `~/.gemini/skills/`,
-`~/.copilot/skills/` — so Claude Code finds the skill too.
+and Copilot CLI read directly. `ezai` then creates a link in `~/.claude/skills/` when that
+directory already exists, so Claude Code finds the skill too.
 
 One line is printed per copied file, then one line per link, then a summary naming the
 directory the skills were installed into.
@@ -40,6 +39,6 @@ If the command failed, see [Troubleshooting](../troubleshooting.md).
 
 ## ➡️ Next steps
 
-- [Choose which platform links are created](./choose-platform-links.md)
+- [Choose whether a platform link is created](./choose-platform-links.md)
 - [Update installed skills](./update-skills.md)
 - [Remove a skill](./remove-a-skill.md)

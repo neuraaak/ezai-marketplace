@@ -87,13 +87,13 @@ ezai install ezai-code-formatter
 ezai install --claude
 ```
 
-Skills are copied to `~/.agents/skills/<name>/`, where Codex discovers them directly. When their directories exist, Claude Code receives links in `~/.claude/skills/`; Gemini CLI and Copilot CLI can also discover the shared store directly, and ezai creates links in their platform directories when selected. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
+Skills are copied to `~/.agents/skills/<name>/`, where Codex, Gemini CLI, and Copilot CLI discover them directly. Claude Code reads only its own directory, so ezai links the skills into `~/.claude/skills/` when it exists. On Windows, directory junctions are used instead of symlinks (no administrator rights required).
 
 ## 🎯 Key Features
 
-- ✅ **One command, all platforms** — installs for Codex and creates links for Claude Code, Gemini CLI, and Copilot in one shot
+- ✅ **One command, all platforms** — installs for Codex, Gemini CLI, and Copilot, and links into Claude Code in one shot
 - ✅ **Atomic control** — install or uninstall individual skills by name
-- ✅ **Platform flags** — select which platform links to create (`--claude`, `--gemini`, `--copilot`); shared skills remain discoverable
+- ✅ **One link to create** — only Claude Code needs one; `--no-links` skips it and leaves the shared store
 - ✅ **Safe uninstall** — only removes skills known to the marketplace; third-party tools are never touched
 - ✅ **Offline-first** — catalogue is bundled with the package, no network required
 - ✅ **Windows-compatible** — uses directory junctions when symlinks are unavailable
@@ -159,9 +159,9 @@ The `prepare` script configures a `pre-commit` hook that rebuilds `marketplace.j
 | `ezai purge`             | Drops stale `ezai-` skills no longer in the catalogue |
 
 ```bash
-# Install everything, then install one skill for Gemini CLI and Copilot only
+# Install everything, then install one skill without linking into Claude Code
 ezai install
-ezai install ezai-docs-writer --gemini --copilot
+ezai install ezai-docs-writer --no-links
 ```
 
 `install` and `uninstall` take the same options:
@@ -170,15 +170,15 @@ ezai install ezai-docs-writer --gemini --copilot
 | :-------------- | :---------------------------------------------------------------- |
 | `--dest <path>` | Override the base destination directory (default: home directory) |
 | `--claude`      | Select the links in `~/.claude/skills/`                           |
-| `--gemini`      | Select the links in `~/.gemini/skills/`                           |
-| `--copilot`     | Select the links in `~/.copilot/skills/`                          |
+
+`install` also takes `--no-links`, which writes the shared store and creates no link at
+all; it is rejected together with `--claude`.
 
 Three things are worth knowing before you use them:
 
-- A platform flag selects **which links are created or removed** — it is not exclusive
-  access. Skills always land in the shared `~/.agents/skills/` store, which Codex reads
-  directly and the other agents can read too. With no flag, links go to every platform
-  directory that already exists.
+- Claude Code is the only harness ezai links into — Codex, Gemini CLI and Copilot CLI read
+  the shared `~/.agents/skills/` store natively, so they need no link. `--claude` names that
+  one link explicitly; the default already creates it when `~/.claude/` exists.
 - `uninstall` deletes the skill files from `~/.agents/skills/` **even with a platform
   flag**, so links in the unselected directories may be left broken. Skills absent from
   the catalogue are never touched.

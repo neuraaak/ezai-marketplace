@@ -54,4 +54,4 @@ install Node.js and use the CLI.
 ## ➡️ Next steps
 
 - [Install skills](./install-skills.md)
-- [Choose which platform links are created](./choose-platform-links.md)
+- [Choose whether a platform link is created](./choose-platform-links.md)

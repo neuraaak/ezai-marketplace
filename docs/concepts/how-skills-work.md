@@ -10,8 +10,8 @@ The supported local harnesses discover skills in these personal directories:
 | :---------- | :------------------------------------------ | :------------------------------ |
 | Codex       | `~/.agents/skills/`                         | None needed                     |
 | Claude Code | `~/.claude/skills/`                         | `~/.claude/skills/`             |
-| Gemini CLI  | `~/.agents/skills/` or `~/.gemini/skills/`  | `~/.gemini/skills/`             |
-| Copilot CLI | `~/.agents/skills/` or `~/.copilot/skills/` | `~/.copilot/skills/`            |
+| Gemini CLI  | `~/.agents/skills/` or `~/.gemini/skills/`  | None needed                     |
+| Copilot CLI | `~/.agents/skills/` or `~/.copilot/skills/` | None needed                     |
 
 These locations are documented by [OpenAI](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/skills), [Gemini CLI](https://geminicli.com/docs/cli/skills/), and [GitHub Copilot](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference). Cloud sessions do not necessarily read skills stored on your machine.
 
@@ -25,15 +25,13 @@ ezai-marketplace writes skills once to a shared store:
 ~/.agents/skills/<skill-name>/
 ```
 
-For each selected platform directory that exists, ezai creates a symlink (or directory junction on Windows) pointing back to the shared location:
+When the Claude Code directory exists, ezai creates a symlink (or directory junction on Windows) pointing back to the shared location:
 
 ```text
 ~/.claude/skills/ezai-code-formatter  →  ~/.agents/skills/ezai-code-formatter
-~/.gemini/skills/ezai-code-formatter  →  ~/.agents/skills/ezai-code-formatter
-~/.copilot/skills/ezai-code-formatter →  ~/.agents/skills/ezai-code-formatter
 ```
 
-Updating a skill means updating the shared store once — all platform links immediately reflect the change without any per-platform bookkeeping.
+Updating a skill means updating the shared store once — the link immediately reflects the change without any per-platform bookkeeping.
 
 ## 🔍 Stale skills
 
@@ -62,8 +60,8 @@ On Windows, directory junctions replace symlinks automatically — no administra
 
 ## 🔗 Relationship to platform flags
 
-The `--claude`, `--gemini`, and `--copilot` flags select which platform links ezai creates during `install` or removes during `uninstall` and `purge`. There is no `--codex` flag because Codex reads the shared store directly. The flags do not make a skill exclusive to a harness: `install` always writes to `.agents/skills/`, which Codex, Gemini CLI, and Copilot CLI can discover directly.
+Claude Code is the only harness ezai links into, because it is the only one that does not read the shared store. `--claude` selects that link during `install`, `uninstall` and `purge`, and `install --no-links` skips it. There is no flag for Codex, Gemini CLI or Copilot CLI: all three discover `.agents/skills/` directly, so a link would add nothing. No flag makes a skill exclusive to a harness — `install` always writes the shared store.
 
 Direct discovery above assumes the default home directory. With `--dest`, the shared store moves to `<dest>/.agents/skills/`; Codex sees it automatically only when that directory lies on its repository discovery path. Platform links remain under the user's home directory.
 
-`uninstall` and `purge` also remove matching skill files from the shared store. For example, `ezai uninstall ezai-code-formatter --claude` removes that skill from `.agents/skills/` and removes its Claude Code link; links in other platform directories may then point to a missing target. Use the platform flags to select link operations, not to preserve a skill for another harness.
+`uninstall` and `purge` also remove matching skill files from the shared store. For example, `ezai uninstall ezai-code-formatter --claude` removes that skill from `.agents/skills/` and removes its Claude Code link. Links left in a platform directory by an earlier version of ezai may then point to a missing target. Use `--claude` to select the link operation, not to preserve a skill for another harness.

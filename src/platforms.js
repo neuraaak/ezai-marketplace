@@ -2,12 +2,9 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-// Codex, Gemini CLI et Copilot CLI découvrent ~/.agents/skills/ ; Claude Code utilise son lien.
-const DEFAULT_PLATFORMS = [
-  { name: 'Claude Code', dir: path.join(os.homedir(), '.claude') },
-  { name: 'Gemini CLI', dir: path.join(os.homedir(), '.gemini') },
-  { name: 'Copilot', dir: path.join(os.homedir(), '.copilot') },
-];
+// Codex, Gemini CLI et Copilot CLI découvrent ~/.agents/skills/ nativement : leur lien
+// n'apporte rien. Claude Code ne lit que ~/.claude/skills/, d'où le seul lien à créer.
+const DEFAULT_PLATFORMS = [{ name: 'Claude Code', dir: path.join(os.homedir(), '.claude') }];
 
 // `--dest` vient de la ligne de commande et sert de racine à des rmSync/mkdirSync :
 // il est résolu en absolu et doit désigner un dossier existant, pour qu'une faute
@@ -63,14 +60,13 @@ function resolveAgentsSkillsDir(dest) {
 }
 
 function resolvePlatforms(options = {}) {
-  const deployAll = !options.claude && !options.gemini && !options.copilot;
-  return DEFAULT_PLATFORMS.filter(({ name }) => {
-    if (deployAll) return true;
-    if (options.claude && name === 'Claude Code') return true;
-    if (options.gemini && name === 'Gemini CLI') return true;
-    if (options.copilot && name === 'Copilot') return true;
-    return false;
-  });
+  if (options.links === false) {
+    if (options.claude) {
+      throw new Error('--no-links : incompatible avec --claude');
+    }
+    return [];
+  }
+  return [...DEFAULT_PLATFORMS];
 }
 
 module.exports = {

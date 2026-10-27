@@ -207,7 +207,7 @@ reads its own directory and no link was created for it.
 
 4. If the link is missing because that directory did not exist when you installed, create
    the agent's directory and install again — see
-   [Choose which platform links are created](./tasks/choose-platform-links.md).
+   [Choose whether a platform link is created](./tasks/choose-platform-links.md).
 
 ## Nothing is reported as installed
 

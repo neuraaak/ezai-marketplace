@@ -27,14 +27,24 @@ describe('collectManagedSkills', () => {
 
   it('recense les skills ezai- de .agents et des plateformes, dédupliqués et triés', () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
-    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-docs-writer'), { recursive: true });
-    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-old-orphan'), { recursive: true });
-    fs.mkdirSync(path.join(agentsSkillsDir, 'foreign-skill'), { recursive: true });
+    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-docs-writer'), {
+      recursive: true,
+    });
+    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-old-orphan'), {
+      recursive: true,
+    });
+    fs.mkdirSync(path.join(agentsSkillsDir, 'foreign-skill'), {
+      recursive: true,
+    });
 
     const platform = path.join(tmpDir, 'platform');
     const platSkills = path.join(platform, 'skills');
-    fs.mkdirSync(path.join(platSkills, 'ezai-docs-writer'), { recursive: true });
-    fs.mkdirSync(path.join(platSkills, 'ezai-only-in-platform'), { recursive: true });
+    fs.mkdirSync(path.join(platSkills, 'ezai-docs-writer'), {
+      recursive: true,
+    });
+    fs.mkdirSync(path.join(platSkills, 'ezai-only-in-platform'), {
+      recursive: true,
+    });
 
     const result = collectManagedSkills(agentsSkillsDir, [{ name: 'P', dir: platform }]);
 
@@ -103,7 +113,9 @@ describe('runPurge', () => {
 
   it('ne fait rien si aucun skill obsolète', async () => {
     const agentsSkillsDir = path.join(tmpDir, '.agents', 'skills');
-    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-docs-writer'), { recursive: true });
+    fs.mkdirSync(path.join(agentsSkillsDir, 'ezai-docs-writer'), {
+      recursive: true,
+    });
 
     await expect(
       runPurge(options(path.join(tmpDir, 'platform')), catalogue)

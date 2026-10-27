@@ -20,9 +20,9 @@ Instructions for AI coding agents (Codex, Claude Code, Gemini CLI, Copilot, etc.
 bin/ezai.js                        CLI entry point (Commander.js)
 src/
   catalogue.js                     Loads .claude-plugin/marketplace.json
-  platforms.js                     Platform directories, --dest and --claude|--gemini|--copilot resolution
+  platforms.js                     Platform directories, --dest, --claude and --no-links resolution
   commands/
-    install.js                     ezai install [plugin] [--dest] [--claude|--gemini|--copilot]
+    install.js                     ezai install [plugin] [--dest] [--claude] [--no-links]
     uninstall.js                   ezai uninstall [skill]
     purge.js                       ezai purge — removes ezai- skills no longer in the catalogue
     list.js                        ezai list

@@ -94,11 +94,15 @@ When `[skill]` is omitted, all catalogue skills are installed.
 | :-------------- | :---------------------------------------------------------------- |
 | `--dest <path>` | Override the base destination directory (default: home directory) |
 | `--claude`      | Deploy symlinks to `~/.claude/skills/` only                       |
-| `--gemini`      | Deploy symlinks to `~/.gemini/skills/` only                       |
-| `--copilot`     | Deploy symlinks to `~/.copilot/skills/` only                      |
+| `--no-links`    | Write the shared store only, create no link at all                |
 
-When no platform flag is set, symlinks are deployed to every platform directory that already exists on your machine.
-Platform flags select links, not exclusive access to the shared skill files.
+Claude Code is the only platform ezai links into: Codex, Gemini CLI and Copilot CLI read
+`~/.agents/skills/` natively and need no link. The link is created when `~/.claude/` exists,
+whether or not `--claude` is passed.
+
+`--no-links` is accepted by `install` only, and is rejected together with `--claude`. It
+leaves the skills readable by every agent that discovers the shared store natively, and
+skips the link Claude Code needs.
 
 ### 🧪 Examples
 
@@ -109,11 +113,11 @@ ezai install
 # Install a single skill
 ezai install ezai-project-quality
 
-# Create only the Claude Code platform links
+# Create the Claude Code link explicitly
 ezai install --claude
 
-# Create links only for Gemini CLI and Copilot
-ezai install ezai-docs-writer --gemini --copilot
+# Write the shared store only, no link at all
+ezai install ezai-docs-writer --no-links
 
 # Use a shared base directory outside your home and current project
 EZAI_ALLOWED_DEST_ROOT=/opt/ai-tools ezai install --dest /opt/ai-tools
@@ -142,8 +146,6 @@ ezai purge [OPTIONS]
 | :-------------- | :---------------------------------------------------- |
 | `--dest <path>` | Override the base directory (default: home directory) |
 | `--claude`      | Select links in `~/.claude/skills/`                   |
-| `--gemini`      | Select links in `~/.gemini/skills/`                   |
-| `--copilot`     | Select links in `~/.copilot/skills/`                  |
 
 ### 🧪 Examples
 
@@ -173,8 +175,6 @@ When `[skill]` is omitted, all catalogue skills are removed.
 | :-------------- | :---------------------------------------------------- |
 | `--dest <path>` | Override the base directory (default: home directory) |
 | `--claude`      | Select links in `~/.claude/skills/`                   |
-| `--gemini`      | Select links in `~/.gemini/skills/`                   |
-| `--copilot`     | Select links in `~/.copilot/skills/`                  |
 
 ### 🧪 Examples
 

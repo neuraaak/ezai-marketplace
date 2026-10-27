@@ -42,7 +42,8 @@ platform entry only when that entry is a link.
 `uninstall` always deletes the shared files in `~/.agents/skills/`, whichever flags you
 pass. A flag only selects which _links_ are removed, so
 `ezai uninstall ezai-docs-writer --claude` deletes the files and the Claude Code link, and
-leaves the Gemini CLI and Copilot links pointing at something that no longer exists.
+leaves any link an earlier version of ezai created elsewhere pointing at something that no
+longer exists.
 There is no way to remove a skill for one agent and keep it for another.
 :::
 

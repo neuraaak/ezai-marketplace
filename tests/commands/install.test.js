@@ -51,7 +51,9 @@ describe('collectRuntimeFiles', () => {
 
   function makePluginDir() {
     const pluginDir = path.join(tmpDir, 'ezai-fake');
-    fs.mkdirSync(path.join(pluginDir, 'references', 'python'), { recursive: true });
+    fs.mkdirSync(path.join(pluginDir, 'references', 'python'), {
+      recursive: true,
+    });
     fs.mkdirSync(path.join(pluginDir, 'evals'), { recursive: true });
     fs.mkdirSync(path.join(pluginDir, 'graphify-out'), { recursive: true });
     fs.mkdirSync(path.join(pluginDir, '.claude-plugin'), { recursive: true });
@@ -126,7 +128,12 @@ describe('runInstall', () => {
     jest.spyOn(console, 'info').mockImplementation(() => {});
     const catalogue = {
       fetchCatalogue: async () => ({
-        plugins: [{ name: 'ezai-docs-writer', source: './plugins/experts/ezai-docs-writer' }],
+        plugins: [
+          {
+            name: 'ezai-docs-writer',
+            source: './plugins/experts/ezai-docs-writer',
+          },
+        ],
       }),
     };
 
@@ -142,7 +149,12 @@ describe('runInstall', () => {
     fs.writeFileSync(outside, 'à conserver');
     const catalogue = {
       fetchCatalogue: async () => ({
-        plugins: [{ name: '../important.txt', source: './plugins/experts/ezai-docs-writer' }],
+        plugins: [
+          {
+            name: '../important.txt',
+            source: './plugins/experts/ezai-docs-writer',
+          },
+        ],
       }),
     };
 
@@ -265,28 +277,31 @@ describe('linkToPlatforms', () => {
 // --- resolvePlatforms ---
 
 describe('resolvePlatforms', () => {
-  it('retourne toutes les plateformes par défaut (aucun flag)', () => {
+  it('ne retourne que Claude Code, seule plateforme qui dépend de son lien', () => {
     const result = resolvePlatforms({});
-    expect(result.map((p) => p.name)).toEqual(['Claude Code', 'Gemini CLI', 'Copilot']);
+    expect(result.map((p) => p.name)).toEqual(['Claude Code']);
   });
 
-  it('filtre uniquement Claude Code avec --claude', () => {
+  it('retourne Claude Code avec --claude', () => {
     const result = resolvePlatforms({ claude: true });
     expect(result.map((p) => p.name)).toEqual(['Claude Code']);
   });
 
-  it('filtre uniquement Gemini CLI avec --gemini', () => {
-    const result = resolvePlatforms({ gemini: true });
-    expect(result.map((p) => p.name)).toEqual(['Gemini CLI']);
+  it('ne retourne aucune plateforme avec --no-links', () => {
+    expect(resolvePlatforms({ links: false })).toEqual([]);
   });
 
-  it('filtre uniquement Copilot avec --copilot', () => {
-    const result = resolvePlatforms({ copilot: true });
-    expect(result.map((p) => p.name)).toEqual(['Copilot']);
+  it('retourne Claude Code quand --no-links est absent', () => {
+    const result = resolvePlatforms({ links: true });
+    expect(result.map((p) => p.name)).toEqual(['Claude Code']);
   });
 
-  it('combine plusieurs flags', () => {
-    const result = resolvePlatforms({ claude: true, copilot: true });
-    expect(result.map((p) => p.name)).toEqual(['Claude Code', 'Copilot']);
+  it('refuse --no-links combiné à --claude', () => {
+    expect(() => resolvePlatforms({ links: false, claude: true })).toThrow('--no-links');
+  });
+
+  it('ignore les anciens flags --gemini et --copilot', () => {
+    const result = resolvePlatforms({ gemini: true, copilot: true });
+    expect(result.map((p) => p.name)).toEqual(['Claude Code']);
   });
 });

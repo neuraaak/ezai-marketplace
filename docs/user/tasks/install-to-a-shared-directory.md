@@ -36,9 +36,8 @@ shared between several accounts or projects.
 
 The skills are installed into `<dest>/.agents/skills/<skill-name>/`.
 
-Platform links are **not** moved: they are still created under your home directory, in
-`~/.claude/skills/`, `~/.gemini/skills/` and `~/.copilot/skills/`, pointing at the new
-location.
+The Claude Code link is **not** moved: it is still created under your home directory, in
+`~/.claude/skills/`, pointing at the new location.
 
 Codex finds a custom store automatically only when `<dest>` is the directory you are
 working in or one of its ancestors. An unrelated path such as `/opt/shared/ai-tools` is
@@ -58,5 +57,5 @@ If the path is refused, see
 
 ## ➡️ Next steps
 
-- [Choose which platform links are created](./choose-platform-links.md)
+- [Choose whether a platform link is created](./choose-platform-links.md)
 - [Use a remote catalogue](./use-a-remote-catalogue.md)

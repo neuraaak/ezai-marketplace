@@ -17,9 +17,9 @@ is not, start with [Get started](../get-started.md).
 
 ## 📚 Choosing where things go
 
-| Task                                                                  | When you do it                                        |
-| :-------------------------------------------------------------------- | :---------------------------------------------------- |
-| [Choose which platform links are created](./choose-platform-links.md) | You want links for some agents only                   |
-| [Install to a shared directory](./install-to-a-shared-directory.md)   | Several accounts or projects share one skills store   |
-| [Use a remote catalogue](./use-a-remote-catalogue.md)                 | Your team publishes its own skill list                |
-| [Set up on Windows](./set-up-on-windows.md)                           | You are on Windows, with or without Node.js installed |
+| Task                                                                    | When you do it                                        |
+| :---------------------------------------------------------------------- | :---------------------------------------------------- |
+| [Choose whether a platform link is created](./choose-platform-links.md) | You want to skip the Claude Code link                 |
+| [Install to a shared directory](./install-to-a-shared-directory.md)     | Several accounts or projects share one skills store   |
+| [Use a remote catalogue](./use-a-remote-catalogue.md)                   | Your team publishes its own skill list                |
+| [Set up on Windows](./set-up-on-windows.md)                             | You are on Windows, with or without Node.js installed |

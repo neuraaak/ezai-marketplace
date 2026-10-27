@@ -65,8 +65,8 @@ script instead.
 ## ✅ Result
 
 `~/.agents/skills/` holds one directory per skill. Codex, Gemini CLI and Copilot CLI read
-that directory directly. For Claude Code — and for Gemini CLI and Copilot CLI, which also
-accept their own directory — `ezai` created a link in each platform directory that already
+that directory directly. For Claude Code, which reads only its own directory, `ezai`
+created a link in `~/.claude/skills/` if that directory already
 existed on your machine, for example `~/.claude/skills/`.
 
 You never need to repeat the installation per agent: the files exist once and every link
@@ -76,5 +76,5 @@ points at them.
 
 - [Install a single skill](./tasks/install-skills.md) — add or refresh one skill by name
 - [Find a skill before installing](./tasks/find-a-skill.md) — search and inspect the catalogue
-- [Choose which platform links are created](./tasks/choose-platform-links.md)
+- [Choose whether a platform link is created](./tasks/choose-platform-links.md)
 - [Troubleshooting](./troubleshooting.md) — if a command failed

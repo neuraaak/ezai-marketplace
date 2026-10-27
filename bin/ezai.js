@@ -16,9 +16,7 @@ const BASE_DIR_HELP = 'Répertoire de base (défaut : répertoire home)';
 function addTargetOptions(command, destHelp, platformVerb) {
   return command
     .option('--dest <chemin>', destHelp)
-    .option('--claude', `${platformVerb} ~/.claude/skills/`)
-    .option('--gemini', `${platformVerb} ~/.gemini/skills/`)
-    .option('--copilot', `${platformVerb} ~/.copilot/skills/`);
+    .option('--claude', `${platformVerb} ~/.claude/skills/`);
 }
 
 program
@@ -46,11 +44,12 @@ addTargetOptions(
   'Répertoire de destination (défaut : répertoire home)',
   'Déployer les symlinks vers'
 )
-  .description('Installer dans .agents/skills/ (Codex et autres) et créer les liens sélectionnés')
+  .option('--no-links', 'Écrire uniquement dans .agents/skills/, sans créer aucun lien')
+  .description('Installer dans .agents/skills/ (Codex et autres) et créer le lien Claude Code')
   .action((plugin, options) => runInstall(plugin, options, catalogue));
 
 addTargetOptions(program.command('purge'), BASE_DIR_HELP, 'Sélectionner les liens dans')
-  .description('Supprimer les skills obsolètes du stockage partagé et leurs liens sélectionnés')
+  .description('Supprimer les skills obsolètes du stockage partagé et leurs liens')
   .action((options) => runPurge(options, catalogue));
 
 addTargetOptions(
@@ -58,7 +57,7 @@ addTargetOptions(
   BASE_DIR_HELP,
   'Sélectionner les liens à supprimer dans'
 )
-  .description('Supprimer du stockage partagé un skill (ou tous) et ses liens sélectionnés')
+  .description('Supprimer du stockage partagé un skill (ou tous) et son lien')
   .action((skill, options) => runUninstall(skill, options, catalogue));
 
 program.parseAsync().catch((err) => {

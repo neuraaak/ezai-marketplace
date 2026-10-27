@@ -39,7 +39,11 @@ function makeSymlink(platformDir, skillName, target) {
 function mockCatalogue(...skillNames) {
   return {
     fetchCatalogue: async () => ({
-      plugins: skillNames.map((name) => ({ name, description: '', source: `./plugins/${name}` })),
+      plugins: skillNames.map((name) => ({
+        name,
+        description: '',
+        source: `./plugins/${name}`,
+      })),
     }),
   };
 }
@@ -47,23 +51,12 @@ function mockCatalogue(...skillNames) {
 // --- resolvePlatforms ---
 
 describe('resolvePlatforms', () => {
-  it('retourne toutes les plateformes par défaut', () => {
-    expect(resolvePlatforms({}).map((p) => p.name)).toEqual([
-      'Claude Code',
-      'Gemini CLI',
-      'Copilot',
-    ]);
+  it('retourne la seule plateforme liée par défaut', () => {
+    expect(resolvePlatforms({}).map((p) => p.name)).toEqual(['Claude Code']);
   });
 
   it('filtre avec --claude', () => {
     expect(resolvePlatforms({ claude: true }).map((p) => p.name)).toEqual(['Claude Code']);
-  });
-
-  it('combine plusieurs flags', () => {
-    expect(resolvePlatforms({ gemini: true, copilot: true }).map((p) => p.name)).toEqual([
-      'Gemini CLI',
-      'Copilot',
-    ]);
   });
 });
 

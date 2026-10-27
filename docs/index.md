@@ -26,7 +26,7 @@ ezai install ezai-code-formatter
 
 ## ✨ Key features
 
-- One command installs skills for Codex and links them to Claude Code, Gemini CLI, and Copilot
+- One command installs skills for Codex, Gemini CLI, and Copilot, and links them into Claude Code
 - Install or uninstall individual skills by name
 - Safe uninstall — third-party tools are never touched
 - Offline-first — catalogue is bundled, no network required

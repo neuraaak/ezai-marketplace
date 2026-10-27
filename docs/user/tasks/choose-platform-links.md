@@ -1,7 +1,7 @@
-# Choose which platform links are created
+# Choose whether a platform link is created
 
-Limit `ezai install` to the agents you care about, instead of linking into every platform
-directory it finds.
+Decide whether `ezai install` links the skills into Claude Code, or leaves only the shared
+store that the other agents read by themselves.
 
 ## 🔧 Prerequisites
 
@@ -9,31 +9,27 @@ directory it finds.
 
 ## 📝 Steps
 
-1. By default, no flag is needed. `ezai` links into every platform directory that already
-   exists:
+1. By default, no flag is needed. `ezai` writes the shared store and links into
+   `~/.claude/skills/` when that directory already exists:
 
    ```bash
    ezai install
    ```
 
-2. Pass one or more flags to restrict that to specific agents:
+2. Pass `--no-links` to write the shared store and create no link at all:
 
    ```bash
-   # Claude Code link only
-   ezai install --claude
-
-   # Gemini CLI link only
-   ezai install --gemini
-
-   # Copilot link only
-   ezai install --copilot
-
-   # Gemini CLI and Copilot links, without a Claude Code link
-   ezai install --gemini --copilot
+   ezai install --no-links
    ```
 
-3. The same three flags work on `uninstall` and `purge`, where they select which links are
-   removed:
+3. `--claude` asks for the same link the default already creates. It is kept for scripts
+   that state their intent explicitly, and it cannot be combined with `--no-links`:
+
+   ```bash
+   ezai install --claude
+   ```
+
+4. On `uninstall` and `purge`, `--claude` selects the link to remove:
 
    ```bash
    ezai uninstall ezai-docs-writer --claude
@@ -42,28 +38,28 @@ directory it finds.
 ## ✅ Result
 
 One line is printed per link created. A platform directory that does not exist on your
-machine is skipped silently — `ezai` never creates `~/.gemini/` or `~/.copilot/` for you.
+machine is skipped silently — `ezai` never creates `~/.claude/` for you.
 
-The available flags are `--claude`, `--gemini` and `--copilot`. There is no flag for Codex,
-because Codex reads the shared store directly and needs no link.
+There is no flag for Codex, Gemini CLI or Copilot CLI: all three read `~/.agents/skills/`
+natively, so they need no link. `--no-links` is the only way to install without touching
+`~/.claude/skills/`.
 
-## 📚 What a flag does and does not control
+## 📚 What a link does and does not control
 
-Three different things decide whether an agent sees a skill, and a flag only controls the
+Three different things decide whether an agent sees a skill, and a link only controls the
 third:
 
 1. **The shared store is always written.** `ezai install` copies the skill files into
    `~/.agents/skills/` on every run, whatever flags you pass.
-2. **Some agents read that store by themselves.** Codex, Gemini CLI and Copilot CLI
-   discover `~/.agents/skills/` natively, so they can find a skill with no link at all.
-3. **A flag selects which links `ezai` creates.** The links matter for Claude Code, which
-   reads only `~/.claude/skills/`, and they are a convenience for Gemini CLI and Copilot
-   CLI, which also accept their own directory.
+2. **Most agents read that store by themselves.** Codex, Gemini CLI and Copilot CLI
+   discover `~/.agents/skills/` natively, so they find a skill with no link at all.
+3. **The link covers the one agent that cannot.** Claude Code reads only
+   `~/.claude/skills/`, so its link is the single one `ezai` has to create.
 
-::: warning A flag is not exclusive access
-`ezai install --claude` does not hide the skill from the other agents. It writes the same
-shared files and simply creates fewer links. Use the flags to control where links go, not
-to restrict a skill to one agent.
+::: warning `--no-links` is not a way to hide a skill
+`ezai install --no-links` does not keep the skill away from your agents. It writes the same
+shared files, which Codex, Gemini CLI and Copilot CLI still discover. It only skips the
+Claude Code link.
 :::
 
 ## ➡️ Next steps
