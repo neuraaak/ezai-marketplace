@@ -7,6 +7,29 @@ User-visible changes, newest version first. Upgrade with
 For the full commit-level history, see the
 [developer changelog](../changelog.md).
 
+## 1.9.0 — 2026-10-30
+
+### New
+
+- Two skills for interface work, bringing the catalogue to eleven. `ezai-uiux-expert`
+  handles one screen, flow, form or component: a usability review against the Nielsen
+  heuristics, a WCAG 2.2 check, a conformance fix, a deceptive-design check on a flow, or
+  the visual direction a sector implies. `ezai-uiux-specialist-persona` runs the same
+  ground over a whole product, through a six-stage pipeline that stops for your approval
+  before changing anything. See the [catalogue](../skills/).
+- Both skills say what they could not check. Contrast, focus visibility, target size and
+  reflow cannot be judged from source code, so a review that could not run your interface
+  lists them as unverified rather than reporting them as failures.
+- Neither skill redesigns your interface. They apply the corrections that need no visual
+  decision — accessible names, focus order, form semantics, error copy — and for anything
+  that does, they name the skill that should do it and the prompt to give it. If you have
+  no UI skill installed, you get the direction and the name of the one that would fit.
+
+### Fixed
+
+- The documentation version switcher offers 1.9.0. It had stayed at 1.8.1 through one
+  release.
+
 ## 1.8.0 — 2026-10-27
 
 ### New
