@@ -1,0 +1,263 @@
+{
+  "skill_name": "ezai-uiux-expert",
+  "evals": [
+    {
+      "id": 1,
+      "capability": "a11y-review",
+      "prompt": "Les boutons icônes de ma barre d'outils font 16×16 px. Est-ce que ça passe en accessibilité ?",
+      "expected_output": "Finding sur SC 2.5.8 Target Size (Minimum), niveau AA, exigence 24×24 CSS px, en précisant que l'espacement peut compter. Les 44×44 d'Apple et les 48×48 de Material sont cités séparément comme des recommandations de plateforme, jamais comme l'exigence WCAG.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "cites-criterion",
+          "description": "Cite le critère 2.5.8",
+          "type": "contains",
+          "value": "2.5.8"
+        },
+        {
+          "id": "correct-requirement",
+          "description": "Donne 24 comme exigence AA",
+          "type": "regex",
+          "value": "24\\s*(×|x|\\*)\\s*24"
+        },
+        {
+          "id": "level-aa",
+          "description": "Niveau AA précisé",
+          "type": "regex",
+          "value": "\\bAA\\b"
+        },
+        {
+          "id": "spacing-exception",
+          "description": "Mentionne que l'espacement peut compter",
+          "type": "regex",
+          "value": "([Ee]spacement|[Ss]pacing)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "capability": "ux-review",
+      "prompt": "Voici le code source de mon formulaire d'inscription. Fais-en la revue. Je n'ai pas de serveur de dev lancé.",
+      "expected_output": "Revue sur ce que la source établit : labels manquants, placeholder utilisé comme label, autocomplete absent, div cliquable. Le contraste, la visibilité du focus, la taille de cible et le reflow sont listés comme non vérifiables faute de rendu — pas affirmés comme défaillants.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "declares-limitations",
+          "description": "Déclare ce qui n'a pas pu être vérifié",
+          "type": "regex",
+          "value": "([Ll]imitation|[Nn]on vérifi|[Pp]as pu vérifi|annot be verified)"
+        },
+        {
+          "id": "contrast-not-asserted",
+          "description": "Le contraste est cité comme non vérifiable, pas comme un échec constaté",
+          "type": "regex",
+          "value": "[Cc]ontraste?"
+        },
+        {
+          "id": "static-findings",
+          "description": "Produit au moins un finding établi par lecture de source",
+          "type": "regex",
+          "value": "([Ll]abel|[Aa]utocomplete|[Pp]laceholder)"
+        },
+        {
+          "id": "severity-scale",
+          "description": "Utilise l'échelle de sévérité du corpus",
+          "type": "regex",
+          "value": "([Bb]loquant|[Mm]ajeur|[Mm]ineur)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "capability": "dark-pattern-check",
+      "prompt": "On peut s'abonner en un clic mais pour résilier il faut appeler le service client. C'est un problème ?",
+      "expected_output": "Roach motel, catégorie obstruction dans l'ontologie de Gray et al. Cadre légal donné avec sa portée : DSA art. 25 applicable depuis février 2024 aux plateformes en ligne ; côté US la règle FTC « click to cancel » a été annulée le 8 juillet 2025, mais ROSCA et FTC Act §5 continuent de s'appliquer — règlement Amazon de 2,5 Md$ en septembre 2025.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "names-pattern",
+          "description": "Nomme le pattern et sa catégorie",
+          "type": "regex",
+          "value": "([Rr]oach [Mm]otel|[Oo]bstruction)"
+        },
+        {
+          "id": "ftc-rule-vacated",
+          "description": "Ne présente pas la règle click to cancel comme en vigueur",
+          "type": "regex",
+          "value": "([Aa]nnul|[Vv]acat|8th Circuit|uitième)"
+        },
+        {
+          "id": "rosca-still-applies",
+          "description": "Précise que ROSCA continue de s'appliquer",
+          "type": "contains",
+          "value": "ROSCA"
+        },
+        {
+          "id": "dsa-scope",
+          "description": "Cite le DSA avec sa portée plateformes",
+          "type": "regex",
+          "value": "(DSA|Digital Services Act)"
+        },
+        {
+          "id": "blocking-severity",
+          "description": "Classé bloquant",
+          "type": "contains",
+          "value": "bloquant"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "capability": "ui-direction",
+      "prompt": "Quel style visuel pour le tableau de bord de mon SaaS B2B ?",
+      "expected_output": "Note de direction de moins de 15 lignes : registre data-first et plat recommandé, avec la raison sectorielle ; deux alternatives avec leur compromis ; un anti-conseil. Aucune palette, aucune police, aucun composant. Se termine en nommant le skill qui doit implémenter.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "names-register",
+          "description": "Nomme un registre issu des familles de styles",
+          "type": "regex",
+          "value": "([Dd]ata-first|[Pp]lat|[Ff]lat|[Mm]inimal)"
+        },
+        {
+          "id": "sector-reason",
+          "description": "Justifie par la convention sectorielle",
+          "type": "regex",
+          "value": "([Ss]ecteur|[Ss]ector|SaaS|[Cc]onvention)"
+        },
+        {
+          "id": "anti-recommendation",
+          "description": "Donne un anti-conseil",
+          "type": "regex",
+          "value": "(viter|[Aa]void|proscrire|[Dd]éconseill)"
+        },
+        {
+          "id": "routes-implementation",
+          "description": "Renvoie l'implémentation à un autre skill",
+          "type": "regex",
+          "value": "(ui-ux-pro-max|frontend-design|[Rr]out)"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "capability": "conformance-fix",
+      "prompt": "Le texte secondaire de mes cartes est en #9AA0A6 sur fond blanc et ne passe pas le contraste. Corrige.",
+      "expected_output": "Le correctif s'exprime dans les tokens existants du projet : si un rôle sémantique de texte secondaire conforme existe, on l'utilise. Si aucun token ne satisfait le ratio 4.5:1, le correctif s'arrête et devient une décision de design à router — pas une valeur inventée.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "uses-tokens",
+          "description": "Exprime le correctif via les tokens du projet",
+          "type": "regex",
+          "value": "([Tt]oken|sémantique|[Ss]emantic)"
+        },
+        {
+          "id": "cites-ratio",
+          "description": "Cite le ratio WCAG applicable",
+          "type": "regex",
+          "value": "4\\.5\\s*:\\s*1"
+        },
+        {
+          "id": "stops-without-token",
+          "description": "S'arrête et route si aucun token ne convient",
+          "type": "regex",
+          "value": "([Dd]écision de design|[Dd]esign decision|[Rr]out)"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "capability": "research-plan",
+      "prompt": "Je veux savoir pourquoi les gens abandonnent mon tunnel d'achat. Mes analytics me disent où, pas pourquoi.",
+      "expected_output": "Test d'utilisabilité modéré sur la tâche d'achat, cinq participants par segment et par itération, tâches et non questions, pensée à voix haute. Précise que le quantitatif dit combien et le qualitatif dit pourquoi, et que les cinq utilisateurs sont par segment et par tour, pas un total.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "names-method",
+          "description": "Recommande un test d'utilisabilité",
+          "type": "regex",
+          "value": "([Tt]est d'utilisabilité|[Uu]sability test)"
+        },
+        {
+          "id": "five-per-segment",
+          "description": "Cinq utilisateurs, par segment et par itération",
+          "type": "regex",
+          "value": "(5|[Cc]inq)[^\\n]{0,60}([Ss]egment|[Ii]tération|[Ii]teration|[Tt]our|[Rr]ound)"
+        },
+        {
+          "id": "qual-vs-quant",
+          "description": "Distingue le pourquoi du combien",
+          "type": "regex",
+          "value": "([Pp]ourquoi|[Ww]hy)"
+        },
+        {
+          "id": "tasks-not-questions",
+          "description": "Des tâches, pas des questions d'opinion",
+          "type": "regex",
+          "value": "([Tt]âche|[Tt]ask)"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "capability": "metrics-plan",
+      "prompt": "On a un SUS de 72 et un NPS de 40. On est bons en ergonomie, non ?",
+      "expected_output": "Le SUS est un score sur 0–100, pas un pourcentage ; 72 se situe au-dessus de la moyenne d'environ 68 et se lit avec l'échelle de notation courbe de Sauro–Lewis. Le NPS est une métrique business, pas une mesure d'utilisabilité. Un score isolé ne constitue pas un constat : ces instruments sont comparatifs.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "sus-not-percentage",
+          "description": "Précise que le SUS n'est pas un pourcentage",
+          "type": "regex",
+          "value": "([Pp]as un pourcentage|[Nn]ot a percentage|0\\s*[–-]\\s*100)"
+        },
+        {
+          "id": "sus-mean",
+          "description": "Situe par rapport à la moyenne d'environ 68",
+          "type": "contains",
+          "value": "68"
+        },
+        {
+          "id": "nps-not-usability",
+          "description": "Écarte le NPS comme mesure d'utilisabilité",
+          "type": "regex",
+          "value": "([Bb]usiness|[Pp]as une mesure d'utilisabilité|[Nn]ot a usability)"
+        },
+        {
+          "id": "comparative",
+          "description": "Rappelle que ces instruments sont comparatifs",
+          "type": "regex",
+          "value": "([Cc]omparat|[Bb]enchmark|[Rr]éférence|[Pp]revious|[Pp]récédent)"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "capability": "ux-review",
+      "prompt": "Mon interface a besoin d'un coup d'œil.",
+      "expected_output": "Ni revue ni direction : le skill pose en un seul appel ses questions de cadrage, option recommandée en premier, et attend la réponse avant de charger la moindre référence.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Rr]evue|[Dd]irection|[Cc]orrectif|[Tt]ask|[Rr]eview)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-findings",
+          "description": "Ne produit pas de findings avant la réponse",
+          "type": "not_contains",
+          "value": "bloquant"
+        }
+      ]
+    }
+  ]
+}

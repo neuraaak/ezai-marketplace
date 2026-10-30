@@ -1,0 +1,45 @@
+{
+  "skill_name": "ezai-uiux-specialist-persona",
+  "triggers": [
+    {
+      "query": "audite toute l'interface de mon app React et remets-la à niveau",
+      "should_trigger": true
+    },
+    {
+      "query": "est-ce qu'on est conformes WCAG ? fais le tour du produit, pas juste une page",
+      "should_trigger": true
+    },
+    {
+      "query": "notre UX est mauvaise de l'avis général. Fais un checkup complet et propose un plan.",
+      "should_trigger": true
+    },
+    {
+      "query": "review the whole app for usability and accessibility, then fix what you can",
+      "should_trigger": true
+    },
+    {
+      "query": "bring our interface up to standard before the accessibility audit next month",
+      "should_trigger": true
+    },
+    {
+      "query": "est-ce que ce bouton est assez contrasté sur le fond gris ?",
+      "should_trigger": false
+    },
+    {
+      "query": "ajoute un aria-label sur ce bouton de fermeture",
+      "should_trigger": false
+    },
+    {
+      "query": "quel style pour ma landing page ?",
+      "should_trigger": false
+    },
+    {
+      "query": "génère-moi une palette de couleurs et un font pairing pour ce projet",
+      "should_trigger": false
+    },
+    {
+      "query": "corrige le bug de login, les tokens expirent trop tôt",
+      "should_trigger": false
+    }
+  ]
+}

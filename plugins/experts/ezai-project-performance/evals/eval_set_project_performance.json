@@ -159,7 +159,7 @@
           "id": "measure-before-optimize",
           "description": "Déconseille d'optimiser avant de mesurer",
           "type": "regex",
-          "value": "(?i)mesur|profil|avant d'optim|d'abord"
+          "value": "[Mm]esur|[Pp]rofil|[Aa]vant d'optim|[Dd]'abord"
         },
         {
           "id": "memory-profiling",

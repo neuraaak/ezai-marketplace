@@ -131,7 +131,7 @@
           "id": "coverage-badge",
           "description": "Badge coverage présent",
           "type": "regex",
-          "value": "(?i)coverage"
+          "value": "[Cc]overage"
         },
         {
           "id": "no-invented-badge",

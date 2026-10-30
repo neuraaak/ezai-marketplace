@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-uiux-specialist-persona/00-context.schema.json",
+  "title": "DETECTION — interface context",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["DETECTION"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "user_scope": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["full", "targeted"]
+        },
+        "focus": {
+          "type": "string",
+          "enum": ["heuristics", "accessibility", "direction", "all"]
+        },
+        "surface": {
+          "type": "string",
+          "description": "'whole product' or the named flow, route or screen group in scope"
+        }
+      },
+      "required": ["mode", "focus", "surface"],
+      "additionalProperties": false
+    },
+    "surface": {
+      "type": "string",
+      "enum": ["web", "ios", "android", "desktop", "multiple"],
+      "description": "Drives which platforms/ reference the expert loads"
+    },
+    "stack": {
+      "type": "string",
+      "enum": [
+        "react",
+        "vue",
+        "svelte",
+        "angular",
+        "html",
+        "swiftui",
+        "flutter",
+        "react-native",
+        "other",
+        "none"
+      ],
+      "description": "Where the UI lives, not how it is judged"
+    },
+    "design_system": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "string",
+          "enum": ["dtcg", "css-custom-properties", "tailwind-theme", "library-theme", "none"],
+          "description": "The vocabulary GENERATION must express every visual fix in"
+        },
+        "component_library": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Name of the library in use (shadcn/ui, MUI, Mantine, Vuetify...), else null"
+        }
+      },
+      "required": ["tokens", "component_library"],
+      "additionalProperties": false
+    },
+    "rendering": {
+      "type": "string",
+      "enum": ["live", "static"],
+      "description": "'live' only when the interface can actually be rendered and inspected; 'static' limits what AUDIT may assert"
+    },
+    "a11y_tooling": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["axe", "pa11y", "lighthouse", "eslint-jsx-a11y", "native-inspector"]
+      },
+      "description": "Only tooling already installed in the project; empty when there is none"
+    },
+    "sector": {
+      "type": "string",
+      "enum": [
+        "b2b-saas",
+        "consumer-brand",
+        "local-business",
+        "public-sector",
+        "ecommerce",
+        "unknown"
+      ],
+      "description": "'unknown' makes Section C advisory only"
+    },
+    "conformance": {
+      "type": "string",
+      "enum": ["wcag22-aa", "wcag22-aaa", "wcag21-aa"],
+      "description": "A criterion above this target is never bloquant"
+    },
+    "expert_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Files under ezai-uiux-expert/references/ that AUDIT and GENERATION must load"
+    },
+    "ui_skills_available": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skill names found in the on-disk skills stores that ROUTING may route to; empty when none"
+    }
+  },
+  "required": [
+    "stage",
+    "date",
+    "inputs_read",
+    "user_scope",
+    "surface",
+    "stack",
+    "design_system",
+    "rendering",
+    "a11y_tooling",
+    "sector",
+    "conformance",
+    "expert_refs",
+    "ui_skills_available"
+  ],
+  "additionalProperties": false
+}

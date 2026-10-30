@@ -1,0 +1,263 @@
+{
+  "skill_name": "ezai-uiux-specialist-persona",
+  "evals": [
+    {
+      "id": 1,
+      "capability": "uiux-audit",
+      "prompt": "Audite toute l'interface de mon app React et remets-la à niveau. Le repo est sur GitHub.",
+      "expected_output": "Pipeline déclenché : DETECTION produit 00-context.json (surface:web, stack:react, rendering, conformance), AUDIT produit 01-audit.json avec des findings classifiés bloquant/majeur/mineur sur les trois sections, agent principal rédige 02-plan.json et attend validation humaine avant GENERATION.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "detection-artifact",
+          "description": "Artefact 00-context.json mentionné",
+          "type": "contains",
+          "value": "00-context.json"
+        },
+        {
+          "id": "surface-web",
+          "description": "Surface web détectée dans le contexte",
+          "type": "regex",
+          "value": "surface:\\s*web"
+        },
+        {
+          "id": "stack-react",
+          "description": "Stack react détectée dans le contexte",
+          "type": "regex",
+          "value": "stack:\\s*react"
+        },
+        {
+          "id": "rendering-recorded",
+          "description": "Capacité de rendu enregistrée dans le contexte",
+          "type": "regex",
+          "value": "rendering:\\s*(live|static)"
+        },
+        {
+          "id": "human-gate",
+          "description": "Pipeline s'arrête et attend validation humaine avant GENERATION",
+          "type": "regex",
+          "value": "([Aa]pprou|[Vv]alid|[Aa]ttend|[Aa]pprov|[Ww]ait)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "capability": "uiux-audit",
+      "prompt": "Est-ce que ce bouton est assez contrasté sur le fond gris ?",
+      "expected_output": "Scope gate déclenché : tâche = un seul élément, pas un audit de produit. Le skill délègue directement à ezai-uiux-expert via le Skill tool et s'arrête — aucun sous-agent de pipeline lancé.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "delegates-to-expert",
+          "description": "Délégation à ezai-uiux-expert mentionnée",
+          "type": "contains",
+          "value": "ezai-uiux-expert"
+        },
+        {
+          "id": "no-detection-stage",
+          "description": "Aucun sous-agent DETECTION lancé (scope gate actif)",
+          "type": "not_contains",
+          "value": "DETECTION"
+        },
+        {
+          "id": "no-pipeline-artifact",
+          "description": "Pas d'artefact 00-context.json produit",
+          "type": "not_contains",
+          "value": "00-context.json"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "capability": "uiux-upgrade-plan",
+      "prompt": "Notre UX est mauvaise de l'avis général. Fais un checkup complet du produit et corrige ce qui peut l'être.",
+      "expected_output": "Pipeline complet en 6 étapes : DETECTION, AUDIT sur les trois sections, PLANNING avec plan priorisé présenté à l'utilisateur, GENERATION après approbation, VALIDATION croisant 01-audit.json et 03-changes.json, puis ROUTING qui nomme les skills pour le travail visuel restant.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "detection-stage",
+          "description": "Stage DETECTION mentionné",
+          "type": "contains",
+          "value": "DETECTION"
+        },
+        {
+          "id": "audit-stage",
+          "description": "Stage AUDIT mentionné",
+          "type": "contains",
+          "value": "AUDIT"
+        },
+        {
+          "id": "planning-stage",
+          "description": "Stage PLANNING mentionné",
+          "type": "contains",
+          "value": "PLANNING"
+        },
+        {
+          "id": "generation-stage",
+          "description": "Stage GENERATION mentionné",
+          "type": "contains",
+          "value": "GENERATION"
+        },
+        {
+          "id": "validation-stage",
+          "description": "Stage VALIDATION mentionné",
+          "type": "contains",
+          "value": "VALIDATION"
+        },
+        {
+          "id": "routing-stage",
+          "description": "Stage ROUTING mentionné — la 6e étape",
+          "type": "contains",
+          "value": "ROUTING"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "capability": "uiux-apply",
+      "prompt": "Audite l'app et corrige. Je précise qu'on ne peut pas lancer le serveur de dev sur cette machine.",
+      "expected_output": "00-context.json enregistre rendering:static. AUDIT ne revendique aucun constat de contraste, de visibilité du focus, de taille de cible, de reflow ou de motion : ces critères partent dans limitations. Les findings produits sont ceux que la source établit, et le résumé dit explicitement ce qui n'a pas pu être vérifié.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "rendering-static",
+          "description": "rendering: static enregistré dans le contexte",
+          "type": "regex",
+          "value": "rendering:\\s*static"
+        },
+        {
+          "id": "limitations-declared",
+          "description": "Les critères non vérifiables sont déclarés en limitations",
+          "type": "regex",
+          "value": "[Ll]imitation"
+        },
+        {
+          "id": "pipeline-continues",
+          "description": "Le pipeline continue malgré l'absence de rendu",
+          "type": "regex",
+          "value": "AUDIT|PLANNING"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "capability": "uiux-apply",
+      "prompt": "Audite l'interface. Parmi les constats, je veux que tu appliques tout ce qui est applicable.",
+      "expected_output": "Seuls les findings dont le track est apply entrent dans 02-plan.json et sont vus par GENERATION. Les findings track route — direction visuelle, palette, composition — ne sont jamais des TODO : ils sont listés à part et portés jusqu'à 05-routing.json. Le statut ROUTED n'est pas compté comme OPEN.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "track-apply",
+          "description": "Distingue les findings applicables",
+          "type": "regex",
+          "value": "\\b[Aa]pply\\b"
+        },
+        {
+          "id": "track-route",
+          "description": "Distingue les findings à router",
+          "type": "regex",
+          "value": "\\b[Rr]oute(d)?\\b"
+        },
+        {
+          "id": "routing-artifact",
+          "description": "Les findings routés sont portés à 05-routing.json",
+          "type": "contains",
+          "value": "05-routing.json"
+        },
+        {
+          "id": "no-visual-redesign",
+          "description": "GENERATION ne fait pas de redesign visuel",
+          "type": "regex",
+          "value": "([Dd]écision visuelle|[Vv]isual decision|[Pp]as de redesign|[Nn]ever touches)"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "capability": "uiux-upgrade-plan",
+      "prompt": "Fais l'audit complet de l'interface, mais je veux juste voir les constats — aucun correctif pour l'instant.",
+      "expected_output": "Pipeline partiel : DETECTION, AUDIT et PLANNING exécutés. Le plan 02-plan.json est présenté. L'utilisateur n'approuvant pas, GENERATION n'est pas lancé et l'orchestrateur attend une décision explicite.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "audit-executed",
+          "description": "Stage AUDIT exécuté",
+          "type": "contains",
+          "value": "AUDIT"
+        },
+        {
+          "id": "planning-executed",
+          "description": "Stage PLANNING exécuté et plan présenté",
+          "type": "contains",
+          "value": "PLANNING"
+        },
+        {
+          "id": "no-generation",
+          "description": "Stage GENERATION non lancé",
+          "type": "not_contains",
+          "value": "GENERATION"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "capability": "uiux-routing",
+      "prompt": "L'audit est fini. Il reste des constats sur le style de la page de tarifs. Qu'est-ce qu'on en fait ?",
+      "expected_output": "ROUTING détecte les skills UI installés sur disque, apparie chaque constat restant à l'un d'eux via la table de capacités, et écrit le prompt exact avec ses contraintes — tokens existants, cible de conformité, registre sectoriel, ce qu'il ne faut pas changer. Aucun skill n'est invoqué : l'utilisateur décide.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "detects-skills",
+          "description": "Détecte les skills installés sur disque",
+          "type": "regex",
+          "value": "(\\.agents/skills|\\.claude/skills|[Ii]nstallé|[Ii]nstalled)"
+        },
+        {
+          "id": "names-target-skill",
+          "description": "Nomme un skill cible",
+          "type": "regex",
+          "value": "(ui-ux-pro-max|frontend-design|dataviz)"
+        },
+        {
+          "id": "writes-prompt",
+          "description": "Écrit le prompt à donner avec ses contraintes",
+          "type": "regex",
+          "value": "([Cc]ontrainte|[Cc]onstraint|[Pp]rompt)"
+        },
+        {
+          "id": "never-invokes",
+          "description": "N'invoque pas le skill lui-même",
+          "type": "regex",
+          "value": "(n'invoque|[Nn]ever invoke|ne lance pas|vous décidez|[Tt]he user decides)"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "capability": "uiux-audit",
+      "prompt": "Mon interface aurait besoin d'un coup de propre.",
+      "expected_output": "Ni audit ni direction : la persona pose en un seul appel sa question de cadrage (Mode), option recommandée en premier, puis attend la réponse avant tout dispatch.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "asks-scope",
+          "description": "Pose au moins une question de cadrage",
+          "type": "regex",
+          "value": "([Mm]ode|[Aa]udit|[Tt]raitement)[^\\n]*\\?"
+        },
+        {
+          "id": "recommended-first",
+          "description": "Marque l'option recommandée",
+          "type": "contains",
+          "value": "(Recommended)"
+        },
+        {
+          "id": "no-premature-pipeline",
+          "description": "Ne lance pas le pipeline avant la réponse",
+          "type": "not_contains",
+          "value": ".uiux-audit/"
+        }
+      ]
+    }
+  ]
+}

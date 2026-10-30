@@ -24,7 +24,7 @@
           "id": "redis-used",
           "description": "Redis utilisé dans l'implémentation",
           "type": "regex",
-          "value": "(?i)redis"
+          "value": "[Rr]edis"
         },
         {
           "id": "no-placeholder",
@@ -63,7 +63,7 @@
           "id": "human-gate",
           "description": "PLANNING attend l'approbation humaine avant APPLY",
           "type": "regex",
-          "value": "(?i)(approu|valid|attend|approv|wait)"
+          "value": "([Aa]pprou|[Vv]alid|[Aa]ttend|[Aa]pprov|[Ww]ait)"
         }
       ]
     },
@@ -117,13 +117,13 @@
           "id": "dynamic-skip",
           "description": "Au moins un domaine marqué skipped (sélection dynamique)",
           "type": "regex",
-          "value": "(?i)skip"
+          "value": "[Ss][Kk][Ii][Pp]"
         },
         {
           "id": "performance-skipped",
           "description": "Domaine performance non retenu (code sans I/O ni concurrence)",
           "type": "regex",
-          "value": "(?i)performance"
+          "value": "[Pp]erformance"
         }
       ]
     },

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-uiux-specialist-persona/02-plan.schema.json",
+  "title": "PLANNING — fix plan",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["PLANNING"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "approved": {
+      "type": "boolean",
+      "description": "false when written; set to true only after the user approves the plan"
+    },
+    "todos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-NNN"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bloquant", "majeur", "mineur"],
+            "description": "bloquant makes the interface unusable or unlawful, majeur costs the user, mineur is polish"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "description": "File to modify"
+          },
+          "action": {
+            "type": "string",
+            "description": "One line"
+          }
+        },
+        "required": ["id", "severity", "title", "file", "action"],
+        "additionalProperties": false
+      },
+      "description": "Ordered bloquant, then majeur, then mineur. Only findings whose track is 'apply' — a 'route' finding is never a TODO"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "approved", "todos"],
+  "additionalProperties": false
+}

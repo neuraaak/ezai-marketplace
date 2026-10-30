@@ -1,0 +1,49 @@
+{
+  "skill_name": "ezai-uiux-expert",
+  "triggers": [
+    {
+      "query": "revois cet écran de checkout, il y a un truc qui cloche dans l'ordre des champs",
+      "should_trigger": true
+    },
+    {
+      "query": "est-ce que ma modale est utilisable au clavier ? le focus a l'air de partir n'importe où",
+      "should_trigger": true
+    },
+    {
+      "query": "check this form against WCAG 2.2 AA",
+      "should_trigger": true
+    },
+    {
+      "query": "ajoute les aria-label manquants sur les boutons icônes de la navbar",
+      "should_trigger": true
+    },
+    {
+      "query": "est-ce que mon flow de désabonnement est un dark pattern ?",
+      "should_trigger": true
+    },
+    {
+      "query": "quel style visuel pour le site de ma boutique de fleurs ?",
+      "should_trigger": true
+    },
+    {
+      "query": "how many users do I need to test with to find the usability problems?",
+      "should_trigger": true
+    },
+    {
+      "query": "génère-moi un dashboard glassmorphism en React avec Tailwind et une palette complète",
+      "should_trigger": false
+    },
+    {
+      "query": "audite toute l'application écran par écran et corrige tout ce qui peut l'être",
+      "should_trigger": false
+    },
+    {
+      "query": "écris la page de documentation de ce composant",
+      "should_trigger": false
+    },
+    {
+      "query": "mon build Vite met 40 secondes, accélère-le",
+      "should_trigger": false
+    }
+  ]
+}
