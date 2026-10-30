@@ -1,0 +1,40 @@
+{
+  "name": "ezai-uiux-expert",
+  "description": "Interface usability and accessibility expert: review a screen, flow, form or component against the Nielsen heuristics and WCAG 2.2, fix a conformance defect, check a flow for deceptive design, or give the visual direction a sector implies. Evaluates and advises; implementation is routed to the UI skills installed. For a whole-product audit with a plan, use ezai-uiux-specialist-persona.",
+  "version": "1.8.2",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "ux-review",
+      "description": "Usability findings on a screen or flow, each with a heuristic and a severity"
+    },
+    {
+      "id": "a11y-review",
+      "description": "WCAG findings, each with its criterion, level and evidence"
+    },
+    {
+      "id": "conformance-fix",
+      "description": "Applied correction to a verifiable defect — never a visual redesign"
+    },
+    {
+      "id": "dark-pattern-check",
+      "description": "Deceptive-design review of a flow, with the legal frame and its scope limits"
+    },
+    {
+      "id": "ui-direction",
+      "description": "Direction note: the visual register the sector implies, under 15 lines"
+    },
+    {
+      "id": "research-plan",
+      "description": "Which research method answers the open question, and how to run it"
+    },
+    {
+      "id": "metrics-plan",
+      "description": "What to measure, which instrument, and how to read the result"
+    }
+  ]
+}
