@@ -30,7 +30,7 @@
           "id": "human-gate",
           "description": "Pipeline s'arrête et attend validation humaine avant GENERATION",
           "type": "regex",
-          "value": "(?i)(approu|valid|attend|approv|wait)"
+          "value": "([Aa]pprou|[Vv]alid|[Aa]ttend|[Aa]pprov|[Ww]ait)"
         }
       ]
     },
@@ -192,13 +192,13 @@
           "id": "gitlab-detected",
           "description": "GitLab détecté dans le contexte",
           "type": "regex",
-          "value": "(?i)gitlab"
+          "value": "[Gg]it[Ll]ab"
         },
         {
           "id": "badge-finding",
           "description": "Finding sur les badges du template signalé",
           "type": "regex",
-          "value": "(?i)(badge|template)"
+          "value": "([Bb]adge|[Tt]emplate)"
         },
         {
           "id": "generation-invokes-docs-writer",
