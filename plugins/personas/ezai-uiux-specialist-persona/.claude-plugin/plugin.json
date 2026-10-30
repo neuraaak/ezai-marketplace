@@ -1,7 +1,7 @@
 {
   "name": "ezai-uiux-specialist-persona",
   "description": "Audit and upgrade an entire interface through a 6-stage multi-subagent pipeline: detection, audit (usability, accessibility, visual direction), planning with a human gate, generation of the conformance fixes via ezai-uiux-expert, validation, and routing of the remaining visual work to the UI skills installed.",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"

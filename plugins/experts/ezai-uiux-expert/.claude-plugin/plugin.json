@@ -1,7 +1,7 @@
 {
   "name": "ezai-uiux-expert",
   "description": "Interface usability and accessibility expert: review a screen, flow, form or component against the Nielsen heuristics and WCAG 2.2, fix a conformance defect, check a flow for deceptive design, or give the visual direction a sector implies. Evaluates and advises; implementation is routed to the UI skills installed. For a whole-product audit with a plan, use ezai-uiux-specialist-persona.",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "author": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
