@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-uiux-specialist-persona/01-audit.schema.json",
+  "title": "AUDIT — findings",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["AUDIT"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": ["heuristics", "accessibility", "direction"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["run", "skipped"]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Why it was skipped (e.g. 'user scope'), else null"
+          }
+        },
+        "required": ["section", "status", "reason"],
+        "additionalProperties": false
+      },
+      "description": "Exactly one entry per section"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Criteria the stage could not verify, one line each — mandatory when rendering is 'static'"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-NNN"
+          },
+          "section": {
+            "type": "string",
+            "enum": ["heuristics", "accessibility", "direction"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bloquant", "majeur", "mineur"],
+            "description": "bloquant makes the interface unusable or unlawful, majeur costs the user, mineur is polish"
+          },
+          "track": {
+            "type": "string",
+            "enum": ["apply", "route"],
+            "description": "'apply' is verifiable and fixable without a visual decision; 'route' needs one. A 'direction' finding is always 'route'"
+          },
+          "title": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string",
+            "description": "One sentence"
+          },
+          "where": {
+            "type": "string",
+            "description": "File path, route or screen"
+          },
+          "fix": {
+            "type": "string",
+            "description": "One sentence"
+          },
+          "criterion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The rule the finding rests on (WCAG SC, 'Nielsen 1', 'Fitts', a dark-pattern category), or null for a sector convention"
+          },
+          "evidence": {
+            "type": "string",
+            "enum": ["tool", "rendered", "static"],
+            "description": "How the finding was established; 'rendered' is forbidden when rendering is 'static'"
+          }
+        },
+        "required": [
+          "id",
+          "section",
+          "severity",
+          "track",
+          "title",
+          "what",
+          "where",
+          "fix",
+          "criterion",
+          "evidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "sections", "limitations", "findings"],
+  "additionalProperties": false
+}

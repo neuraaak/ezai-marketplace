@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ezai-uiux-specialist-persona/05-routing.schema.json",
+  "title": "ROUTING — findings handed to another skill",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["ROUTING"]
+    },
+    "date": {
+      "type": "string",
+      "description": "ISO date, YYYY-MM-DD",
+      "format": "date"
+    },
+    "inputs_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Artifacts and project files read by the stage"
+    },
+    "direction_note": {
+      "type": "string",
+      "description": "Section C's direction, under 15 lines: recommended register and why the sector implies it, two alternatives, one anti-recommendation. No hex value, no font file, no component"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable finding ID: 01-NNN"
+          },
+          "title": {
+            "type": "string"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "A name from ui_skills_available, or null when no installed skill fits"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The exact prompt to hand that skill: the finding, the constraints to respect (existing tokens, conformance target, sector register), and what not to change"
+          },
+          "suggested_install": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The skill that would fit, when 'skill' is null; else null"
+          }
+        },
+        "required": ["id", "title", "skill", "prompt", "suggested_install"],
+        "additionalProperties": false
+      },
+      "description": "Every finding whose track is 'route', plus every TODO GENERATION skipped with 'needs a design decision' or 'no token satisfies the fix' — each exactly once, and nothing else"
+    }
+  },
+  "required": ["stage", "date", "inputs_read", "direction_note", "routes"],
+  "additionalProperties": false
+}
