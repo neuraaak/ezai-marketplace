@@ -8,7 +8,7 @@ REM  install.bat <plugin> <dest>
 REM  install.bat "" <dest>  -> tous les plugins, destination personnalisee
 REM
 REM Decouverte par walk de plugins\experts\* et plugins\personas\* (le nom du
-REM dossier = nom du plugin). Seuls SKILL.md + references\ sont copies, dans
+REM dossier = nom du plugin). Seuls SKILL.md, references\ et scripts\ sont copies, dans
 REM Par defaut, ~\.agents\skills\<nom> est lu par Codex, Gemini CLI, Copilot CLI,
 REM Vibe et Kimi Code ; seul Claude Code a besoin d'une junction vers ~\.claude.
 REM Avec un DEST personnalise, la decouverte directe depend du chemin choisi.
@@ -63,6 +63,9 @@ if exist "%PLUGIN_DIR%\SKILL.md" (
 )
 if exist "%PLUGIN_DIR%\references" (
   xcopy /s /e /y /q "%PLUGIN_DIR%\references" "%DEST_DIR%\references\" >nul
+)
+if exist "%PLUGIN_DIR%\scripts" (
+  xcopy /s /e /y /q "%PLUGIN_DIR%\scripts" "%DEST_DIR%\scripts\" >nul
 )
 
 if not %ERRORLEVEL% EQU 0 (

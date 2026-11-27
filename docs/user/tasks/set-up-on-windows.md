@@ -52,7 +52,7 @@ Windows cannot create symbolic links without elevated rights, so `ezai` uses dir
 junctions instead, automatically and with no configuration. The agents cannot tell the
 difference.
 
-The batch script copies the same files as `ezai install` — `SKILL.md` and `references\` —
+The batch script copies the same files as `ezai install` — `SKILL.md`, `references\` and `scripts\` —
 but it has no `list`, `search`, `info`, `uninstall` or `purge` counterpart. For those,
 install Node.js and use the CLI.
 

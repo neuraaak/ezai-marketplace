@@ -53,7 +53,7 @@ node bin/ezai.js install <plugin>
 ### Windows without Node
 
 From a cloned copy, use the bundled batch wrapper. Like `ezai install`, it
-copies `SKILL.md` + `references/` into `.agents\skills\` and creates junctions
+copies `SKILL.md`, `references/` and `scripts/` into `.agents\skills\` and creates junctions
 into the platform skills folders (`~\.claude`, `~\.gemini`, `~\.copilot`) that
 exist:
 
