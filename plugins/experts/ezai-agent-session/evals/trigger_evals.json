@@ -1,0 +1,45 @@
+{
+  "skill_name": "ezai-agent-session",
+  "triggers": [
+    {
+      "query": "ouvre une session avec Codex pour qu'on refactore le module auth à deux",
+      "should_trigger": true
+    },
+    {
+      "query": "rejoins la session partagée, Claude t'attend",
+      "should_trigger": true
+    },
+    {
+      "query": "join the shared session of this project",
+      "should_trigger": true
+    },
+    {
+      "query": "work with Codex on this: you plan, it reviews",
+      "should_trigger": true
+    },
+    {
+      "query": "reprends la session, il y a un .shared-session à la racine",
+      "should_trigger": true
+    },
+    {
+      "query": "ferme la session avec Codex, on a fini",
+      "should_trigger": true
+    },
+    {
+      "query": "demande à Codex en sous-processus de relire ce fichier et rends-moi sa réponse",
+      "should_trigger": false
+    },
+    {
+      "query": "lance trois subagents en parallèle pour explorer le dépôt",
+      "should_trigger": false
+    },
+    {
+      "query": "write a GitHub Actions workflow that runs the tests",
+      "should_trigger": false
+    },
+    {
+      "query": "explique-moi la différence entre Claude Code et Codex",
+      "should_trigger": false
+    }
+  ]
+}

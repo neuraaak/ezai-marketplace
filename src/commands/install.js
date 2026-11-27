@@ -5,7 +5,7 @@ const { DEFAULT_PLATFORMS, resolveAgentsSkillsDir, resolvePlatforms } = require(
 // Entrées (fichier ou dossier) à la racine d'un plugin qui sont copiées chez
 // l'utilisateur. Tout le reste (`.claude-plugin/`, `evals/`, `graphify-out/`, …)
 // est outillage dev/CI et n'a aucune utilité au runtime du skill.
-const RUNTIME_INCLUDE = ['SKILL.md', 'references'];
+const RUNTIME_INCLUDE = ['SKILL.md', 'references', 'scripts'];
 
 function assertSafeRelPath(p) {
   if (typeof p !== 'string' || p.length === 0) throw new Error('chemin invalide');

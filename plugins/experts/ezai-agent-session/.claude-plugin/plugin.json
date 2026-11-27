@@ -1,0 +1,28 @@
+{
+  "name": "ezai-agent-session",
+  "description": "Shared session between two coding agents open on the same project (Claude Code and Codex, or any pair): one opens the session, the other joins, and they pass a single token through files so only one works at a time. No daemon, no external API; every blocking state is reported to the user.",
+  "version": "1.10.0",
+  "author": {
+    "name": "ezai",
+    "email": "floriansalort@gmail.com"
+  },
+  "category": "development",
+  "capabilities": [
+    {
+      "id": "create-session",
+      "description": "Open a session as main: create it, wait for the other agent to join, send the plan"
+    },
+    {
+      "id": "join-session",
+      "description": "Join an open session as assistant and enter the turn loop"
+    },
+    {
+      "id": "turn-loop",
+      "description": "Wait for the token, claim it, do the work, hand it off with a self-sufficient summary"
+    },
+    {
+      "id": "close-session",
+      "description": "Report to the user and close the session, so both agents leave the loop"
+    }
+  ]
+}

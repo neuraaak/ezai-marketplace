@@ -30,7 +30,7 @@ export default defineVersionedConfig(
 
     // Version-switcher dropdown — the VitePress analogue of mike. latestVersion must equal package.json version.
     versioning: {
-      latestVersion: '1.9.0',
+      latestVersion: '1.10.0',
     },
 
     themeConfig: {

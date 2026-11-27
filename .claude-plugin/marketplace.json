@@ -1,20 +1,49 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "ezai-marketplace",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Curated marketplace of AI skills for senior developers (Python / JS/TS)",
   "owner": {
     "name": "ezai",
     "email": "floriansalort@gmail.com"
   },
-  "updatedAt": "2026-10-30",
+  "updatedAt": "2026-11-27",
   "plugins": [
+    {
+      "name": "ezai-agent-session",
+      "description": "Shared session between two coding agents open on the same project (Claude Code and Codex, or any pair): one opens the session, the other joins, and they pass a single token through files so only one works at a time. No daemon, no external API; every blocking state is reported to the user.",
+      "source": "./plugins/experts/ezai-agent-session",
+      "category": "development",
+      "version": "1.10.0",
+      "author": {
+        "name": "ezai",
+        "email": "floriansalort@gmail.com"
+      },
+      "capabilities": [
+        {
+          "id": "create-session",
+          "description": "Open a session as main: create it, wait for the other agent to join, send the plan"
+        },
+        {
+          "id": "join-session",
+          "description": "Join an open session as assistant and enter the turn loop"
+        },
+        {
+          "id": "turn-loop",
+          "description": "Wait for the token, claim it, do the work, hand it off with a self-sufficient summary"
+        },
+        {
+          "id": "close-session",
+          "description": "Report to the user and close the session, so both agents leave the loop"
+        }
+      ]
+    },
     {
       "name": "ezai-cicd-expert",
       "description": "CI/CD expert for GitHub Actions and GitLab CI: write, audit, and debug pipelines; caching, matrix builds, OIDC publishing, reusable workflows, and deployment gates for Python and JS/TS projects.",
       "source": "./plugins/experts/ezai-cicd-expert",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -55,7 +84,7 @@
       "description": "Apply source file visual structure to match project conventions: section header comments, import ordering, spacing, and formatting — without touching logic.",
       "source": "./plugins/experts/ezai-code-formatter",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -92,7 +121,7 @@
       "description": "Write a single documentation artifact for a software project: one .md page (a Diátaxis page for developer docs, or a product page for end users and admins), release notes, a README, docstrings, or a badge block. For whole-site audits and upgrades, use ezai-docs-specialist-persona.",
       "source": "./plugins/experts/ezai-docs-writer",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -141,7 +170,7 @@
       "description": "Architecture and design standards for Python and JS/TS projects: module structure, public API surface, design patterns (Repository, Factory, Composition), Hexagonal architecture, and type system contracts.",
       "source": "./plugins/experts/ezai-project-architect",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -186,7 +215,7 @@
       "description": "Toolchain setup, project configuration, and infrastructure standards for Python and JS/TS projects: pyproject.toml, package.json, linters, Docker, lockfiles, env vars, and observability.",
       "source": "./plugins/experts/ezai-project-config",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -235,7 +264,7 @@
       "description": "Concurrency, async patterns, and performance optimization for Python and JS/TS projects: async/await, threading vs multiprocessing, profiling, streaming, and cancellation patterns.",
       "source": "./plugins/experts/ezai-project-performance",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -276,7 +305,7 @@
       "description": "Testing, security, and input validation for Python and JS/TS projects: write tests, secure endpoints, validate schemas, manage secrets, and harden production code.",
       "source": "./plugins/experts/ezai-project-quality",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -313,7 +342,7 @@
       "description": "Interface usability and accessibility expert: review a screen, flow, form or component against the Nielsen heuristics and WCAG 2.2, fix a conformance defect, check a flow for deceptive design, or give the visual direction a sector implies. Evaluates and advises; implementation is routed to the UI skills installed. For a whole-product audit with a plan, use ezai-uiux-specialist-persona.",
       "source": "./plugins/experts/ezai-uiux-expert",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -354,7 +383,7 @@
       "description": "Audit and upgrade an entire documentation site through a 5-stage multi-subagent pipeline: detection, audit, planning (with human gate), generation (via ezai-docs-writer), and validation.",
       "source": "./plugins/personas/ezai-docs-specialist-persona",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -382,7 +411,7 @@
       "description": "Elite Senior Developer persona for enterprise-grade Python and JavaScript/TypeScript projects. Apply for significant development tasks requiring senior-level judgment.",
       "source": "./plugins/personas/ezai-senior-dev-persona",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"
@@ -422,7 +451,7 @@
       "description": "Audit and upgrade an entire interface through a 6-stage multi-subagent pipeline: detection, audit (usability, accessibility, visual direction), planning with a human gate, generation of the conformance fixes via ezai-uiux-expert, validation, and routing of the remaining visual work to the UI skills installed.",
       "source": "./plugins/personas/ezai-uiux-specialist-persona",
       "category": "development",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "author": {
         "name": "ezai",
         "email": "floriansalort@gmail.com"

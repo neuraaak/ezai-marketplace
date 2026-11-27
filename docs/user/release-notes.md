@@ -7,6 +7,27 @@ User-visible changes, newest version first. Upgrade with
 For the full commit-level history, see the
 [developer changelog](../changelog.md).
 
+## 1.10.0 — 2026-11-27
+
+### New
+
+- `ezai-agent-session`, bringing the catalogue to twelve. Two coding agents open on the
+  same project — Claude Code and Codex, or any other pair — take turns on one task: the
+  first one you ask opens the session and proposes the plan, the second joins it, and a
+  single token passed through a `.shared-session/` folder decides which of them may change
+  the project. There is no daemon and no external service. Whenever the session is stuck —
+  the other agent stopped answering, the time budget ran out — the agent tells you instead
+  of taking over. See the [catalogue](../skills/).
+- `.shared-session/` keeps itself out of git: it holds its own `.gitignore`, so there is
+  nothing to add to yours.
+
+### Changed
+
+- `ezai install` also copies a skill's `scripts/` folder, for skills that ship a script
+  their agent runs. `ezai-agent-session` is the first. Run
+  [Update installed skills](./tasks/update-skills.md) after upgrading so the copy is
+  complete.
+
 ## 1.9.0 — 2026-10-30
 
 ### New

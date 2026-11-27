@@ -60,6 +60,8 @@ describe('collectRuntimeFiles', () => {
     fs.writeFileSync(path.join(pluginDir, 'SKILL.md'), '# skill');
     fs.writeFileSync(path.join(pluginDir, 'references', 'index.md'), 'idx');
     fs.writeFileSync(path.join(pluginDir, 'references', 'python', 'standards.md'), 'std');
+    fs.mkdirSync(path.join(pluginDir, 'scripts'), { recursive: true });
+    fs.writeFileSync(path.join(pluginDir, 'scripts', 'run.js'), '');
     fs.writeFileSync(path.join(pluginDir, 'evals', 'eval_set.json'), '{}');
     fs.writeFileSync(path.join(pluginDir, 'graphify-out', 'graph.json'), '{}');
     fs.writeFileSync(path.join(pluginDir, '.claude-plugin', 'plugin.json'), '{}');
@@ -71,6 +73,10 @@ describe('collectRuntimeFiles', () => {
     expect(dests).toContain('SKILL.md');
     expect(dests).toContain('references/index.md');
     expect(dests).toContain('references/python/standards.md');
+  });
+
+  it('inclut scripts/ pour les plugins qui embarquent un runtime', () => {
+    expect(collectRuntimeFiles(makePluginDir()).map((f) => f.dest)).toContain('scripts/run.js');
   });
 
   it('exclut evals/, graphify-out/ et .claude-plugin/', () => {
@@ -89,7 +95,7 @@ describe('collectRuntimeFiles', () => {
   });
 
   it('expose une whitelist runtime minimale', () => {
-    expect(RUNTIME_INCLUDE).toEqual(['SKILL.md', 'references']);
+    expect(RUNTIME_INCLUDE).toEqual(['SKILL.md', 'references', 'scripts']);
   });
 });
 
