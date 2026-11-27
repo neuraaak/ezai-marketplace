@@ -48,6 +48,7 @@ tmpclaude-*
 .remember/
 .superpowers/
 .senior-review/
+.shared-session/
 graphify-out/
 !docs/
 .vscode/settings.json
