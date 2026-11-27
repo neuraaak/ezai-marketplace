@@ -74,15 +74,19 @@ describe('init / join', () => {
     expect(run('bogus').code).toBe(1);
   });
 
-  it('avertit quand le dossier de session n’est pas gitignoré', () => {
-    spawnSync('git', ['init', '-q'], { cwd });
-    expect(run('init', '--agent', 'claude').out.warning).toMatch(/gitignoré/);
+  it('refuse de placer la session hors du dossier courant', () => {
+    expect(run('init', '--agent', 'claude', '--dir', os.tmpdir()).code).toBe(1);
+    expect(fs.existsSync(path.join(os.tmpdir(), 'session.json'))).toBe(false);
   });
 
-  it('n’avertit pas quand le dossier est gitignoré', () => {
+  it('crée un dossier de session que git ignore sans toucher au .gitignore du projet', () => {
     spawnSync('git', ['init', '-q'], { cwd });
-    fs.writeFileSync(path.join(cwd, '.gitignore'), '.shared-session/\n');
-    expect(run('init', '--agent', 'claude').out.warning).toBeUndefined();
+    openPair();
+    const status = spawnSync('git', ['status', '--porcelain', '--untracked-files=all'], {
+      cwd,
+      encoding: 'utf8',
+    });
+    expect(status.stdout).toBe('');
   });
 });
 

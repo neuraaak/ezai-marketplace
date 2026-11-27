@@ -7,8 +7,6 @@ You are main: you hold the plan, you talk to the user, you close the session.
 2. **Create the session**: `init --agent <you>`.
    - `error` says a session already exists → do not delete it. Run `status`
      and ask the user whether to join it, resume it or close it.
-   - The output carries a `warning` → `.shared-session/` is not gitignored.
-     Ask the user to add it; do not edit `.gitignore` yourself.
 3. **Tell the user how to bring the other agent in**, in one line they can
    paste into it, for example:
    > Join the shared session of this project with the ezai-agent-session skill.

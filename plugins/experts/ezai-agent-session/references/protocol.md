@@ -6,8 +6,8 @@ plan, the review and the disagreements are yours to handle, under the rules in
 
 ## Session files
 
-`.shared-session/` at the project root (another folder with `--dir`, which then
-goes on every command). It must be gitignored.
+`.shared-session/` in the folder the commands run from — always the project
+root. It holds its own `.gitignore`, so git never sees it.
 
 | File                         | Written by                                                 | Holds                                    |
 | :--------------------------- | :--------------------------------------------------------- | :--------------------------------------- |

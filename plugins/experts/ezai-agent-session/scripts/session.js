@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 // Runtime de session partagée entre deux agents : passage de jeton par fichiers, sans démon.
-const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const { parseArgs } = require('node:util');
-const { setTimeout: sleep } = require('node:timers/promises');
 
 const EXIT = { OK: 0, ERROR: 1, CLOSED: 3, BLOCKED: 4 };
 const POLL_MS = 1000;
@@ -19,8 +17,9 @@ const DEFAULT_LIMITS = {
   budget_min: 120,
 };
 
+// Fixé, pas d'option : un dossier choisi par l'agent ouvrirait l'écriture hors du projet.
+const dir = path.resolve('.shared-session');
 let values;
-let dir;
 
 class Fail extends Error {
   constructor(message, exit = EXIT.ERROR) {
@@ -90,6 +89,8 @@ function ownedTurn(agent) {
 function init() {
   const agent = agentArg();
   fs.mkdirSync(file('messages'), { recursive: true });
+  // Le dossier s'exclut lui-même de git : rien à ajouter au .gitignore du projet.
+  fs.writeFileSync(file('.gitignore'), '*\n');
   const session = {
     protocol_version: '0.2',
     main: agent,
@@ -114,12 +115,7 @@ function init() {
     message: null,
   });
   log('INIT', { agent });
-  const result = { event: 'SESSION_CREATED', role: 'main', dir };
-  // Statut 1 = dans un dépôt git mais non ignoré ; hors dépôt ou sans git, rien à signaler.
-  if (spawnSync('git', ['check-ignore', '-q', dir], { cwd: dir }).status === 1) {
-    result.warning = `${dir} n'est pas gitignoré : demander à l'utilisateur de l'ajouter au .gitignore`;
-  }
-  out(result);
+  out({ event: 'SESSION_CREATED', role: 'main', dir });
 }
 
 function join() {
@@ -137,38 +133,46 @@ function join() {
   out({ event: 'JOINED', role: 'assistant', main: session.main });
 }
 
-async function wait() {
+// Renvoie [sortie, code] dès qu'un événement concerne l'agent, sinon null.
+function waitOutcome(agent, awaitingJoin) {
+  const session = readJson('session.json');
+  const turn = readJson('turn.json');
+  if (session.state === 'CLOSED') return [{ event: 'SESSION_CLOSED' }, EXIT.CLOSED];
+  if (awaitingJoin && session.assistant) {
+    return [{ event: 'ASSISTANT_JOINED', assistant: session.assistant, next: 'handoff' }, EXIT.OK];
+  }
+  if (!awaitingJoin && turn.owner === agent) {
+    const event = turn.claimed ? 'TOKEN_HELD' : 'TOKEN_RECEIVED';
+    return [{ event, seq: turn.seq, next: 'claim' }, EXIT.OK];
+  }
+  const heldMs = Date.now() - Date.parse(turn.since);
+  if (!turn.claimed && heldMs > session.limits.claim_timeout_s * 1000) {
+    const waited_s = Math.round(heldMs / 1000);
+    return [{ event: 'RECEIVER_SILENT', receiver: turn.owner, waited_s }, EXIT.BLOCKED];
+  }
+  if (Date.now() - Date.parse(session.created_at) > session.limits.budget_min * 60_000) {
+    return [{ event: 'BUDGET_EXCEEDED' }, EXIT.BLOCKED];
+  }
+  return null;
+}
+
+function wait() {
   const agent = agentArg();
   // Sans assistant, seul le main est membre : il attend la jonction avant son premier handoff.
   const awaitingJoin = !loadSession(agent).assistant;
-  for (;;) {
-    const session = readJson('session.json');
-    const turn = readJson('turn.json');
-    const heldMs = Date.now() - Date.parse(turn.since);
-    if (session.state === 'CLOSED') return out({ event: 'SESSION_CLOSED' }, EXIT.CLOSED);
-    if (awaitingJoin) {
-      if (session.assistant)
-        return out({
-          event: 'ASSISTANT_JOINED',
-          assistant: session.assistant,
-          next: 'handoff',
-        });
-    } else if (turn.owner === agent) {
-      return out({
-        event: turn.claimed ? 'TOKEN_HELD' : 'TOKEN_RECEIVED',
-        seq: turn.seq,
-        next: 'claim',
-      });
-    }
-    if (!turn.claimed && heldMs > session.limits.claim_timeout_s * 1000) {
-      const waited_s = Math.round(heldMs / 1000);
-      return out({ event: 'RECEIVER_SILENT', receiver: turn.owner, waited_s }, EXIT.BLOCKED);
-    }
-    if (Date.now() - Date.parse(session.created_at) > session.limits.budget_min * 60_000) {
-      return out({ event: 'BUDGET_EXCEEDED' }, EXIT.BLOCKED);
-    }
-    await sleep(POLL_MS);
-  }
+  return new Promise((resolve, reject) => {
+    const poll = () => {
+      try {
+        const outcome = waitOutcome(agent, awaitingJoin);
+        if (!outcome) return setTimeout(poll, POLL_MS);
+        out(...outcome);
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    };
+    poll();
+  });
 }
 
 function claim() {
@@ -244,14 +248,14 @@ function close() {
 
 const COMMANDS = { init, join, wait, claim, handoff, status, close };
 
-(async () => {
+// Toutes les erreurs sont capturées dans le try : la promesse ne peut pas être rejetée.
+void (async () => {
   try {
     const parsed = parseArgs({
       allowPositionals: true,
       options: {
         agent: { type: 'string' },
         to: { type: 'string' },
-        dir: { type: 'string', default: '.shared-session' },
         type: { type: 'string', default: 'handoff' },
         summary: { type: 'string' },
         next: { type: 'string' },
@@ -259,7 +263,6 @@ const COMMANDS = { init, join, wait, claim, handoff, status, close };
       },
     });
     values = parsed.values;
-    dir = path.resolve(values.dir);
     const command = COMMANDS[parsed.positionals[0]];
     if (!command)
       throw new Fail(`commande inconnue ; commandes : ${Object.keys(COMMANDS).join(', ')}`);

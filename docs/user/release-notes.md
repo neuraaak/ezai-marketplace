@@ -18,8 +18,8 @@ For the full commit-level history, see the
   the project. There is no daemon and no external service. Whenever the session is stuck —
   the other agent stopped answering, the time budget ran out — the agent tells you instead
   of taking over. See the [catalogue](../skills/).
-- The skill asks you to keep `.shared-session/` out of git: add it to your `.gitignore`
-  when the first agent warns you.
+- `.shared-session/` keeps itself out of git: it holds its own `.gitignore`, so there is
+  nothing to add to yours.
 
 ### Changed
 
